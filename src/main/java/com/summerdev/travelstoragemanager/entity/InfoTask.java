@@ -20,7 +20,7 @@ public class InfoTask {
 
     private Long cursorId;
 
-    @Column(insertable = false, updatable = false)
+    @Column(name = "task_type_id", insertable = false, updatable = false)
     private Long taskTypeId;
 
     @ManyToOne

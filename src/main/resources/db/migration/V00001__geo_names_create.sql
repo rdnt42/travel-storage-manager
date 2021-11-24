@@ -1,4 +1,4 @@
-create table geo_names_data
+create table geo_names
 (
     geo_name_id  bigint primary key,
     geo_name     text not null,

@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.service.taks;
+package com.summerdev.travelstoragemanager.service.task.factory;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import lombok.extern.slf4j.Slf4j;
@@ -17,8 +17,8 @@ import static com.summerdev.travelstoragemanager.config.ThreadPoolTaskSchedulerC
 @Slf4j
 public class RunnableTask implements Runnable {
 
-    private InfoTask task;
-    private ScheduledFuture<?> future;
+    protected InfoTask task;
+    protected ScheduledFuture<?> future;
 
     public RunnableTask(InfoTask task) {
         this.task = task;
@@ -37,7 +37,7 @@ public class RunnableTask implements Runnable {
         }
     }
 
-    public void start() {
+    public void startTask() {
         future = threadPoolTaskScheduler.schedule(this, new Date());
         log.info("Task started immediately, id: {}", task.getId());
     }

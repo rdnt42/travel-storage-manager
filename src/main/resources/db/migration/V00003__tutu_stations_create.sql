@@ -1,4 +1,4 @@
-create table if not exists tutu_stations
+create table tutu_stations
 (
     station_id   bigint primary key,
     station_name text   not null,

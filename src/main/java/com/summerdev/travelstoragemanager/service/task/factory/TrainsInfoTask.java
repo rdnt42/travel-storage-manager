@@ -1,6 +1,7 @@
-package com.summerdev.travelstoragemanager.service.taks;
+package com.summerdev.travelstoragemanager.service.task.factory;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
+import com.summerdev.travelstoragemanager.service.task.factory.RunnableTask;
 
 /**
  * Created with IntelliJ IDEA.
