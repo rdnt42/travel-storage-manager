@@ -2,6 +2,9 @@ package com.summerdev.travelstoragemanager.repository;
 
 import com.summerdev.travelstoragemanager.entity.HotelInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,4 +14,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
  */
 public interface HotelInfoRepository extends JpaRepository<HotelInfo, Long> {
     HotelInfo findFirstByOrderByIdAsc();
+
+    @Modifying
+    @Query("UPDATE hotels_info SET isActualData = false")
+    @Transactional
+    void updateAllActualDataFalse();
 }

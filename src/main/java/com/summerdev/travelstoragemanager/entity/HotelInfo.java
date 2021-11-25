@@ -1,6 +1,7 @@
 package com.summerdev.travelstoragemanager.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
 
@@ -11,6 +12,7 @@ import javax.persistence.*;
  * Time: 23:42
  */
 @Entity(name = "hotels_info")
+@DynamicInsert
 @Data
 public class HotelInfo {
     @Id
@@ -26,6 +28,6 @@ public class HotelInfo {
 
     private Long cost;
 
+//    @Column(name = "is_actual_data", columnDefinition = "boolean default false")
     private Boolean isActualData;
-
 }
