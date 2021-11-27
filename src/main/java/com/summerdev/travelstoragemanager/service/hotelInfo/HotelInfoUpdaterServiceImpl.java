@@ -1,10 +1,9 @@
-package com.summerdev.travelstoragemanager.service.travelInfo;
+package com.summerdev.travelstoragemanager.service.hotelInfo;
 
 import com.summerdev.travelstoragemanager.decode.HotelInfoDecodeService;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.entity.HotelInfo;
+import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
-import com.summerdev.travelstoragemanager.repository.HotelInfoRepository;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.service.api.hotellook.HotelLookApiService;
 import lombok.AccessLevel;
@@ -21,29 +20,25 @@ import java.util.List;
 /**
  * Created with IntelliJ IDEA.
  * User: marowak
- * Date: 24.11.2021
- * Time: 0:09
+ * Date: 27.11.2021
+ * Time: 21:47
  */
-@Service
 @Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
-public class HotelsInfoServiceImpl implements TravelInfoService<HotelInfo>, CursorService {
+@Service
+public class HotelInfoUpdaterServiceImpl implements HotelInfoUpdaterService {
 
-    @NonNull HotelInfoRepository hotelInfoRepository;
     @NonNull HotelLookApiService hotelLookApiService;
     @NonNull HotelInfoDecodeService hotelInfoDecodeService;
     @NonNull TutuStationRepository tutuStationRepository;
+    @NonNull HotelInfoService hotelInfoService;
+
 
     @Override
-    public List<HotelInfo> getAllActualInfo() {
-        return null;
-    }
-
-    @Override
-    public void updateTravelInfo() {
+    public void updateTravelInfo () {
         List<TutuStation> tutuStations = tutuStationRepository.findAll();
-        for (int i = 0; i < 1; i++) {
+        for (int i = 0; i < 10; i++) {
             updateInfoForCity(tutuStations.get(i).getGeoName());
         }
 //        for (TutuStation station : tutuStations) {
@@ -51,14 +46,8 @@ public class HotelsInfoServiceImpl implements TravelInfoService<HotelInfo>, Curs
 //        }
     }
 
-    @Override
-    public Long getFirstCursorId() {
-        HotelInfo info = hotelInfoRepository.findFirstByOrderByIdAsc();
 
-        return info == null ? null : info.getId();
-    }
-
-    public void updateInfoForCity(GeoNameData city) {
+    public void updateInfoForCity (GeoNameData city){
         int totalDaysCount = 30;
 
         Calendar calendar = Calendar.getInstance();
@@ -73,13 +62,9 @@ public class HotelsInfoServiceImpl implements TravelInfoService<HotelInfo>, Curs
         hotelLookApiService
                 .getHotelsInfo(city, startDate, endDate)
                 .subscribe(responses -> {
-                    List<HotelInfo> hotelInfos = hotelInfoDecodeService.decodeHotelsResponse(responses, totalDaysCount, city);
-                    hotelInfoRepository.saveAll(hotelInfos);
+                    List<HotelInfo> hotelInfos = hotelInfoDecodeService.decodeHotelsResponse(
+                            responses, totalDaysCount, city);
+                    hotelInfoService.deleteAndCreate(hotelInfos);
                 });
-    }
-
-    @Override
-    public Long getLastCursorId() {
-        return null;
     }
 }

@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.response;
 
-import com.summerdev.travelstoragemanager.entity.HotelInfo;
+import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.TrainInfo;
 import lombok.Data;
 

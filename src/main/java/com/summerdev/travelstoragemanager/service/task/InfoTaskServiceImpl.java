@@ -22,8 +22,8 @@ import java.util.Map;
  * Date: 23.11.2021
  * Time: 23:08
  */
-@Service
 @RequiredArgsConstructor
+@Service
 public class InfoTaskServiceImpl implements InfoTaskService {
 
     protected static final Map<Long, RunnableTask> infoTasksMap = new HashMap<>();

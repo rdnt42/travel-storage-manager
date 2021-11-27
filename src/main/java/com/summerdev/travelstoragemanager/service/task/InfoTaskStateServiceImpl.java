@@ -17,9 +17,9 @@ import static com.summerdev.travelstoragemanager.service.task.InfoTaskServiceImp
  * Date: 24.11.2021
  * Time: 23:48
  */
-@Service
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Service
 public class InfoTaskStateServiceImpl implements InfoTaskStateService {
 
     @NonNull InfoTaskRepository infoTaskRepository;

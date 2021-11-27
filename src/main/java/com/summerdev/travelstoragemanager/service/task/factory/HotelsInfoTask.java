@@ -1,8 +1,8 @@
 package com.summerdev.travelstoragemanager.service.task.factory;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
+import com.summerdev.travelstoragemanager.service.hotelInfo.HotelInfoUpdaterService;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
-import com.summerdev.travelstoragemanager.service.travelInfo.HotelsInfoServiceImpl;
 import lombok.AccessLevel;
 import lombok.experimental.FieldDefaults;
 
@@ -14,19 +14,20 @@ import lombok.experimental.FieldDefaults;
  */
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 public class HotelsInfoTask extends RunnableTask {
-    HotelsInfoServiceImpl hotelsInfoService;
+    HotelInfoUpdaterService hotelInfoUpdaterService;
     InfoTaskStateService infoTaskStateService;
 
-    public HotelsInfoTask(InfoTask task, HotelsInfoServiceImpl hotelsInfoService, InfoTaskStateService infoTaskStateService) {
+    public HotelsInfoTask(InfoTask task, InfoTaskStateService infoTaskStateService,
+                          HotelInfoUpdaterService hotelInfoUpdaterService) {
         super(task);
-        this.hotelsInfoService = hotelsInfoService;
+        this.hotelInfoUpdaterService = hotelInfoUpdaterService;
         this.infoTaskStateService = infoTaskStateService;
     }
 
 
     @Override
     public void run() {
-        hotelsInfoService.updateTravelInfo();
+        hotelInfoUpdaterService.updateTravelInfo();
         infoTaskStateService.disableAndDeleteTask(task);
     }
 }
