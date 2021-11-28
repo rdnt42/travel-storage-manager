@@ -3,8 +3,7 @@ package com.summerdev.travelstoragemanager.service.travelInfo;
 import com.summerdev.travelstoragemanager.entity.TrainInfo;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -21,7 +20,7 @@ public class TrainsInfoServiceImpl implements TravelInfoService<TrainInfo>, Curs
     }
 
     @Override
-    public Long getLastCursorId() {
+    public Long getNextCursorId(long currCursorId) {
         return null;
     }
 

@@ -4,6 +4,7 @@ import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
@@ -13,7 +14,7 @@ import javax.persistence.*;
  */
 @Entity(name = "hotel_prices")
 @Data
-public class HotelPrice {
+public class HotelPrice implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hotel_price_id")

@@ -13,5 +13,5 @@ public interface InfoTaskStateService {
 
     void disableTask(InfoTask task);
 
-    void disableAndDeleteTask(InfoTask task);
+    void disableAndDeleteTask(Long taskId);
 }

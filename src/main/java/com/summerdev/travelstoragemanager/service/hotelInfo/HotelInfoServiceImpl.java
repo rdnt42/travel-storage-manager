@@ -1,20 +1,21 @@
 package com.summerdev.travelstoragemanager.service.hotelInfo;
 
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
-import com.summerdev.travelstoragemanager.entity.hotel.HotelPrice;
 import com.summerdev.travelstoragemanager.repository.HotelInfoRepository;
-import com.summerdev.travelstoragemanager.repository.HotelPriceRepository;
-import com.summerdev.travelstoragemanager.service.travelInfo.CursorService;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -27,44 +28,33 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class HotelInfoServiceImpl implements HotelInfoService, CursorService {
+public class HotelInfoServiceImpl implements HotelInfoService {
 
     @NonNull HotelInfoRepository hotelInfoRepository;
-    @NonNull HotelPriceRepository hotelPriceRepository;
 
+    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
     @Override
-    public Long getFirstCursorId() {
-        HotelInfo info = hotelInfoRepository.findFirstByOrderByIdAsc();
+    public int updateOrCreate(List<HotelInfo> hotelInfos) {
+        Map<Long, HotelInfo> newItems = hotelInfos.stream()
+                .collect(Collectors.toMap(HotelInfo::getId, Function.identity()));
 
-        return info == null ? null : info.getId();
+        List<HotelInfo> itemsToUpdate = hotelInfoRepository.findAllById(newItems.keySet());
+
+        for (HotelInfo itemToUpdate : itemsToUpdate) {
+            HotelInfo newItem = newItems.get(itemToUpdate.getId());
+
+            updateItem(itemToUpdate, newItem);
+            newItems.put(itemToUpdate.getId(), itemToUpdate);
+        }
+
+        return hotelInfoRepository.saveAll(newItems.values()).size();
     }
 
-    @Override
-    public Long getLastCursorId() {
-        return null;
+    private void updateItem(HotelInfo info, HotelInfo newInfo) {
+        info.setHotelName(newInfo.getHotelName());
+        info.setCity(newInfo.getCity());
+        info.setStars(newInfo.getStars());
+        info.setLastUpdate(new Date());
+        info.addNewPrices(newInfo.getHotelPrices());
     }
-
-    @Transactional
-    public void deleteAndCreate(List<HotelInfo> hotelInfos) {
-        List<Long> ids = hotelInfos.stream()
-                .map(HotelInfo::getId)
-                .collect(Collectors.toList());
-        List<HotelInfo> infosToDelete = hotelInfoRepository.findAllById(ids);
-
-        List<Long> pricesToDelete = infosToDelete.parallelStream()
-                .map(HotelInfo::getHotelPrices)
-                .flatMap(List::stream)
-                .map(HotelPrice::getId)
-                .collect(Collectors.toList());
-
-        // it`s don`t work. change to update or create
-        hotelPriceRepository.deleteByIdIn(pricesToDelete);
-        hotelPriceRepository.flush();
-
-        hotelInfoRepository.deleteByIdIn(ids);
-        hotelInfoRepository.flush();
-
-        hotelInfoRepository.saveAll(hotelInfos);
-    }
-
 }

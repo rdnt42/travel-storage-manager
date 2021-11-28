@@ -2,9 +2,8 @@ package com.summerdev.travelstoragemanager.service.task.factory;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes;
-import com.summerdev.travelstoragemanager.service.hotelInfo.HotelInfoUpdaterService;
+import com.summerdev.travelstoragemanager.service.task.HotelExecuteTaskServiceImpl;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
-import com.summerdev.travelstoragemanager.service.hotelInfo.HotelInfoServiceImpl;
 import com.summerdev.travelstoragemanager.service.travelInfo.CursorService;
 import com.summerdev.travelstoragemanager.service.travelInfo.TrainsInfoServiceImpl;
 import lombok.AccessLevel;
@@ -24,22 +23,21 @@ import org.springframework.stereotype.Service;
 @Service
 public class TaskFactory {
 
-    @NonNull HotelInfoServiceImpl hotelsInfoServiceImpl;
     @NonNull TrainsInfoServiceImpl trainsInfoServiceImpl;
     @NonNull InfoTaskStateService infoTaskStateService;
-    @NonNull HotelInfoUpdaterService hotelInfoUpdaterService;
+    @NonNull HotelExecuteTaskServiceImpl hotelExecuteTaskService;
 
     public RunnableTask getTask(InfoTask task, TaskTypes taskType) {
         RunnableTask runnableTask;
 
         switch (taskType) {
             case TASK_GET_HOTELS_INFO:
-                runnableTask = new HotelsInfoTask(task, infoTaskStateService, hotelInfoUpdaterService);
+                runnableTask = new HotelsInfoTask(task.getId(), infoTaskStateService, hotelExecuteTaskService);
                 break;
 
             case TASK_GET_TRAINS_INFO:
-                runnableTask = new TrainsInfoTask(task);
-                break;
+//                runnableTask = new TrainsInfoTask(task);
+//                break;
 
             default:
                 throw new IllegalArgumentException("Wrong task type: " + taskType.getIdValue());
@@ -52,7 +50,7 @@ public class TaskFactory {
         CursorService service;
         switch (taskType) {
             case TASK_GET_HOTELS_INFO:
-                service = hotelsInfoServiceImpl;
+                service = hotelExecuteTaskService;
                 break;
 
             case TASK_GET_TRAINS_INFO:

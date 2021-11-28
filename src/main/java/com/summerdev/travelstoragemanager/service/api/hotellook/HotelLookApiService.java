@@ -3,7 +3,6 @@ package com.summerdev.travelstoragemanager.service.api.hotellook;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.request.api.hotellook.HotelLookRequest;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
-import reactor.core.publisher.Mono;
 
 import java.util.Date;
 import java.util.List;
@@ -22,7 +21,7 @@ public interface HotelLookApiService {
      * @param request фильтр для поиска отеля в указанном городе
      * @return список отелей, соответсвующих фильтру
      */
-    Mono<List<HotelLookHotelResponse>> getHotelsResponse(HotelLookRequest request);
+    List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request);
 
     /**
      * Информация обо всех отелях в указанном городе
@@ -32,5 +31,5 @@ public interface HotelLookApiService {
      * @param endDate   дата выезда
      * @return список отелей, соответсующих фильтру
      */
-    Mono<List<HotelLookHotelResponse>> getHotelsInfo(GeoNameData city, Date startDate, Date endDate);
+    List<HotelLookHotelResponse> getHotelsInfo(GeoNameData city, Date startDate, Date endDate);
 }

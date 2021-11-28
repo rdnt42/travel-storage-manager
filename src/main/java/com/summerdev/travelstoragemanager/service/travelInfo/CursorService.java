@@ -9,5 +9,5 @@ package com.summerdev.travelstoragemanager.service.travelInfo;
 public interface CursorService {
     Long getFirstCursorId();
 
-    Long getLastCursorId();
+    Long getNextCursorId(long currCursorId);
 }

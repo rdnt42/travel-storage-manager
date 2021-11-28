@@ -11,5 +11,5 @@ import java.util.List;
  * Time: 21:49
  */
 public interface HotelInfoService {
-    void deleteAndCreate(List<HotelInfo> hotelInfos);
+    int updateOrCreate(List<HotelInfo> hotelInfos);
 }

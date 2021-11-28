@@ -10,4 +10,9 @@ public interface TutuStationRepository extends JpaRepository<TutuStation, Long> 
     List<TutuStation> findByStationNameStartsWith(String name);
 
     List<TutuStation> findByGeoName(GeoNameData geoName);
+
+    TutuStation findFirstByOrderByIdAsc();
+
+    TutuStation findFirstByIdAfterOrderByIdAsc(Long id);
+
 }

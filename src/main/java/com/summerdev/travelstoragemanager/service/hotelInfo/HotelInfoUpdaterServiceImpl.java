@@ -5,6 +5,7 @@ import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
+import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import com.summerdev.travelstoragemanager.service.api.hotellook.HotelLookApiService;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -36,18 +37,17 @@ public class HotelInfoUpdaterServiceImpl implements HotelInfoUpdaterService {
 
 
     @Override
-    public void updateTravelInfo () {
-        List<TutuStation> tutuStations = tutuStationRepository.findAll();
-        for (int i = 0; i < 10; i++) {
-            updateInfoForCity(tutuStations.get(i).getGeoName());
-        }
-//        for (TutuStation station : tutuStations) {
-//            updateInfoForCity(station.getGeoName());
-//        }
+    public int updateTravelInfo(Long cursorId) {
+        // TODO rework search to return distinct cities
+        TutuStation station = tutuStationRepository.findById(cursorId)
+                .orElseThrow(() -> new NullPointerException("Station with id: " + cursorId +
+                        " not found"));
+
+        return updateInfoForCity(station.getGeoName());
     }
 
 
-    public void updateInfoForCity (GeoNameData city){
+    public int updateInfoForCity(GeoNameData city) {
         int totalDaysCount = 30;
 
         Calendar calendar = Calendar.getInstance();
@@ -59,12 +59,9 @@ public class HotelInfoUpdaterServiceImpl implements HotelInfoUpdaterService {
         calendar.add(Calendar.DAY_OF_MONTH, totalDaysCount);
         Date endDate = calendar.getTime();
 
-        hotelLookApiService
-                .getHotelsInfo(city, startDate, endDate)
-                .subscribe(responses -> {
-                    List<HotelInfo> hotelInfos = hotelInfoDecodeService.decodeHotelsResponse(
-                            responses, totalDaysCount, city);
-                    hotelInfoService.deleteAndCreate(hotelInfos);
-                });
+        List<HotelLookHotelResponse> responses = hotelLookApiService.getHotelsInfo(city, startDate, endDate);
+        List<HotelInfo> hotelInfos = hotelInfoDecodeService.decodeHotelsResponse(responses, totalDaysCount, city);
+
+        return hotelInfoService.updateOrCreate(hotelInfos);
     }
 }

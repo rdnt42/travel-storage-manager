@@ -17,11 +17,19 @@ import static com.summerdev.travelstoragemanager.config.ThreadPoolTaskSchedulerC
 @Slf4j
 public class RunnableTask implements Runnable {
 
-    protected InfoTask task;
+    protected Long taskId;
     protected ScheduledFuture<?> future;
 
-    public RunnableTask(InfoTask task) {
-        this.task = task;
+    public RunnableTask(Long taskId) {
+        this.taskId = taskId;
+    }
+
+    public Long getTaskId() {
+        return taskId;
+    }
+
+    public ScheduledFuture<?> getFuture() {
+        return future;
     }
 
     public void cancelTask() {
@@ -33,17 +41,17 @@ public class RunnableTask implements Runnable {
     public void stopTask() {
         if (future != null) {
             future.cancel(true);
-            log.info("Task stopped, id: {}", task.getId());
+            log.info("Task stopped, id: {}", taskId);
         }
     }
 
     public void startTask() {
         future = threadPoolTaskScheduler.schedule(this, new Date());
-        log.info("Task started immediately, id: {}", task.getId());
+        log.info("Task started immediately, id: {}", taskId);
     }
 
     @Override
     public void run() {
-        log.error("Method not implement: {}", task.getId());
+        log.error("Method not implement: {}", taskId);
     }
 }

@@ -5,6 +5,7 @@ import lombok.Data;
 import org.hibernate.annotations.DynamicInsert;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ import java.util.List;
 @Entity(name = "hotels_info")
 @DynamicInsert
 @Data
-public class HotelInfo {
+public class HotelInfo implements Serializable {
     @Id
     @Column(name = "hotel_info_id")
     private Long id;
@@ -34,9 +35,22 @@ public class HotelInfo {
     private Date lastUpdate;
 
     @OneToMany(mappedBy = "hotelInfo", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<HotelPrice> hotelPrices = new ArrayList<>();
+    private List<HotelPrice> hotelPrices;
 
     public void addPrice(HotelPrice price) {
+        if (hotelPrices == null) {
+            hotelPrices = new ArrayList<>();
+        }
+
         hotelPrices.add(price);
+    }
+
+    public void addNewPrices(List<HotelPrice> prices) {
+        if (hotelPrices == null) {
+            hotelPrices = prices;
+        } else {
+            hotelPrices.clear();
+            hotelPrices.addAll(prices);
+        }
     }
 }

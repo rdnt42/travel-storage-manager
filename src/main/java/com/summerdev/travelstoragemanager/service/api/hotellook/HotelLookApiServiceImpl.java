@@ -12,12 +12,12 @@ import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
-import reactor.core.publisher.Mono;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -35,14 +35,14 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
     WebClient webClient;
 
     @Override
-    public Mono<List<HotelLookHotelResponse>> getHotelsResponse(HotelLookRequest request) {
+    public List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request) {
         String encodeLocation;
 
         try {
             encodeLocation = URLEncoder.encode(request.getLocation(), StandardCharsets.UTF_8.name());
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
-            return null;
+            return new ArrayList<>();
         }
         URI uri = UriComponentsBuilder
                 .fromHttpUrl(Urls.URL_HOTEL_LOOK_GET_HOTELS)
@@ -59,12 +59,13 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
                 .get()
                 .uri(uri)
                 .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {});
+                .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
+                .block();
 
     }
 
     @Override
-    public Mono<List<HotelLookHotelResponse>> getHotelsInfo(GeoNameData city, Date startDate, Date endDate) {
+    public List<HotelLookHotelResponse> getHotelsInfo(GeoNameData city, Date startDate, Date endDate) {
         return getHotelsResponse(new HotelLookRequest(city.getGeoNameRu(), startDate, endDate));
     }
 }

@@ -7,5 +7,5 @@ package com.summerdev.travelstoragemanager.service.hotelInfo;
  * Time: 21:46
  */
 public interface HotelInfoUpdaterService {
-    public void updateTravelInfo();
+    int updateTravelInfo(Long cursorId);
 }

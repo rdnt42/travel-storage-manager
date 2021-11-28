@@ -47,7 +47,11 @@ public class InfoTaskStateServiceImpl implements InfoTaskStateService {
     }
 
     @Override
-    public void disableAndDeleteTask(InfoTask task) {
+    public void disableAndDeleteTask(Long taskId) {
+        InfoTask task = infoTaskRepository.findById(taskId)
+                .orElseThrow(() -> new NullPointerException("Task with id: " + taskId +
+                        " not found"));
+
         disableTask(task);
         infoTaskRepository.delete(task);
     }

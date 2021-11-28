@@ -11,11 +11,15 @@ import java.io.Serializable;
 @Data
 public class TutuStation implements Serializable {
     @Id
-    private Long stationId;
+    @Column(name = "station_id")
+    private Long id;
 
     private String stationName;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "geo_name_id")
     private GeoNameData geoName;
+
+    @Column(name = "geo_name_id", insertable = false, updatable = false)
+    private Long geoNameId;
 }
