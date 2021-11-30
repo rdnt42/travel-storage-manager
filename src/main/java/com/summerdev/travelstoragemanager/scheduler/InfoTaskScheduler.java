@@ -26,9 +26,9 @@ public class InfoTaskScheduler {
     @NonNull InfoTaskService infoTaskService;
     @NonNull InfoTaskStateService infoTaskStateService;
 
-    @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(cron = "0 0 0 * * *")
 //    @Scheduled(cron = "0 */1 * * * *")
-//    @Scheduled(cron = "0 15 23 * * *")
+    @Scheduled(cron = "0 45 22 * * *")
     public void createTasksInfo() {
         InfoTask task = infoTaskService.createTask(TASK_GET_HOTELS_INFO);
         infoTaskStateService.enableTask(task);

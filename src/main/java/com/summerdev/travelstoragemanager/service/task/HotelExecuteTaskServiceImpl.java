@@ -51,7 +51,6 @@ public class HotelExecuteTaskServiceImpl implements ExecuteTaskService, CursorSe
                 // TODO error handler
                 e.printStackTrace();
             }
-
         }
     }
 

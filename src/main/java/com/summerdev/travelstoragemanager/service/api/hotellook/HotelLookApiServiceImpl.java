@@ -11,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.io.UnsupportedEncodingException;
@@ -55,12 +56,18 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
                 .build(true)
                 .toUri();
 
-        return webClient
-                .get()
-                .uri(uri)
-                .retrieve()
-                .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
-                .block();
+        try {
+            return webClient
+                    .get()
+                    .uri(uri)
+                    .retrieve()
+                    .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
+                    .block();
+        } catch (WebClientResponseException e) {
+            throw new NullPointerException();
+        }
+
+
 
     }
 
