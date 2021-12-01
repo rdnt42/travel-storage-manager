@@ -2,6 +2,7 @@ package com.summerdev.travelstoragemanager.service.api.hotellook;
 
 import com.summerdev.travelstoragemanager.constant.api.Urls;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
+import com.summerdev.travelstoragemanager.error.HotelTaskErrorHandlerService;
 import com.summerdev.travelstoragemanager.request.api.hotellook.HotelLookRequest;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import lombok.AccessLevel;
@@ -34,6 +35,7 @@ import java.util.List;
 @Service
 public class HotelLookApiServiceImpl implements HotelLookApiService {
     WebClient webClient;
+    HotelTaskErrorHandlerService hotelTaskErrorHandlerService;
 
     @Override
     public List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request) {
@@ -64,11 +66,10 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
                     .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
                     .block();
         } catch (WebClientResponseException e) {
-            throw new NullPointerException();
+            hotelTaskErrorHandlerService.errorHandler(e, request);
         }
 
-
-
+        return new ArrayList<>();
     }
 
     @Override

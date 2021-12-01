@@ -7,12 +7,15 @@ package com.summerdev.travelstoragemanager.error;
  * Time: 22:57
  */
 public class HotelExecuteException extends BusinessLogicException {
+    public HotelExecuteException(HotelError error, String addText) {
+        super(error.code, error.message + addText);
+    }
     public HotelExecuteException(HotelError error) {
-        super(error.message, error.code);
+        super(error.code, error.message);
     }
 
-    public HotelExecuteException(String message, long code) {
-        super(message, code);
+    public HotelExecuteException(long code, String message) {
+        super(code, message);
     }
 
     public HotelExecuteException(String message) {
@@ -20,7 +23,8 @@ public class HotelExecuteException extends BusinessLogicException {
     }
 
     public enum HotelError {
-        ;
+        UNKNOWN_ERROR(2000, ""),
+        LOCATION_NOT_FOUND_ERROR(2002, "Location not found");
 
         private final long code;
         private final String message;

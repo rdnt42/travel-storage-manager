@@ -1,12 +1,14 @@
 package com.summerdev.travelstoragemanager.service.task.factory;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
+import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
 
 import static com.summerdev.travelstoragemanager.config.ThreadPoolTaskSchedulerConfig.threadPoolTaskScheduler;
+import static com.summerdev.travelstoragemanager.error.BusinessLogicException.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -48,6 +50,22 @@ public class RunnableTask implements Runnable {
     public void startTask() {
         future = threadPoolTaskScheduler.schedule(this, new Date());
         log.info("Task started immediately, id: {}", taskId);
+    }
+
+    public void startTaskWithDelay(long interval) {
+        Date date = new Date(new Date().getTime() + (interval * 60000));
+        future = threadPoolTaskScheduler.schedule(this, date);
+        log.info("Task will start at {}, id: {}", date, taskId);
+    }
+
+    protected void changeStateOnError(BusinessLogicException e) {
+        if (e.getCode() == BusinessError.TOO_MANY_REQUESTS_ERROR.getCode()) {
+            log.warn("Rate limit exceeded for task id: {}. Task will be postponed", taskId);
+            startTaskWithDelay(1);
+        }  else if (e.getCode() == BusinessError.EMPTY_ERROR_CODE.getCode()) {
+            log.warn("Any business exception for task id: {}. Task will be postponed", taskId);
+            startTaskWithDelay(1L);
+        }
     }
 
     @Override

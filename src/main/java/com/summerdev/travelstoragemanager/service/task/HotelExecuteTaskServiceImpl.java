@@ -2,6 +2,8 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
+import com.summerdev.travelstoragemanager.error.BusinessLogicException;
+import com.summerdev.travelstoragemanager.error.HotelExecuteException;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.service.hotelInfo.HotelInfoUpdaterService;
@@ -10,9 +12,12 @@ import com.summerdev.travelstoragemanager.service.travelInfo.CursorService;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import static com.summerdev.travelstoragemanager.error.HotelExecuteException.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -33,23 +38,29 @@ public class HotelExecuteTaskServiceImpl implements ExecuteTaskService, CursorSe
     @Override
     public void executeTask(RunnableTask runnableTask) {
         while (!runnableTask.getFuture().isCancelled()) {
-            try {
-                InfoTask task = infoTaskRepository.findById(runnableTask.getTaskId())
-                        .orElseThrow(() -> new NullPointerException("Task with id: " + runnableTask.getTaskId() +
-                                " not found"));
-                Long cursor = task.getCursorId();
+            InfoTask task = infoTaskRepository.findById(runnableTask.getTaskId())
+                    .orElseThrow(() -> new NullPointerException("Task with id: " + runnableTask.getTaskId() +
+                            " not found"));
+            Long cursor = task.getCursorId();
 
-                if (cursor == null) break;
+            if (cursor == null) break;
 
-                int updatedCount = hotelInfoUpdaterService.updateTravelInfo(cursor);
-                log.info("Update {} records for task id {}, cursor id {}", updatedCount, task.getId(), task.getCursorId());
+            updateTravelInfoWithErrorHandler(cursor, task);
 
-                Long nextCursor = getNextCursorId(cursor);
-                task.setCursorId(nextCursor);
-                infoTaskRepository.save(task);
-            } catch (Exception e) {
-                // TODO error handler
-                e.printStackTrace();
+            Long nextCursor = getNextCursorId(cursor);
+            task.setCursorId(nextCursor);
+            infoTaskRepository.save(task);
+        }
+    }
+
+    private void updateTravelInfoWithErrorHandler(Long cursor, InfoTask task) {
+        try {
+            int updatedCount = hotelInfoUpdaterService.updateTravelInfo(cursor);
+            log.info("Update {} records for task id {}, cursor id {}", updatedCount, task.getId(), task.getCursorId());
+        } catch (HotelExecuteException e) {
+            if (e.getCode() == HotelError.LOCATION_NOT_FOUND_ERROR.getCode()) {
+                log.warn("Some expected error in task " + task.getId() +
+                        ", message: " + e.getMessage());
             }
         }
     }

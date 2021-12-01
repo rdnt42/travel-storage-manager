@@ -1,5 +1,6 @@
 package com.summerdev.travelstoragemanager.service.task.factory;
 
+import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import com.summerdev.travelstoragemanager.service.task.HotelExecuteTaskServiceImpl;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
 import lombok.AccessLevel;
@@ -27,10 +28,16 @@ public class HotelsInfoTask extends RunnableTask {
         this.hotelExecuteTaskService = hotelExecuteTaskService;
     }
 
-
     @Override
     public void run() {
-        hotelExecuteTaskService.executeTask(this);
-        infoTaskStateService.disableAndDeleteTask(taskId);
+        try {
+            hotelExecuteTaskService.executeTask(this);
+            infoTaskStateService.disableAndDeleteTask(taskId);
+        } catch (BusinessLogicException e) {
+            changeStateOnError(e);
+        } catch (Exception e) {
+            e.printStackTrace();
+            startTaskWithDelay(1);
+        }
     }
 }

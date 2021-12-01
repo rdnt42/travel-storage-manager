@@ -12,5 +12,5 @@ import lombok.Data;
 public class HotelLookErrorResponse {
     private Long errorCode;
     private String status;
-    private String location;
+    private String message;
 }

@@ -7,12 +7,16 @@ package com.summerdev.travelstoragemanager.error;
  * Time: 0:09
  */
 public class BusinessLogicException extends RuntimeException {
+    public BusinessLogicException(BusinessError error, String addText) {
+        super(error.message + addText);
+        this.code = error.code;
+    }
     public BusinessLogicException(BusinessError error) {
         super(error.message);
         this.code = error.code;
     }
 
-    public BusinessLogicException(String message, long code) {
+    public BusinessLogicException(long code, String message) {
         super(message);
         this.code = code;
     }
@@ -33,8 +37,10 @@ public class BusinessLogicException extends RuntimeException {
     }
 
     public enum BusinessError {
+        TOO_MANY_REQUESTS_ERROR(429, "Too Many Requests"),
         EMPTY_ERROR_CODE(1000, ""),
-        JSON_PARSE_ERROR_CODE(1001, "An error occurred while parsing text ")
+        JSON_PARSE_ERROR_CODE(1001, "An error occurred while parsing text "),
+        UNKNOWN_ERROR(1002, "")
         ;
 
         private final long code;
@@ -50,4 +56,7 @@ public class BusinessLogicException extends RuntimeException {
         }
     }
 
+    public long getCode() {
+        return code;
+    }
 }

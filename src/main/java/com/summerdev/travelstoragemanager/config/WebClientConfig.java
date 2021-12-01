@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 public class WebClientConfig {
-    public static final int TIMEOUT = 1000;
+    public static final int TIMEOUT = 10000;
 
     @Bean
     public WebClient webClientWithTimeout() {
@@ -33,7 +33,6 @@ public class WebClientConfig {
                 });
 
         return WebClient.builder()
-//                .baseUrl(BASE_URL)
                 .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
                 .build();
     }
