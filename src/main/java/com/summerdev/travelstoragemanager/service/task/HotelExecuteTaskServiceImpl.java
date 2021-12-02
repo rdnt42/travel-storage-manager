@@ -2,22 +2,20 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
-import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import com.summerdev.travelstoragemanager.error.HotelExecuteException;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.service.hotelInfo.HotelInfoUpdaterService;
 import com.summerdev.travelstoragemanager.service.task.factory.RunnableTask;
-import com.summerdev.travelstoragemanager.service.travelInfo.CursorService;
+import com.summerdev.travelstoragemanager.service.CursorService;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.summerdev.travelstoragemanager.error.HotelExecuteException.*;
+import static com.summerdev.travelstoragemanager.error.HotelExecuteException.HotelError;
 
 /**
  * Created with IntelliJ IDEA.

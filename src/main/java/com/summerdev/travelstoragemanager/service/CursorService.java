@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.service.travelInfo;
+package com.summerdev.travelstoragemanager.service;
 
 /**
  * Created with IntelliJ IDEA.

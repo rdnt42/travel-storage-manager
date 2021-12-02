@@ -43,8 +43,12 @@ public class HotelInfoDecodeService {
         return hotelInfos;
     }
 
-    private Long getCost(int totalDaysCount, Double fullCost) {
-        return (long) (fullCost / totalDaysCount);
+    private Double getCost(int totalDaysCount, Double fullCost) {
+        if (totalDaysCount == 0) {
+            return 0.0;
+        }
+        
+        return fullCost / totalDaysCount;
     }
 
     private HotelPrice getLowPrice(Long hotelId, HotelLookHotelResponse hotel, int totalDaysCount) {

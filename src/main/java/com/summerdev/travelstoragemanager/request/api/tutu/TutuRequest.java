@@ -11,9 +11,6 @@ public class TutuRequest {
     @JsonProperty("term2")
     private int arrivalStation;
 
-    public TutuRequest() {
-    }
-
     public TutuRequest(int departureStation, int arrivalStation) {
         this.departureStation = departureStation;
         this.arrivalStation = arrivalStation;

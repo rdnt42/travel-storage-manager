@@ -31,5 +31,5 @@ public interface HotelLookApiService {
      * @param endDate   дата выезда
      * @return список отелей, соответсующих фильтру
      */
-    List<HotelLookHotelResponse> getHotelsInfo(GeoNameData city, Date startDate, Date endDate);
+    List<HotelLookHotelResponse> getHotelsResponse(GeoNameData city, Date startDate, Date endDate);
 }

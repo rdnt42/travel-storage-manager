@@ -4,7 +4,7 @@ import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes;
 import com.summerdev.travelstoragemanager.service.task.HotelExecuteTaskServiceImpl;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
-import com.summerdev.travelstoragemanager.service.travelInfo.CursorService;
+import com.summerdev.travelstoragemanager.service.CursorService;
 import com.summerdev.travelstoragemanager.service.travelInfo.TrainsInfoServiceImpl;
 import lombok.AccessLevel;
 import lombok.NonNull;

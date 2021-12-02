@@ -7,7 +7,7 @@ import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TaskTypeRepository;
 import com.summerdev.travelstoragemanager.service.task.factory.RunnableTask;
 import com.summerdev.travelstoragemanager.service.task.factory.TaskFactory;
-import com.summerdev.travelstoragemanager.service.travelInfo.CursorService;
+import com.summerdev.travelstoragemanager.service.CursorService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

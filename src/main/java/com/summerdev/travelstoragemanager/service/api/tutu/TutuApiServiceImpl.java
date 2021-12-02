@@ -1,26 +1,54 @@
 package com.summerdev.travelstoragemanager.service.api.tutu;
 
+import com.summerdev.travelstoragemanager.constant.api.Urls;
+import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
+import com.summerdev.travelstoragemanager.request.api.tutu.TutuRequest;
+import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
+import lombok.AccessLevel;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
+import org.springframework.web.util.UriComponentsBuilder;
 
+import java.net.URI;
+
+@RequiredArgsConstructor
+@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class TutuServiceImpl implements TutuService {
+public class TutuApiServiceImpl implements TutuApiService {
+    @NonNull WebClient webClient;
 
-//    private final Logger log = LoggerFactory.getLogger(TutuServiceImpl.class);
-//    private final ObjectMapper objectMapper = new ObjectMapper();
-//
-//    private final TutuStationRepository tutuStationRepository;
-//    private final TutuRouteRepository tutuRouteRepository;
-//    private final HttpRequestService httpRequestService;
-//    private final GeoNameRepository geoNameRepository;
-//
-//    public TutuServiceImpl(TutuStationRepository tutuStationDirectoryRepository, TutuRouteRepository tutuRouteRepository,
-//                           HttpRequestService httpRequestService, GeoNameRepository geoNameRepository) {
-//        this.tutuStationRepository = tutuStationDirectoryRepository;
-//        this.tutuRouteRepository = tutuRouteRepository;
-//        this.httpRequestService = httpRequestService;
-//        this.geoNameRepository = geoNameRepository;
-//    }
-//
+    @Override
+    public TutuTrainsResponse getTrainsResponse(TutuRequest request) {
+        URI uri = UriComponentsBuilder.fromHttpUrl(Urls.URL_TUTU_GET_TRAINS)
+                .queryParam("term", request.getDepartureStation())
+                .queryParam("term2", request.getArrivalStation())
+                .build(true)
+                .toUri();
+        try {
+            return webClient
+                    .get()
+                    .uri(uri)
+                    .retrieve()
+                    .bodyToMono(TutuTrainsResponse.class)
+                    .block();
+        } catch (WebClientResponseException e) {
+            e.printStackTrace();
+        }
+
+        return new TutuTrainsResponse();
+    }
+
+    @Override
+    public TutuTrainsResponse getTrainsResponse(TutuStation departureStation, TutuStation arrivalStation) {
+        return getTrainsResponse(new TutuRequest(departureStation.getId().intValue(), arrivalStation.getId().intValue()));
+    }
+
+
+
 //    @Override
 //    public List<TutuTrainsResponse> getTrainsInfo(GeoName departureCity) {
 //        List<TutuTrainsResponse> responses = new ArrayList<>();

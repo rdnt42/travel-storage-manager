@@ -27,7 +27,7 @@ public class HotelPrice implements Serializable {
     @JoinColumn(name = "hotel_info_id", insertable = false, updatable = false)
     private HotelInfo hotelInfo;
 
-    private Long cost;
+    private Double cost;
 
     @Column(name = "comfort_type")
     @Enumerated(EnumType.STRING)
@@ -36,7 +36,7 @@ public class HotelPrice implements Serializable {
     public HotelPrice() {
     }
 
-    public HotelPrice(Long hotelInfoId, Long cost, ComfortType comfortType) {
+    public HotelPrice(Long hotelInfoId, Double cost, ComfortType comfortType) {
         this.hotelInfoId = hotelInfoId;
         this.cost = cost;
         this.comfortType = comfortType;

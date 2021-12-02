@@ -7,8 +7,8 @@ import com.summerdev.travelstoragemanager.request.api.hotellook.HotelLookRequest
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -29,7 +29,6 @@ import java.util.List;
  * Date: 25.11.2021
  * Time: 22:32
  */
-@Slf4j
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
@@ -37,16 +36,10 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
     WebClient webClient;
     HotelTaskErrorHandlerService hotelTaskErrorHandlerService;
 
+    @SneakyThrows(UnsupportedEncodingException.class)
     @Override
     public List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request) {
-        String encodeLocation;
-
-        try {
-            encodeLocation = URLEncoder.encode(request.getLocation(), StandardCharsets.UTF_8.name());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        String encodeLocation = URLEncoder.encode(request.getLocation(), StandardCharsets.UTF_8.name());
         URI uri = UriComponentsBuilder
                 .fromHttpUrl(Urls.URL_HOTEL_LOOK_GET_HOTELS)
                 .queryParam("location", encodeLocation)
@@ -73,7 +66,7 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
     }
 
     @Override
-    public List<HotelLookHotelResponse> getHotelsInfo(GeoNameData city, Date startDate, Date endDate) {
+    public List<HotelLookHotelResponse> getHotelsResponse(GeoNameData city, Date startDate, Date endDate) {
         return getHotelsResponse(new HotelLookRequest(city.getGeoNameRu(), startDate, endDate));
     }
 }

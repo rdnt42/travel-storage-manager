@@ -33,6 +33,7 @@ public class HotelsInfoTask extends RunnableTask {
         try {
             hotelExecuteTaskService.executeTask(this);
             infoTaskStateService.disableAndDeleteTask(taskId);
+            log.info("Data about all Hotels has been updated");
         } catch (BusinessLogicException e) {
             changeStateOnError(e);
         } catch (Exception e) {

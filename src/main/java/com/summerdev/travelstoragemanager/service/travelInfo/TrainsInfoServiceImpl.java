@@ -1,6 +1,7 @@
 package com.summerdev.travelstoragemanager.service.travelInfo;
 
 import com.summerdev.travelstoragemanager.entity.TrainInfo;
+import com.summerdev.travelstoragemanager.service.CursorService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

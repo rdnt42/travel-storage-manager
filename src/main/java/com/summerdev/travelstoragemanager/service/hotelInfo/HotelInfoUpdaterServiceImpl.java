@@ -46,8 +46,7 @@ public class HotelInfoUpdaterServiceImpl implements HotelInfoUpdaterService {
         return updateInfoForCity(station.getGeoName());
     }
 
-
-    public int updateInfoForCity(GeoNameData city) {
+    private int updateInfoForCity(GeoNameData city) {
         int totalDaysCount = 30;
 
         Calendar calendar = Calendar.getInstance();
@@ -59,7 +58,7 @@ public class HotelInfoUpdaterServiceImpl implements HotelInfoUpdaterService {
         calendar.add(Calendar.DAY_OF_MONTH, totalDaysCount);
         Date endDate = calendar.getTime();
 
-        List<HotelLookHotelResponse> responses = hotelLookApiService.getHotelsInfo(city, startDate, endDate);
+        List<HotelLookHotelResponse> responses = hotelLookApiService.getHotelsResponse(city, startDate, endDate);
         List<HotelInfo> hotelInfos = hotelInfoDecodeService.decodeHotelsResponse(responses, totalDaysCount, city);
 
         return hotelInfoService.updateOrCreate(hotelInfos);
