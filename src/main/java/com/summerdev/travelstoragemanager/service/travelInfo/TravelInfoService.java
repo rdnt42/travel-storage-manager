@@ -14,5 +14,4 @@ public interface TravelInfoService<T> {
      */
     List<T> getAllActualInfo();
 
-    void updateTravelInfo();
 }
