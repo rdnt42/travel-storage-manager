@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.response.api.aviasales;
+package com.summerdev.travelstoragemanager.response.api.aviasales.bkp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -24,10 +24,6 @@ public class AviaSalesMainResponse {
 
     public AviaSalesMainResponse() {
     }
-
-//    public AviaSalesMainResponse(AviaSalesMainResponse aviaSalesMainResponse) {
-//
-//    }
 
     public boolean isSuccess() {
         return success;

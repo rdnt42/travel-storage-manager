@@ -1,0 +1,24 @@
+{
+    "properties": [
+        {
+            "name": "api.aviasales.url.supported_routes",
+            "type": "java.lang.String",
+            "description": "Description for api.aviasales.url.supported_routes."
+        },
+        {
+            "name": "api.aviasales.url.cheap",
+            "type": "java.lang.String",
+            "description": "Description for api.aviasales.url.cheap."
+        },
+        {
+            "name": "api.aviasales.token",
+            "type": "java.lang.String",
+            "description": "Description for api.aviasales.token."
+        },
+        {
+            "name": "api.aviasales.urls.priceMap",
+            "type": "java.lang.String",
+            "description": "Description for api.aviasales.urls.priceMap."
+        }
+    ]
+}

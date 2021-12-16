@@ -12,6 +12,6 @@ public class Urls {
     public static final String URL_HOTEL_LOOK_GET_HOTELS = "http://engine.hotellook.com/api/v2/cache.json";
 
     //"https://api.travelpayouts.com/v1/prices/cheap?origin=MOW&destination=HKT&depart_date=2016-11&return_date=2016-12&token";
-    public static final String URL_AVIASALES_GET_CHEAP_TICKETS = "https://api.travelpayouts.com/v1/prices/cheap?";
+//    public static final String URL_AVIASALES_GET_CHEAP_TICKETS = "https://api.travelpayouts.com/v1/prices/cheap?";
 
 }

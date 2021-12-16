@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.response.api.aviasales;
+package com.summerdev.travelstoragemanager.response.api.aviasales.bkp;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
