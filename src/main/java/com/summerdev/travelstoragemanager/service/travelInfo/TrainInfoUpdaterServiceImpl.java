@@ -1,7 +1,7 @@
 package com.summerdev.travelstoragemanager.service.travelInfo;
 
-import com.summerdev.travelstoragemanager.decode.TutuInfoDecodeService;
-import com.summerdev.travelstoragemanager.entity.TrainInfo;
+import com.summerdev.travelstoragemanager.decode.TrainInfoDecodeService;
+import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.tutu.TutuRoute;
 import com.summerdev.travelstoragemanager.repository.TutuRouteRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
@@ -10,7 +10,6 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,7 +27,7 @@ public class TrainInfoUpdaterServiceImpl implements TrainInfoUpdaterService {
 
     @NonNull TutuRouteRepository tutuRouteRepository;
     @NonNull TutuApiService tutuApiService;
-    @NonNull TutuInfoDecodeService tutuInfoDecodeService;
+    @NonNull TrainInfoDecodeService tutuInfoDecodeService;
     @NonNull TrainsInfoService trainsInfoService;
 
     @Override

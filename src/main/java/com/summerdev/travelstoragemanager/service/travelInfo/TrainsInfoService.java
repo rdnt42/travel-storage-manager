@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.travelInfo;
 
-import com.summerdev.travelstoragemanager.entity.TrainInfo;
+import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
 
 import java.util.List;
 

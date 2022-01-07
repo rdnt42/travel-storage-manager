@@ -7,5 +7,5 @@ import lombok.Data;
 @Data
 public class TutuRailwayCarriageResponse {
     private String type;
-    private int price;
+    private double price;
 }

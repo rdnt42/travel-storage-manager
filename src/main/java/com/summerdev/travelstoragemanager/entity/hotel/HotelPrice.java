@@ -29,7 +29,7 @@ public class HotelPrice implements Serializable {
 
     private Double cost;
 
-    @Column(name = "comfort_type")
+    @Column(name = "comfort_type_id")
     @Enumerated(EnumType.STRING)
     private ComfortType comfortType;
 
