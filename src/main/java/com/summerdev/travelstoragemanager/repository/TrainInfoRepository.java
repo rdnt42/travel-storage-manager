@@ -4,6 +4,8 @@ import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 /**
  * Created with IntelliJ IDEA.
  * User: marowak
@@ -13,6 +15,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface TrainInfoRepository extends JpaRepository<TrainInfo, Long> {
     TrainInfo findFirstByOrderByIdAsc();
 
-    TrainInfo findByDepartureCityAndArrivalCityAndTrainNumber(
+    Optional<TrainInfo> findByDepartureCityAndArrivalCityAndTrainNumber(
             GeoNameData departureCity, GeoNameData arrivalCity, String trainNUmber);
 }

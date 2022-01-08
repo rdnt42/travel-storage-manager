@@ -32,7 +32,7 @@ public class HotelInfoServiceImpl implements HotelInfoService {
 
     @NonNull HotelInfoRepository hotelInfoRepository;
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW, isolation = Isolation.SERIALIZABLE)
+    @Transactional
     @Override
     public int updateOrCreate(List<HotelInfo> hotelInfos) {
         Map<Long, HotelInfo> newItems = hotelInfos.stream()

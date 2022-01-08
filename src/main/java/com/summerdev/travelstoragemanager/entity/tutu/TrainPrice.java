@@ -29,6 +29,7 @@ public class TrainPrice {
     @Column(name = "train_price_id")
     private Long id;
 
+    @Column(name = "train_info_id")
     private Long trainInfoId;
 
     @ManyToOne

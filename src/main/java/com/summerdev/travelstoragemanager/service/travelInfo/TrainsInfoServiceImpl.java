@@ -9,11 +9,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -38,30 +37,28 @@ public class TrainsInfoServiceImpl implements TrainsInfoService, CursorService {
         return null;
     }
 
+    @Transactional
     @Override
     public int updateOrCreate(List<TrainInfo> trainInfos) {
         List<TrainInfo> listForSave = new ArrayList<>();
         for (TrainInfo newItem : trainInfos) {
-            TrainInfo updateItem = trainInfoRepository.findByDepartureCityAndArrivalCityAndTrainNumber(
-                    newItem.getDepartureCity(), newItem.getArrivalCity(), newItem.getTrainNumber()
-            );
-            if (updateItem != null) {
-
-            }
-
+            listForSave.add(getItemForUpdate(newItem));
         }
 
-        return 0;
+        return trainInfoRepository.saveAll(listForSave).size();
     }
 
-//    private void updateItem(TrainInfo info, TrainInfo newInfo) {
-//        info.setTravelTime(newInfo.getTravelTime());
-//        info.setArrivalCity(newInfo.getArrivalCity());
-//        info.setDepartureCity(newInfo.getDepartureCity());
-//        info.setSeatTypeId(newInfo.getId());
-//        info.addNewPrices(newInfo.getHotelPrices());
-//    }
+    private TrainInfo getItemForUpdate(TrainInfo newInfo) {
+        TrainInfo itemToUpdate = trainInfoRepository.findByDepartureCityAndArrivalCityAndTrainNumber(
+                        newInfo.getDepartureCity(), newInfo.getArrivalCity(), newInfo.getTrainNumber())
+                .orElse(newInfo);
 
+        itemToUpdate.setTravelTime(newInfo.getTravelTime());
+        itemToUpdate.addNewPrices(newInfo.getTrainPrices());
+        itemToUpdate.setLastUpdate(new Date());
+
+        return itemToUpdate;
+    }
 
 //
 //    Map<Long, Optional<TrainInfo>> minCostTrains = trainInfos.stream()

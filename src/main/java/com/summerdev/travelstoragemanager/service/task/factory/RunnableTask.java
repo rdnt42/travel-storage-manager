@@ -1,14 +1,14 @@
 package com.summerdev.travelstoragemanager.service.task.factory;
 
-import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import static com.summerdev.travelstoragemanager.config.ThreadPoolTaskSchedulerConfig.threadPoolTaskScheduler;
-import static com.summerdev.travelstoragemanager.error.BusinessLogicException.*;
+import static com.summerdev.travelstoragemanager.error.BusinessLogicException.BusinessError;
 
 /**
  * Created with IntelliJ IDEA.
@@ -22,16 +22,16 @@ public class RunnableTask implements Runnable {
     protected Long taskId;
     protected ScheduledFuture<?> future;
 
-    public RunnableTask(Long taskId) {
-        this.taskId = taskId;
-    }
-
     public Long getTaskId() {
         return taskId;
     }
 
     public ScheduledFuture<?> getFuture() {
         return future;
+    }
+
+    public void setTaskId(Long taskId) {
+        this.taskId = taskId;
     }
 
     public void cancelTask() {
@@ -60,11 +60,11 @@ public class RunnableTask implements Runnable {
 
     protected void changeStateOnError(BusinessLogicException e) {
         if (e.getCode() == BusinessError.TOO_MANY_REQUESTS_ERROR.getCode()) {
-            log.warn("Rate limit exceeded for task id: {}. Task will be postponed", taskId);
             startTaskWithDelay(1);
+            log.warn("Rate limit exceeded for task id: {}. Task will start in {} minutes", taskId, future.getDelay(TimeUnit.MINUTES));
         }  else if (e.getCode() == BusinessError.EMPTY_ERROR_CODE.getCode()) {
-            log.warn("Any business exception for task id: {}. Task will be postponed", taskId);
             startTaskWithDelay(1L);
+            log.warn("Rate limit exceeded for task id: {}. Task will start in {} minutes", taskId, future.getDelay(TimeUnit.MINUTES));
         }
     }
 

@@ -7,6 +7,8 @@ import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Service;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,17 +18,17 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Service
+@Scope("prototype")
 public class HotelsInfoTask extends RunnableTask {
     @NonNull InfoTaskStateService infoTaskStateService;
     @NonNull HotelExecuteTaskServiceImpl hotelExecuteTaskService;
 
-    public HotelsInfoTask(Long taskId,
-                          @NonNull InfoTaskStateService infoTaskStateService,
-                          @NonNull HotelExecuteTaskServiceImpl hotelExecuteTaskService) {
-        super(taskId);
+    public HotelsInfoTask(@NonNull InfoTaskStateService infoTaskStateService, @NonNull HotelExecuteTaskServiceImpl hotelExecuteTaskService) {
         this.infoTaskStateService = infoTaskStateService;
         this.hotelExecuteTaskService = hotelExecuteTaskService;
     }
+
 
     @Override
     public void run() {

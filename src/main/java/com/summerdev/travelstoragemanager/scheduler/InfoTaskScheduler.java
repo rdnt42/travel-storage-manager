@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes.TASK_GET_HOTELS_INFO;
+import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes.TASK_GET_TRAINS_INFO;
 
 /**
  * Created with IntelliJ IDEA.
@@ -26,11 +27,10 @@ public class InfoTaskScheduler {
     @NonNull InfoTaskService infoTaskService;
     @NonNull InfoTaskStateService infoTaskStateService;
 
-//    @Scheduled(cron = "0 0 0 * * *")
-//    @Scheduled(cron = "0 */1 * * * *")
-    @Scheduled(cron = "0 27 22 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
+//    @Scheduled(cron = "0 15 17 * * *")
     public void createTasksInfo() {
-        InfoTask task = infoTaskService.createTask(TASK_GET_HOTELS_INFO);
-        infoTaskStateService.enableTask(task);
+        infoTaskStateService.enableTask(infoTaskService.createTask(TASK_GET_HOTELS_INFO));
+        infoTaskStateService.enableTask(infoTaskService.createTask(TASK_GET_TRAINS_INFO));
     }
 }
