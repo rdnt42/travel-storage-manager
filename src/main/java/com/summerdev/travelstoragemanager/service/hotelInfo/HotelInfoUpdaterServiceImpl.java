@@ -6,6 +6,7 @@ import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
+import com.summerdev.travelstoragemanager.service.TravelInfoUpdaterService;
 import com.summerdev.travelstoragemanager.service.api.hotellook.HotelLookApiService;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -28,7 +29,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class HotelInfoUpdaterServiceImpl implements HotelInfoUpdaterService {
+public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
 
     @NonNull HotelLookApiService hotelLookApiService;
     @NonNull HotelInfoDecodeService hotelInfoDecodeService;

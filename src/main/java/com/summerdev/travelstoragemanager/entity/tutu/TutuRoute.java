@@ -9,8 +9,10 @@ import java.io.Serializable;
 @Table(name = "tutu_routes")
 @Data
 public class TutuRoute implements Serializable {
-    @EmbeddedId
-    private TutuRoutePk id;
+    @Id
+    @Column(name = "tutu_route_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "departure_station_id", insertable = false, updatable = false)
@@ -19,5 +21,4 @@ public class TutuRoute implements Serializable {
     @ManyToOne
     @JoinColumn(name = "arrival_station_id", insertable = false, updatable = false)
     private TutuStation arrivalStation;
-
 }

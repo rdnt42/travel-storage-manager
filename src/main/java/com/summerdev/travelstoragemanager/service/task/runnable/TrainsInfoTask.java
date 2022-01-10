@@ -1,7 +1,7 @@
-package com.summerdev.travelstoragemanager.service.task.factory;
+package com.summerdev.travelstoragemanager.service.task.runnable;
 
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
-import com.summerdev.travelstoragemanager.service.task.HotelExecuteTaskServiceImpl;
+import com.summerdev.travelstoragemanager.service.task.ExecuteTaskService;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -14,28 +14,28 @@ import org.springframework.stereotype.Service;
  * Created with IntelliJ IDEA.
  * User: marowak
  * Date: 23.11.2021
- * Time: 23:30
+ * Time: 23:32
  */
 @Slf4j
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 @Scope("prototype")
-public class HotelsInfoTask extends RunnableTask {
+public class TrainsInfoTask extends RunnableTask {
     @NonNull InfoTaskStateService infoTaskStateService;
-    @NonNull HotelExecuteTaskServiceImpl hotelExecuteTaskService;
+    @NonNull ExecuteTaskService executeTaskService;
 
-    public HotelsInfoTask(@NonNull InfoTaskStateService infoTaskStateService, @NonNull HotelExecuteTaskServiceImpl hotelExecuteTaskService) {
+    public TrainsInfoTask(@NonNull InfoTaskStateService infoTaskStateService,
+                          @NonNull ExecuteTaskService executeTaskService) {
         this.infoTaskStateService = infoTaskStateService;
-        this.hotelExecuteTaskService = hotelExecuteTaskService;
+        this.executeTaskService = executeTaskService;
     }
-
 
     @Override
     public void run() {
         try {
-            hotelExecuteTaskService.executeTask(this);
+            executeTaskService.executeTask(this);
             infoTaskStateService.disableAndDeleteTask(taskId);
-            log.info("Data about all Hotels has been updated");
+            log.info("Data about all Trains has been updated");
         } catch (BusinessLogicException e) {
             changeStateOnError(e);
         } catch (Exception e) {

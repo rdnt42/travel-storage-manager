@@ -2,7 +2,7 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
-import com.summerdev.travelstoragemanager.service.task.factory.RunnableTask;
+import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;

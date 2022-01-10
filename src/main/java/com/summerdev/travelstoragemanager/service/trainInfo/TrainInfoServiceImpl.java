@@ -1,8 +1,7 @@
-package com.summerdev.travelstoragemanager.service.travelInfo;
+package com.summerdev.travelstoragemanager.service.trainInfo;
 
 import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
 import com.summerdev.travelstoragemanager.repository.TrainInfoRepository;
-import com.summerdev.travelstoragemanager.service.CursorService;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -23,19 +22,9 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class TrainsInfoServiceImpl implements TrainsInfoService, CursorService {
+public class TrainInfoServiceImpl implements TrainInfoService {
 
     @NonNull TrainInfoRepository trainInfoRepository;
-
-    @Override
-    public Long getFirstCursorId() {
-        return null;
-    }
-
-    @Override
-    public Long getNextCursorId(long currCursorId) {
-        return null;
-    }
 
     @Transactional
     @Override

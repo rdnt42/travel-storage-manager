@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.service.task.factory;
+package com.summerdev.travelstoragemanager.service.task.runnable;
 
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import lombok.extern.slf4j.Slf4j;
@@ -61,10 +61,10 @@ public class RunnableTask implements Runnable {
     protected void changeStateOnError(BusinessLogicException e) {
         if (e.getCode() == BusinessError.TOO_MANY_REQUESTS_ERROR.getCode()) {
             startTaskWithDelay(1);
-            log.warn("Rate limit exceeded for task id: {}. Task will start in {} minutes", taskId, future.getDelay(TimeUnit.MINUTES));
+            log.warn("Rate limit exceeded for task id: {}. Task will be postpone", taskId);
         }  else if (e.getCode() == BusinessError.EMPTY_ERROR_CODE.getCode()) {
             startTaskWithDelay(1L);
-            log.warn("Rate limit exceeded for task id: {}. Task will start in {} minutes", taskId, future.getDelay(TimeUnit.MINUTES));
+            log.warn("Rate limit exceeded for task id: {}. . Task will be postpone", taskId);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.task;
 
-import com.summerdev.travelstoragemanager.service.task.factory.RunnableTask;
+import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,5 +9,5 @@ import com.summerdev.travelstoragemanager.service.task.factory.RunnableTask;
  * Time: 22:35
  */
 public interface ExecuteTaskService {
-    void executeTask(RunnableTask runnableTask);
+    void executeTask(RunnableTask runnableTask) throws Exception;
 }

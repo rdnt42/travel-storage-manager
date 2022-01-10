@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.service.travelInfo;
+package com.summerdev.travelstoragemanager.service.trainInfo;
 
 import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
 
@@ -10,6 +10,6 @@ import java.util.List;
  * Date: 15.12.2021
  * Time: 23:56
  */
-public interface TrainsInfoService {
+public interface TrainInfoService {
     int updateOrCreate(List<TrainInfo> trainInfos);
 }

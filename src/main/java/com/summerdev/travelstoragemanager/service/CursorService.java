@@ -7,7 +7,14 @@ package com.summerdev.travelstoragemanager.service;
  * Time: 22:23
  */
 public interface CursorService {
+    /**
+     * @return init cursor id for task
+     */
     Long getFirstCursorId();
 
+    /**
+     * @param currCursorId current cursor id for task
+     * @return next cursor id in order
+     */
     Long getNextCursorId(long currCursorId);
 }
