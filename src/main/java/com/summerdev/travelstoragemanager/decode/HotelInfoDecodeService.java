@@ -32,9 +32,9 @@ public class HotelInfoDecodeService {
 
         for (HotelLookHotelResponse response : responses) {
             HotelInfo hotelInfo = getCommonHotel(response, city);
-            hotelInfo.addPrice(getLowPrice(hotelInfo.getId(), response, totalDaysCount));
-            hotelInfo.addPrice(getMediumPrice(hotelInfo.getId(), response, totalDaysCount));
-            hotelInfo.addPrice(getHighPrice(hotelInfo.getId(), response, totalDaysCount));
+            hotelInfo.addPrice(getLowPrice(hotelInfo, response, totalDaysCount));
+            hotelInfo.addPrice(getMediumPrice(hotelInfo, response, totalDaysCount));
+            hotelInfo.addPrice(getHighPrice(hotelInfo, response, totalDaysCount));
             hotelInfo.setLastUpdate(new Date());
 
             hotelInfos.add(hotelInfo);
@@ -51,18 +51,18 @@ public class HotelInfoDecodeService {
         return fullCost / totalDaysCount;
     }
 
-    private HotelPrice getLowPrice(Long hotelId, HotelLookHotelResponse hotel, int totalDaysCount) {
-        return new HotelPrice(hotelId, getCost(totalDaysCount, hotel.getPriceFrom()),
+    private HotelPrice getLowPrice(HotelInfo hotelInfo, HotelLookHotelResponse hotel, int totalDaysCount) {
+        return new HotelPrice(hotelInfo, getCost(totalDaysCount, hotel.getPriceFrom()),
                 ComfortType.COMFORT_TYPE_CHEAP);
     }
 
-    private HotelPrice getMediumPrice(Long hotelId, HotelLookHotelResponse hotel, int totalDaysCount) {
-        return new HotelPrice(hotelId, getCost(totalDaysCount, hotel.getPriceAvg()),
+    private HotelPrice getMediumPrice(HotelInfo hotelInfo, HotelLookHotelResponse hotel, int totalDaysCount) {
+        return new HotelPrice(hotelInfo, getCost(totalDaysCount, hotel.getPriceAvg()),
                 ComfortType.COMFORT_TYPE_COMFORT);
     }
 
-    private HotelPrice getHighPrice(Long hotelId, HotelLookHotelResponse hotel, int totalDaysCount) {
-        return new HotelPrice(hotelId, getCost(totalDaysCount, hotel.getPricePercentile().getHighPrice()),
+    private HotelPrice getHighPrice(HotelInfo hotelInfo, HotelLookHotelResponse hotel, int totalDaysCount) {
+        return new HotelPrice(hotelInfo, getCost(totalDaysCount, hotel.getPricePercentile().getHighPrice()),
                 ComfortType.COMFORT_TYPE_LUXURY);
     }
 

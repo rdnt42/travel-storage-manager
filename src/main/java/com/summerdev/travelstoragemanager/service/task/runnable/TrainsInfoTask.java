@@ -8,6 +8,7 @@ import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 /**
@@ -19,8 +20,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-@Scope("prototype")
-public class TrainsInfoTask extends RunnableTask {
+@Scope(value = "prototype")
+public final class TrainsInfoTask extends RunnableTask {
     @NonNull InfoTaskStateService infoTaskStateService;
     @NonNull ExecuteTaskService executeTaskService;
 

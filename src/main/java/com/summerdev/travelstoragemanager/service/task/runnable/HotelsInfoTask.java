@@ -19,8 +19,8 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-@Scope("prototype")
-public class HotelsInfoTask extends RunnableTask {
+@Scope(value = "prototype")
+public final class HotelsInfoTask extends RunnableTask {
     @NonNull InfoTaskStateService infoTaskStateService;
     @NonNull ExecuteTaskService executeTaskService;
 

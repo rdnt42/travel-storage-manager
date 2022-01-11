@@ -44,7 +44,7 @@ public class InfoTaskServiceImpl implements InfoTaskService {
         //TODO rework cycle dependency Runnable <-> InfoTask
         InfoTask newTask = createInitInfoTask(taskTypeEnum);
 
-        RunnableTask runnableTask = taskFactory.getTask(newTask, taskTypeEnum);
+        RunnableTask runnableTask = taskFactory.getTask(taskTypeEnum);
         CursorService cursorService = cursorFactory.getCursorService(runnableTask);
         newTask.setCursorId(cursorService.getFirstCursorId());
 

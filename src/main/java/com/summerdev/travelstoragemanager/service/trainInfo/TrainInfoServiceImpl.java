@@ -38,12 +38,15 @@ public class TrainInfoServiceImpl implements TrainInfoService {
     }
 
     private TrainInfo getItemForUpdate(TrainInfo newInfo) {
-        TrainInfo itemToUpdate = trainInfoRepository.findByDepartureCityAndArrivalCityAndTrainNumber(
-                        newInfo.getDepartureCity(), newInfo.getArrivalCity(), newInfo.getTrainNumber())
-                .orElse(newInfo);
+        TrainInfo itemToUpdate = trainInfoRepository.findByDepartureCityIdAndArrivalCityIdAndTrainNumber(
+                        newInfo.getDepartureCityId(), newInfo.getDepartureCityId(), newInfo.getTrainNumber());
 
-        itemToUpdate.setTravelTime(newInfo.getTravelTime());
-        itemToUpdate.addNewPrices(newInfo.getTrainPrices());
+        if (itemToUpdate == null) {
+            itemToUpdate = newInfo;
+        } else {
+            itemToUpdate.setTravelTime(newInfo.getTravelTime());
+            itemToUpdate.addNewPrices(newInfo.getTrainPrices());
+        }
         itemToUpdate.setLastUpdate(new Date());
 
         return itemToUpdate;

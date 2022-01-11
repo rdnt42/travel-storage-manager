@@ -1,14 +1,10 @@
 package com.summerdev.travelstoragemanager.service.factory;
 
-import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes;
 import com.summerdev.travelstoragemanager.service.task.runnable.HotelsInfoTask;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 import com.summerdev.travelstoragemanager.service.task.runnable.TrainsInfoTask;
-import lombok.AccessLevel;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.stereotype.Service;
 
 /**
@@ -17,29 +13,24 @@ import org.springframework.stereotype.Service;
  * Date: 23.11.2021
  * Time: 23:27
  */
-@RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class TaskFactory {
-    @NonNull HotelsInfoTask hotelsInfoTask;
-    @NonNull TrainsInfoTask trainsInfoTask;
-
-    public RunnableTask getTask(InfoTask task, TaskTypes taskType) {
-        RunnableTask runnableTask;
-
+public abstract class TaskFactory {
+    public RunnableTask getTask(TaskTypes taskType) {
         switch (taskType) {
             case TASK_GET_HOTELS_INFO:
-                runnableTask = hotelsInfoTask;
-                break;
+                return getHotelsInfoTask();
 
             case TASK_GET_TRAINS_INFO:
-                runnableTask = trainsInfoTask;
-                break;
+                return getTrainsInfoTask();
 
             default:
                 throw new IllegalArgumentException("Wrong task type: " + taskType.getIdValue());
         }
-
-        return runnableTask;
     }
+
+    @Lookup
+    protected abstract HotelsInfoTask getHotelsInfoTask();
+
+    @Lookup
+    protected abstract TrainsInfoTask getTrainsInfoTask();
 }

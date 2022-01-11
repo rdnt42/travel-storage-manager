@@ -1,7 +1,9 @@
-package com.summerdev.travelstoragemanager.error;
+package com.summerdev.travelstoragemanager.service.hotelInfo;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.summerdev.travelstoragemanager.error.BusinessLogicException;
+import com.summerdev.travelstoragemanager.error.HotelExecuteException;
 import com.summerdev.travelstoragemanager.request.api.hotellook.HotelLookRequest;
 import com.summerdev.travelstoragemanager.response.HotelLookErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -18,8 +20,8 @@ import static com.summerdev.travelstoragemanager.error.HotelExecuteException.*;
  * Time: 22:55
  */
 @Service
-public class HotelTaskErrorHandlerService {
-    public void errorHandler(WebClientResponseException e, HotelLookRequest request) {
+public class HotelApiErrorHandlerService {
+    public void handleError(WebClientResponseException e, HotelLookRequest request) {
         HttpStatus status = e.getStatusCode();
 
         if (status == HttpStatus.BAD_REQUEST) {

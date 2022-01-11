@@ -15,6 +15,6 @@ import java.util.Optional;
 public interface TrainInfoRepository extends JpaRepository<TrainInfo, Long> {
     TrainInfo findFirstByOrderByIdAsc();
 
-    Optional<TrainInfo> findByDepartureCityAndArrivalCityAndTrainNumber(
-            GeoNameData departureCity, GeoNameData arrivalCity, String trainNUmber);
+    TrainInfo findByDepartureCityIdAndArrivalCityIdAndTrainNumber(
+            Long departureCityId, Long arrivalCityId, String trainNUmber);
 }

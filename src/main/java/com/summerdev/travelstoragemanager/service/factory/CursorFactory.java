@@ -26,16 +26,12 @@ public class CursorFactory {
     @NonNull TrainCursorServiceImpl trainCursorService;
 
     public CursorService getCursorService(RunnableTask runnableTask) {
-        CursorService service;
-
-        if (HotelsInfoTask.class.equals(runnableTask.getClass())) {
-            service = hotelCursorService;
-        } else if (TrainsInfoTask.class.equals(runnableTask.getClass())) {
-            service = trainCursorService;
+        if (runnableTask instanceof HotelsInfoTask) {
+            return hotelCursorService;
+        } else if (runnableTask instanceof TrainsInfoTask) {
+            return trainCursorService;
         } else {
             throw new IllegalArgumentException("Unknown runnable class: " + runnableTask.getClass());
         }
-
-        return service;
     }
 }

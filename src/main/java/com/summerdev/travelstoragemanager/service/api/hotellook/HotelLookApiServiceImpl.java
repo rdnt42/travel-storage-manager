@@ -2,7 +2,7 @@ package com.summerdev.travelstoragemanager.service.api.hotellook;
 
 import com.summerdev.travelstoragemanager.constant.api.Urls;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.error.HotelTaskErrorHandlerService;
+import com.summerdev.travelstoragemanager.service.hotelInfo.HotelApiErrorHandlerService;
 import com.summerdev.travelstoragemanager.request.api.hotellook.HotelLookRequest;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import lombok.AccessLevel;
@@ -34,7 +34,7 @@ import java.util.List;
 @Service
 public class HotelLookApiServiceImpl implements HotelLookApiService {
     WebClient webClient;
-    HotelTaskErrorHandlerService hotelTaskErrorHandlerService;
+    HotelApiErrorHandlerService hotelTaskErrorHandlerService;
 
     @SneakyThrows(UnsupportedEncodingException.class)
     @Override
@@ -59,7 +59,7 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
                     .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
                     .block();
         } catch (WebClientResponseException e) {
-            hotelTaskErrorHandlerService.errorHandler(e, request);
+            hotelTaskErrorHandlerService.handleError(e, request);
         }
 
         return new ArrayList<>();

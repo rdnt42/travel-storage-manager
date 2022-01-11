@@ -12,19 +12,19 @@ import java.io.Serializable;
  * Date: 27.11.2021
  * Time: 20:24
  */
-@Entity(name = "hotel_prices")
 @Data
+@Entity(name = "hotel_prices")
 public class HotelPrice implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hotel_price_id")
     private Long id;
 
-    @Column(name = "hotel_info_id")
+    @Column(name = "hotel_info_id", insertable = false, updatable = false)
     private Long hotelInfoId;
 
     @ManyToOne
-    @JoinColumn(name = "hotel_info_id", insertable = false, updatable = false)
+    @JoinColumn(name = "hotel_info_id")
     private HotelInfo hotelInfo;
 
     private Double cost;
@@ -36,8 +36,8 @@ public class HotelPrice implements Serializable {
     public HotelPrice() {
     }
 
-    public HotelPrice(Long hotelInfoId, Double cost, ComfortType comfortType) {
-        this.hotelInfoId = hotelInfoId;
+    public HotelPrice(HotelInfo hotelInfo, Double cost, ComfortType comfortType) {
+        this.hotelInfo = hotelInfo;
         this.cost = cost;
         this.comfortType = comfortType;
     }

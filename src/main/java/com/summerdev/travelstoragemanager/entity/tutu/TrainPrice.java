@@ -29,11 +29,11 @@ public class TrainPrice {
     @Column(name = "train_price_id")
     private Long id;
 
-    @Column(name = "train_info_id")
+    @Column(name = "train_info_id", insertable = false, updatable = false)
     private Long trainInfoId;
 
     @ManyToOne
-    @JoinColumn(name = "train_info_id", insertable = false, updatable = false)
+    @JoinColumn(name = "train_info_id")
     private TrainInfo trainInfo;
 
     private Double cost;
