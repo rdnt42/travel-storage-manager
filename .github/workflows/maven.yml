@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: [ubuntu-latest, self-hosted]
+    runs-on: [dev-marowak]
 
     steps:
     - uses: actions/checkout@v2
