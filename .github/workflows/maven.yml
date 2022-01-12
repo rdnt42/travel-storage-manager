@@ -12,7 +12,7 @@ on:
 jobs:
   build:
 
-    runs-on: [server-marowak]
+    runs-on: [server-marowak, dev-marowak, self-hosted]
 
     steps:
     - uses: actions/checkout@v2
