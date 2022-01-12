@@ -13,6 +13,7 @@ jobs:
   build-dev:
 
     runs-on: dev-marowak
+    timeout-minutes: 3
 
     steps:
     - uses: actions/checkout@v2
@@ -32,6 +33,7 @@ jobs:
   build-server:
 
     runs-on: server-marowak
+    timeout-minutes: 3
 
     steps:
     - uses: actions/checkout@v2
