@@ -11,9 +11,8 @@ on:
 
 jobs:
   build-dev:
-
-    runs-on: dev-marowak
     timeout-minutes: 3
+    runs-on: dev-marowak
 
     steps:
     - uses: actions/checkout@v2
@@ -31,9 +30,8 @@ jobs:
       run: mvn -B package '-Dmaven.test.skip=true' --file pom.xml
       
   build-server:
-
-    runs-on: server-marowak
     timeout-minutes: 3
+    runs-on: server-marowak
 
     steps:
     - uses: actions/checkout@v2
