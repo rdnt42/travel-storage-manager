@@ -2,6 +2,8 @@ package com.summerdev.travelstoragemanager.entity.hotel;
 
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,8 +14,10 @@ import java.io.Serializable;
  * Date: 27.11.2021
  * Time: 20:24
  */
-@Data
-@Entity(name = "hotel_prices")
+@Getter
+@Setter
+@Table(name = "hotel_prices")
+@Entity
 public class HotelPrice implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

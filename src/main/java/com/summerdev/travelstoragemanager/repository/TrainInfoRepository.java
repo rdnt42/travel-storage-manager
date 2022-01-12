@@ -1,10 +1,7 @@
 package com.summerdev.travelstoragemanager.repository;
 
-import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
+import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
-
-import java.util.Optional;
 
 /**
  * Created with IntelliJ IDEA.

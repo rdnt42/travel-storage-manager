@@ -1,8 +1,12 @@
 package com.summerdev.travelstoragemanager.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,8 +14,10 @@ import javax.persistence.*;
  * Date: 23.11.2021
  * Time: 22:58
  */
-@Entity(name = "task_types")
-@Data
+@Getter
+@Setter
+@Table(name = "task_types")
+@Entity
 public class TaskType {
     @Id
     @Column(name = "task_type_id")
