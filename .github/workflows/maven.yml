@@ -30,4 +30,4 @@ jobs:
       run: mvn -B package '-Dmaven.test.skip=true' --file pom.xml
 
     - name: Build the docker-compose
-      run: docker-compose up
+      run: sudo docker-compose up
