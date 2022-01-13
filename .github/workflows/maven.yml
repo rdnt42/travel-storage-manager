@@ -13,6 +13,9 @@ jobs:
   build-server:
     timeout-minutes: 3
     runs-on: server-marowak
+    
+    container:
+      options: --user docker
 
     steps:
     - uses: actions/checkout@v2
@@ -30,4 +33,4 @@ jobs:
       run: mvn -B package '-Dmaven.test.skip=true' --file pom.xml
 
     - name: Build the docker-compose
-      run: sudo docker-compose up
+      run: docker-compose up -d
