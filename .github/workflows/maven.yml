@@ -10,25 +10,6 @@ on:
     branches: [ master ]
 
 jobs:
-  build-dev:
-    timeout-minutes: 3
-    runs-on: dev-marowak
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: Set up JDK 11
-      uses: actions/setup-java@v2
-      with:
-        java-version: '11'
-        distribution: 'adopt'
-        cache: maven
-    - name: Set up Maven
-      uses: stCarolas/setup-maven@v4.2
-      with:
-        maven-version: 3.8.2
-    - name: Build with Maven
-      run: mvn -B package '-Dmaven.test.skip=true' --file pom.xml
-      
   build-server:
     timeout-minutes: 3
     runs-on: server-marowak
@@ -47,3 +28,6 @@ jobs:
         maven-version: 3.8.2
     - name: Build with Maven
       run: mvn -B package '-Dmaven.test.skip=true' --file pom.xml
+
+    - name: Build the docker-compose
+      run: docker-compose up

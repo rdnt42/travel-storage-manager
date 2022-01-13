@@ -1,0 +1,20 @@
+#runs: docker-compose -f /travel-storage-manager/docker-compose.yml up
+version: '3.3'
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_USER: manager
+      POSTGRES_PASSWORD: manager
+      POSTGRES_DB: travel_dev
+    ports:
+      - "5432:5432"
+
+  backend:
+    depends_on:
+      - db
+    image: tomcat
+    volumes:
+      - ./target/travel-storage-manager.war
+    ports:
+      - '8080:8080'

@@ -10,7 +10,6 @@
     </parent>
     <groupId>com.summerdev</groupId>
     <artifactId>travel-storage-manager</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>travel-storage-manager</name>
     <description>travel-storage-manager</description>
@@ -71,6 +70,7 @@
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
