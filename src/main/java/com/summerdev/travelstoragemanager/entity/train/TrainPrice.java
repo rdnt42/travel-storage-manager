@@ -1,14 +1,13 @@
-package com.summerdev.travelstoragemanager.entity.tutu;
+package com.summerdev.travelstoragemanager.entity.train;
 
-import com.summerdev.travelstoragemanager.entity.SeatType;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,11 +16,12 @@ import javax.persistence.ManyToOne;
 
 /**
  * Created with IntelliJ IDEA
- * User: alovyannikov
+ * User: marowak
  * Date: 25.12.2021
  * Time: 13:56
  */
-@Data
+@Getter
+@Setter
 @Entity(name = "train_prices")
 public class TrainPrice {
     @Id

@@ -1,20 +1,24 @@
 package com.summerdev.travelstoragemanager.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
- * User: alovyannikov
+ * User: marowak
  * Date: 30.05.2021
  * Time: 19:24
  */
-@Entity(name = "seat_types")
-@Data
+@Getter
+@Setter
+@Table(name = "seat_types")
+@Entity
 public class SeatType implements Serializable {
     @Id
     @Column(name = "seat_type_id")

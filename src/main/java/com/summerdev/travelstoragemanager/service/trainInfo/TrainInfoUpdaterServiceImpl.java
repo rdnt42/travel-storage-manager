@@ -1,8 +1,8 @@
 package com.summerdev.travelstoragemanager.service.trainInfo;
 
 import com.summerdev.travelstoragemanager.decode.TrainInfoDecodeService;
-import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
-import com.summerdev.travelstoragemanager.entity.tutu.TutuRoute;
+import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
+import com.summerdev.travelstoragemanager.entity.train.TutuRoute;
 import com.summerdev.travelstoragemanager.repository.TutuRouteRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
 import com.summerdev.travelstoragemanager.service.TravelInfoUpdaterService;

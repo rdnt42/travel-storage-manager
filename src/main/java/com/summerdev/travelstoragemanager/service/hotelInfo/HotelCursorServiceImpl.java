@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.hotelInfo;
 
-import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
+import com.summerdev.travelstoragemanager.entity.train.TutuStation;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
 import lombok.AccessLevel;

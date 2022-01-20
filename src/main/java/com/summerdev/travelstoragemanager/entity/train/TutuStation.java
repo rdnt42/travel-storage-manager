@@ -1,14 +1,16 @@
-package com.summerdev.travelstoragemanager.entity.tutu;
+package com.summerdev.travelstoragemanager.entity.train;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@Entity
+@Getter
+@Setter
 @Table(name = "tutu_stations")
-@Data
+@Entity
 public class TutuStation implements Serializable {
     @Id
     @Column(name = "station_id")
