@@ -1,5 +1,6 @@
 package com.summerdev.travelstoragemanager.entity.train;
 
+import com.summerdev.travelstoragemanager.entity.SeatType;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,6 +9,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,19 +44,20 @@ public class TrainPrice {
     @Enumerated(EnumType.STRING)
     private ComfortType comfortType;
 
-//    @Column(name = "seat_type_id")
-//    private Long seatTypeId = 0L;
+    @Column(name = "seat_type_id")
+    private Long seatTypeId;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "seat_type_id", insertable = false, updatable = false)
-//    private SeatType seatType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seat_type_id", insertable = false, updatable = false)
+    private SeatType seatType;
 
     public TrainPrice() {
 
     }
 
-    public TrainPrice(Double cost, ComfortType comfortType) {
+    public TrainPrice(Double cost, ComfortType comfortType, Long seatTypeId) {
         this.cost = cost;
         this.comfortType = comfortType;
+        this.seatTypeId = seatTypeId;
     }
 }

@@ -26,14 +26,32 @@ public class SeatType implements Serializable {
 
     private String seatTypeName;
 
+    @Getter
+    public enum SeatTypeEnum {
+        SEAT_TYPE_ID_ECONOMY(1L, "Плацкарт", "plazcard"),
+        SEAT_TYPE_ID_COUPE(2L, "Купе", "coupe"),
+        SEAT_TYPE_ID_SEDENTARY(3L, "Сидячий", "sedentary"),
+        SEAT_TYPE_ID_LUX(4L, "Люкс", "lux"),
+        SEAT_TYPE_ID_SOFT(5L, "Мягкий", "soft");
 
-    public enum SeatTypes {
-        SEAT_TYPE_ID_COMMON,
-        SEAT_TYPE_ID_ECONOMY,
-        SEAT_TYPE_ID_COUPE,
-        SEAT_TYPE_ID_SEDENTARY,
-        SEAT_TYPE_ID_LUX,
-        SEAT_TYPE_ID_SOFT
+        private Long id;
+        private String name;
+        private String dsc;
+
+        SeatTypeEnum(Long id, String name, String dsc) {
+            this.id = id;
+            this.name = name;
+            this.dsc = dsc;
+        }
+
+        public static SeatTypeEnum getByDsc(String text) {
+            for (SeatTypeEnum seatType : SeatTypeEnum.values()) {
+                if(seatType.getDsc().equalsIgnoreCase(text)) {
+                    return seatType;
+                }
+            }
+            return SEAT_TYPE_ID_ECONOMY;
+        }
     }
 
 }

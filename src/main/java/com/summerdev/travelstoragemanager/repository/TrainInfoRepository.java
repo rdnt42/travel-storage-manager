@@ -10,8 +10,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * Time: 22:53
  */
 public interface TrainInfoRepository extends JpaRepository<TrainInfo, Long> {
-    TrainInfo findFirstByOrderByIdAsc();
-
-    TrainInfo findByDepartureCityIdAndArrivalCityIdAndTrainNumber(
+    TrainInfo findDistinctByDepartureCityIdAndArrivalCityIdAndTrainNumber(
             Long departureCityId, Long arrivalCityId, String trainNUmber);
 }
