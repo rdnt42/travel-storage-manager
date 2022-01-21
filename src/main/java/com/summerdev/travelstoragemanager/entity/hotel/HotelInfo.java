@@ -1,12 +1,18 @@
 package com.summerdev.travelstoragemanager.entity.hotel;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicInsert;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,7 +43,7 @@ public class HotelInfo implements Serializable {
 
     private Date lastUpdate;
 
-    @OneToMany(mappedBy = "hotelInfo", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "hotelInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<HotelPrice> hotelPrices;
 
     public void addPrice(HotelPrice price) {
