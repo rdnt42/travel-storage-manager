@@ -31,6 +31,3 @@ jobs:
         maven-version: 3.8.2
     - name: Build with Maven
       run: mvn -B package '-Dmaven.test.skip=true' --file pom.xml
-
-   # - name: Build the docker-compose
-     # run: docker-compose up -d
