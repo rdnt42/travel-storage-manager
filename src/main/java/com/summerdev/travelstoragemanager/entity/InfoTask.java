@@ -1,8 +1,16 @@
 package com.summerdev.travelstoragemanager.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,8 +18,10 @@ import javax.persistence.*;
  * Date: 23.11.2021
  * Time: 22:51
  */
-@Entity(name = "info_tasks")
-@Data
+@Getter
+@Setter
+@Table(name = "info_tasks")
+@Entity
 public class InfoTask {
     @Id
     @Column(name = "info_tasks_id")

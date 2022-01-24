@@ -1,7 +1,7 @@
 package com.summerdev.travelstoragemanager.service.api.tutu;
 
 import com.summerdev.travelstoragemanager.constant.api.Urls;
-import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
+import com.summerdev.travelstoragemanager.entity.train.TutuStation;
 import com.summerdev.travelstoragemanager.request.api.tutu.TutuRequest;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
 import com.summerdev.travelstoragemanager.service.trainInfo.TrainApiErrorHandlerService;

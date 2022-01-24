@@ -3,7 +3,7 @@ package com.summerdev.travelstoragemanager.service.hotelInfo;
 import com.summerdev.travelstoragemanager.decode.HotelInfoDecodeService;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
-import com.summerdev.travelstoragemanager.entity.tutu.TutuStation;
+import com.summerdev.travelstoragemanager.entity.train.TutuStation;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import com.summerdev.travelstoragemanager.service.TravelInfoUpdaterService;

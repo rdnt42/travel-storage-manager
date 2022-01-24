@@ -1,20 +1,25 @@
 package com.summerdev.travelstoragemanager.entity;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA.
- * User: alovyannikov
+ * User: marowak
  * Date: 28.05.2021
  * Time: 23:26
  */
-@Entity(name = "geo_names")
-@Data
+
+@Getter
+@Setter
+@Table(name = "geo_names")
+@Entity
 public class GeoNameData implements Serializable {
     @Id
     @Column(name = "geo_name_id")

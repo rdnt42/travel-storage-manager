@@ -1,8 +1,9 @@
-package com.summerdev.travelstoragemanager.entity.tutu;
+package com.summerdev.travelstoragemanager.entity.train;
 
 import com.summerdev.travelstoragemanager.entity.SeatType;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,11 +18,12 @@ import javax.persistence.ManyToOne;
 
 /**
  * Created with IntelliJ IDEA
- * User: alovyannikov
+ * User: marowak
  * Date: 25.12.2021
  * Time: 13:56
  */
-@Data
+@Getter
+@Setter
 @Entity(name = "train_prices")
 public class TrainPrice {
     @Id
@@ -42,19 +44,20 @@ public class TrainPrice {
     @Enumerated(EnumType.STRING)
     private ComfortType comfortType;
 
-//    @Column(name = "seat_type_id")
-//    private Long seatTypeId = 0L;
+    @Column(name = "seat_type_id")
+    private Long seatTypeId;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "seat_type_id", insertable = false, updatable = false)
-//    private SeatType seatType;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "seat_type_id", insertable = false, updatable = false)
+    private SeatType seatType;
 
     public TrainPrice() {
 
     }
 
-    public TrainPrice(Double cost, ComfortType comfortType) {
+    public TrainPrice(Double cost, ComfortType comfortType, Long seatTypeId) {
         this.cost = cost;
         this.comfortType = comfortType;
+        this.seatTypeId = seatTypeId;
     }
 }

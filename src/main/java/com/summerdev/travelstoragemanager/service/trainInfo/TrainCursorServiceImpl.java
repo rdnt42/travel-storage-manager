@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.trainInfo;
 
-import com.summerdev.travelstoragemanager.entity.tutu.TutuRoute;
+import com.summerdev.travelstoragemanager.entity.train.TutuRoute;
 import com.summerdev.travelstoragemanager.repository.TutuRouteRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
 import lombok.AccessLevel;

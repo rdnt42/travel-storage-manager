@@ -1,7 +1,7 @@
 package com.summerdev.travelstoragemanager.response;
 
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
-import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
+import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import lombok.Data;
 
 @Data

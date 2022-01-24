@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.trainInfo;
 
-import com.summerdev.travelstoragemanager.entity.tutu.TrainInfo;
+import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.repository.TrainInfoRepository;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -38,8 +38,8 @@ public class TrainInfoServiceImpl implements TrainInfoService {
     }
 
     private TrainInfo getItemForUpdate(TrainInfo newInfo) {
-        TrainInfo itemToUpdate = trainInfoRepository.findByDepartureCityIdAndArrivalCityIdAndTrainNumber(
-                        newInfo.getDepartureCityId(), newInfo.getDepartureCityId(), newInfo.getTrainNumber());
+        TrainInfo itemToUpdate = trainInfoRepository.findDistinctByDepartureCityIdAndArrivalCityIdAndTrainNumber(
+                        newInfo.getDepartureCity().getId(), newInfo.getArrivalCity().getId(), newInfo.getTrainNumber());
 
         if (itemToUpdate == null) {
             itemToUpdate = newInfo;
