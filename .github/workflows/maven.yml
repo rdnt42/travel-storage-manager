@@ -10,12 +10,9 @@ on:
     branches: [ master ]
 
 jobs:
-  build-server:
-    timeout-minutes: 3
-    runs-on: server-marowak
-    
-    container:
-      options: --user docker
+  build:
+
+    runs-on: [server-marowak]
 
     steps:
     - uses: actions/checkout@v2
