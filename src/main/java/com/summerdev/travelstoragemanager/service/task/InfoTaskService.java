@@ -2,7 +2,7 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 
-import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes;
+import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,5 +11,7 @@ import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes;
  * Time: 23:08
  */
 public interface InfoTaskService {
-    InfoTask createTask(TaskTypes taskTypeEnum);
+    InfoTask createTask(TaskTypeEnum taskTypeEnum);
+
+    void initTasks();
 }

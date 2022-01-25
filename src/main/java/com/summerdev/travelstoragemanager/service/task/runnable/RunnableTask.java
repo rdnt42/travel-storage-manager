@@ -34,12 +34,6 @@ public class RunnableTask implements Runnable {
         this.taskId = taskId;
     }
 
-    public void cancelTask() {
-        if (future != null) {
-            future.cancel(true);
-        }
-    }
-
     public void stopTask() {
         if (future != null) {
             future.cancel(true);

@@ -52,7 +52,8 @@ public class HotelInfoServiceImpl implements HotelInfoService {
         info.setHotelName(newInfo.getHotelName());
         info.setCity(newInfo.getCity());
         info.setStars(newInfo.getStars());
-        info.setLastUpdate(new Date());
         info.addNewPrices(newInfo.getHotelPrices());
+
+        info.setLastUpdate(new Date());
     }
 }

@@ -40,7 +40,6 @@ public class HotelInfoDecodeService {
             } else if (stars == 5) {
                 hotelInfo.addPrice(getLowPrice(hotelInfo, response, totalDaysCount, ComfortType.COMFORT_TYPE_LUXURY));
             }
-            hotelInfo.setLastUpdate(new Date());
 
             hotelInfos.add(hotelInfo);
         }
