@@ -39,7 +39,7 @@ public class TrainInfoServiceImpl implements TrainInfoService {
 
     private TrainInfo getItemForUpdate(TrainInfo newInfo) {
         TrainInfo itemToUpdate = trainInfoRepository.findDistinctByDepartureCityIdAndArrivalCityIdAndTrainNumber(
-                        newInfo.getDepartureCity().getId(), newInfo.getArrivalCity().getId(), newInfo.getTrainNumber());
+                newInfo.getDepartureCity().getId(), newInfo.getArrivalCity().getId(), newInfo.getTrainNumber());
 
         if (itemToUpdate == null) {
             itemToUpdate = newInfo;
@@ -51,17 +51,4 @@ public class TrainInfoServiceImpl implements TrainInfoService {
 
         return itemToUpdate;
     }
-
-//
-//    Map<Long, Optional<TrainInfo>> minCostTrains = trainInfos.stream()
-//            .collect(Collectors.groupingBy(TrainInfo::getSeatTypeId,
-//                    Collectors.minBy(Comparator.comparing(TrainInfo::getCost))));
-//
-//    List<TrainInfo> filteredList = minCostTrains.values().stream()
-//            .flatMap(Optional::stream)
-//            .collect(Collectors.toList());
-//    private List<TrainInfo> createTrainsInfo(TutuRoute route) {
-//    }
-//
-//
 }

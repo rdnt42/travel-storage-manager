@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.factory;
 
-import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes;
+import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum;
 import com.summerdev.travelstoragemanager.service.task.runnable.HotelsInfoTask;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 import com.summerdev.travelstoragemanager.service.task.runnable.TrainsInfoTask;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public abstract class TaskFactory {
-    public RunnableTask getTask(TaskTypes taskType) {
+    public RunnableTask getTask(TaskTypeEnum taskType) {
         switch (taskType) {
             case TASK_GET_HOTELS_INFO:
                 return getHotelsInfoTask();

@@ -2,7 +2,7 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.TaskType;
-import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes;
+import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TaskTypeRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,8 +41,7 @@ public class InfoTaskServiceImpl implements InfoTaskService {
 
     @Override
     @Transactional
-    public InfoTask createTask(TaskTypes taskTypeEnum) {
-        //TODO rework cycle dependency Runnable <-> InfoTask
+    public InfoTask createTask(TaskTypeEnum taskTypeEnum) {
         InfoTask newTask = createInitInfoTask(taskTypeEnum);
 
         RunnableTask runnableTask = taskFactory.getTask(taskTypeEnum);
@@ -56,7 +56,20 @@ public class InfoTaskServiceImpl implements InfoTaskService {
         return newTask;
     }
 
-    private InfoTask createInitInfoTask(TaskTypes taskTypeEnum) {
+    @Override
+    public void initTasks() {
+        List<InfoTask> taskList = infoTaskRepository.findAll();
+
+        for (InfoTask infoTask : taskList) {
+            RunnableTask runnableTask = taskFactory.getTask(TaskTypeEnum.getById(infoTask.getTaskTypeId()));
+
+            runnableTask.setTaskId(infoTask.getId());
+            infoTasksMap.put(infoTask.getId(), runnableTask);
+            runnableTask.startTask();
+        }
+    }
+
+    private InfoTask createInitInfoTask(TaskTypeEnum taskTypeEnum) {
         TaskType taskType = taskTypeRepository.findById(taskTypeEnum.getIdValue())
                 .orElseThrow(() -> new NullPointerException("Task type with id: " + taskTypeEnum.getIdValue() +
                         " not found"));

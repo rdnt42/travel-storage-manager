@@ -25,23 +25,26 @@ public class TaskType {
 
     private String taskTypeName;
 
-    public enum TaskTypes {
+    @Getter
+    public enum TaskTypeEnum {
         TASK_GET_HOTELS_INFO(1L),
         TASK_GET_TRAINS_INFO(2L),
         TASK_GET_PLAINS_INFO(3L);
 
         private final Long idValue;
 
-        TaskTypes(Long idValue) {
+        TaskTypeEnum(Long idValue) {
             this.idValue = idValue;
         }
 
-        public Long getIdValue() {
-            return idValue;
-        }
+        public static TaskTypeEnum getById(Long id) {
+            for (TaskTypeEnum taskTypeEnum : TaskTypeEnum.values()) {
+                if(taskTypeEnum.idValue.equals(id)) {
+                    return taskTypeEnum;
+                }
+            }
 
-        public boolean equalsByValue(Long value) {
-            return value.equals(this.idValue);
+            throw new NullPointerException("TaskType with id: " + id + " does not exist");
         }
     }
 }
