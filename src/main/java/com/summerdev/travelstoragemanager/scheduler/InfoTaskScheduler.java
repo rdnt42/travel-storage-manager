@@ -1,6 +1,5 @@
 package com.summerdev.travelstoragemanager.scheduler;
 
-import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskService;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
 import lombok.AccessLevel;
@@ -10,8 +9,8 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes.TASK_GET_HOTELS_INFO;
-import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypes.TASK_GET_TRAINS_INFO;
+import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum.TASK_GET_HOTELS_INFO;
+import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum.TASK_GET_TRAINS_INFO;
 
 /**
  * Created with IntelliJ IDEA.
