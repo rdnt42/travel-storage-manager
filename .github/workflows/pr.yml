@@ -11,6 +11,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Start minikube
+        id: minikube
         uses: medyagh/setup-minikube@master
       - name: Try the cluster !
         run: kubectl get pods -A
