@@ -3,6 +3,7 @@ kind: Service # Kubernetes resource kind we are creating
 metadata: # Metadata of the resource kind we are creating
   name: travel-storage-manager-service
 spec:
+#  clusterIP: None
   selector:
     app: travel-storage-manager
   ports:
@@ -11,6 +12,7 @@ spec:
       targetPort: 8080 # The port exposed by the service
   type: LoadBalancer # type of the service. LoadBalancer indicates that our service will be external.
 ---
+
 apiVersion: apps/v1
 kind: Deployment # Kubernetes resource kind we are creating
 metadata:
@@ -26,7 +28,7 @@ spec:
         app: travel-storage-manager
     spec:
       containers:
-        - name: spring-test-app
+        - name: travel-storage-manager-app
           image: travel-storage-manager # Image that will be used to containers in the cluster
           imagePullPolicy: Never
           ports:

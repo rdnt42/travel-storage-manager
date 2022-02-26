@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: postgres-db
+spec:
+  clusterIP: None # no endpoint is created
+  ports:
+    - port: 5432
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: postgres-db
+subsets:
+  - addresses:
+      - ip: 95.165.108.244
+    ports:
+      - port: 5432
