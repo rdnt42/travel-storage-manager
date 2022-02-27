@@ -44,9 +44,5 @@ jobs:
         run: |
           kubectl apply -f deployment-backend.yaml
           kubectl apply -f deployment-db.yaml
-      - name: Test service URLs
-        run: |
-          minikube service list
-          minikube service travel-storage-manager --url
-          echo "------------------opening the service------------------"
-          curl $(minikube service travel-storage-manager --url)
+      - name: Get service list
+        run: minikube service list
