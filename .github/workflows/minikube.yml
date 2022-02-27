@@ -25,22 +25,30 @@ jobs:
         run: mvn -B package '-Pprod' '-Dmaven.test.skip=true' --file pom.xml
 
   deploy:
-    runs-on: [ server-marowak ]
+    runs-on: [server-marowak]
     name: build image and deploy to minikube
 
-    needs: [build]
-
     steps:
+      - uses: actions/checkout@v2
+      - name: Start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@master
       - name: Try the cluster !
         run: kubectl get pods -A
       - name: Build image
         run: |
+          export SHELL=/bin/bash
+          eval $(minikube -p minikube docker-env)
           docker build -t travel-storage-manager .
           echo -n "verifying images:"
           docker images
       - name: Deploy to minikube
-        run: |
-          kubectl apply -f deployment-db.yaml
+        run:
           kubectl apply -f deployment-backend.yaml
-      - name: Get service
-        run: kubectl get service travel-storage-manager-service
+          kubectl apply -f deployment-db.yaml
+      - name: Test service URLs
+        run: |
+          minikube service list
+          minikube service travel-storage-manager --url
+          echo "------------------opening the service------------------"
+          curl $(minikube service travel-storage-manager --url)
