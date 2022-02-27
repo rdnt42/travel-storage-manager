@@ -41,7 +41,7 @@ jobs:
           echo -n "verifying images:"
           docker images
       - name: Deploy to minikube
-        run:
+        run: |
           kubectl apply -f deployment-backend.yaml
           kubectl apply -f deployment-db.yaml
       - name: Test service URLs
