@@ -25,13 +25,16 @@ jobs:
         run: mvn -B package '-Pprod' '-Dmaven.test.skip=true' --file pom.xml
 
   deploy:
-    runs-on: [server-marowak]
+    runs-on: [ server-marowak ]
     name: build image and deploy to minikube
+
+    needs: [build]
 
     steps:
       - uses: actions/checkout@v2
-      - name: setup-minikube
-        uses: medyagh/setup-minikube@v0.0.7
+      - name: start minikube
+        id: minikube
+        uses: medyagh/setup-minikube@latest
 
       - name: Try the cluster !
         run: kubectl get pods -A
