@@ -42,5 +42,5 @@ jobs:
         run: |
           kubectl apply -f deployment-db.yaml
           kubectl apply -f deployment-backend.yaml
-      - name: Get service list
-        run: minikube service list
+      - name: Get service
+        run: kubectl get service travel-storage-manager-app
