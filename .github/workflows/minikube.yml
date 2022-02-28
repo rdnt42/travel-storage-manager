@@ -35,8 +35,6 @@ jobs:
         run: kubectl get pods -A
       - name: Build image
         run: |
-          export SHELL=/bin/bash
-          eval $(minikube -p minikube docker-env)
           docker build -t travel-storage-manager .
           echo -n "verifying images:"
           docker images
