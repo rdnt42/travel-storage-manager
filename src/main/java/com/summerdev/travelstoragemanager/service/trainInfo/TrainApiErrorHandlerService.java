@@ -21,7 +21,9 @@ public class TrainApiErrorHandlerService {
             throw new BusinessLogicException(BusinessLogicException.BusinessError.TOO_MANY_REQUESTS_ERROR);
         } else {
             throw new BusinessLogicException(BusinessLogicException.BusinessError.UNKNOWN_ERROR,
-                    "Unknown Http status: " + status.value());
+                    "Unknown Http status: " + status.value() +
+                    " request departureStation: " + request.getDepartureStation() +
+                    ", arrivalStation: " + request.getArrivalStation());
         }
     }
 }

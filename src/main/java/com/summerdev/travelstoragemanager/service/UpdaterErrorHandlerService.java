@@ -9,5 +9,6 @@ import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
  * Time: 22:45
  */
 public interface UpdaterErrorHandlerService {
+    // TODO need to remove throws Exception
     void handleError(Exception e, RunnableTask task) throws Exception;
 }

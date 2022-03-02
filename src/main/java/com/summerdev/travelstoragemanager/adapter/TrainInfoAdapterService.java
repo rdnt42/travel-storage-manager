@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.decode;
+package com.summerdev.travelstoragemanager.adapter;
 
 import com.summerdev.travelstoragemanager.entity.SeatType.SeatTypeEnum;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
@@ -27,16 +27,16 @@ import java.util.List;
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class TrainInfoDecodeService {
+public class TrainInfoAdapterService {
     @NonNull TutuStationRepository tutuStationRepository;
 
-    public List<TrainInfo> decodeTrainsResponse(TutuTrainsResponse response) {
+    public List<TrainInfo> getTrainInfos(TutuTrainsResponse response) {
         List<TrainInfo> trainInfos = new ArrayList<>();
         for (TutuTripItemResponse trip : response.getTrips()) {
-            TrainInfo trainIfo = getTrainInfo(trip);
+            TrainInfo trainIfo = convertResponseToTrainInfo(trip);
             if (trainIfo == null) continue;
 
-            List<TrainPrice> trainPrices = getPrices(trip.getCategories());
+            List<TrainPrice> trainPrices = convertResponseToTrainPrice(trip.getCategories());
             trainIfo.addNewPrices(trainPrices);
 
             trainInfos.add(trainIfo);
@@ -45,7 +45,7 @@ public class TrainInfoDecodeService {
         return trainInfos;
     }
 
-    private TrainInfo getTrainInfo(TutuTripItemResponse trip) {
+    private TrainInfo convertResponseToTrainInfo(TutuTripItemResponse trip) {
         TrainInfo trainIfo = new TrainInfo();
         trainIfo.setTravelTime(trip.getTravelTimeInSeconds());
 
@@ -63,7 +63,7 @@ public class TrainInfoDecodeService {
         return trainIfo;
     }
 
-    private List<TrainPrice> getPrices(List<TutuRailwayCarriageResponse> categories) {
+    private List<TrainPrice> convertResponseToTrainPrice(List<TutuRailwayCarriageResponse> categories) {
         List<TrainPrice> trainPrices = new ArrayList<>();
         for (TutuRailwayCarriageResponse category : categories) {
             SeatTypeEnum seatType = SeatTypeEnum.getByDsc(category.getType());

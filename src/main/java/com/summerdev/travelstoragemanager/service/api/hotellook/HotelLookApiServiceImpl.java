@@ -36,9 +36,18 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
     WebClient webClient;
     HotelApiErrorHandlerService hotelTaskErrorHandlerService;
 
-    @SneakyThrows(UnsupportedEncodingException.class)
     @Override
     public List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request) {
+        try {
+            return getHotelsResponseFromApi(request);
+        } catch (WebClientResponseException e) {
+            hotelTaskErrorHandlerService.handleError(e, request);
+            return new ArrayList<>();
+        }
+    }
+
+    @SneakyThrows(UnsupportedEncodingException.class)
+    public List<HotelLookHotelResponse> getHotelsResponseFromApi(HotelLookRequest request) {
         String encodeLocation = URLEncoder.encode(request.getLocation(), StandardCharsets.UTF_8.name());
         URI uri = UriComponentsBuilder
                 .fromHttpUrl(Urls.URL_HOTEL_LOOK_GET_HOTELS)
@@ -51,18 +60,12 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
                 .build(true)
                 .toUri();
 
-        try {
-            return webClient
-                    .get()
-                    .uri(uri)
-                    .retrieve()
-                    .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
-                    .block();
-        } catch (WebClientResponseException e) {
-            hotelTaskErrorHandlerService.handleError(e, request);
-        }
-
-        return new ArrayList<>();
+        return webClient
+                .get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
+                .block();
     }
 
     @Override

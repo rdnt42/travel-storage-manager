@@ -27,23 +27,27 @@ public class TutuApiServiceImpl implements TutuApiService {
 
     @Override
     public TutuTrainsResponse getTrainsResponse(TutuRequest request) {
+        try {
+            return getTrainsResponseFromApi(request);
+        } catch (WebClientResponseException e) {
+            trainApiErrorHandlerService.handleError(e, request);
+            return new TutuTrainsResponse();
+        }
+    }
+
+    private TutuTrainsResponse getTrainsResponseFromApi(TutuRequest request) {
         URI uri = UriComponentsBuilder.fromHttpUrl(Urls.URL_TUTU_GET_TRAINS)
                 .queryParam("term", request.getDepartureStation())
                 .queryParam("term2", request.getArrivalStation())
                 .build(true)
                 .toUri();
-        try {
-            return webClient
-                    .get()
-                    .uri(uri)
-                    .retrieve()
-                    .bodyToMono(TutuTrainsResponse.class)
-                    .block();
-        } catch (WebClientResponseException e) {
-            trainApiErrorHandlerService.handleError(e, request);
-        }
 
-        return new TutuTrainsResponse();
+        return webClient
+                .get()
+                .uri(uri)
+                .retrieve()
+                .bodyToMono(TutuTrainsResponse.class)
+                .block();
     }
 
     @Override
