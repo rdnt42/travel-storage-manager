@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.hotelInfo;
 
-import com.summerdev.travelstoragemanager.decode.HotelInfoDecodeService;
+import com.summerdev.travelstoragemanager.adapter.HotelInfoAdapterService;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
@@ -32,7 +32,7 @@ import java.util.List;
 public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
 
     @NonNull HotelLookApiService hotelLookApiService;
-    @NonNull HotelInfoDecodeService hotelInfoDecodeService;
+    @NonNull HotelInfoAdapterService hotelInfoDecodeService;
     @NonNull TutuStationRepository tutuStationRepository;
     @NonNull HotelInfoService hotelInfoService;
 
@@ -60,7 +60,7 @@ public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
         Date endDate = calendar.getTime();
 
         List<HotelLookHotelResponse> responses = hotelLookApiService.getHotelsResponse(city, startDate, endDate);
-        List<HotelInfo> hotelInfos = hotelInfoDecodeService.decodeHotelsResponse(responses, totalDaysCount, city);
+        List<HotelInfo> hotelInfos = hotelInfoDecodeService.getHotelsInfo(responses, totalDaysCount, city);
 
         return hotelInfoService.updateOrCreate(hotelInfos);
     }

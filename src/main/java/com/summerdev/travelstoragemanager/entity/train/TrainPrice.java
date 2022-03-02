@@ -15,6 +15,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 
 /**
  * Created with IntelliJ IDEA
@@ -25,7 +26,7 @@ import javax.persistence.ManyToOne;
 @Getter
 @Setter
 @Entity(name = "train_prices")
-public class TrainPrice {
+public class TrainPrice implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "train_price_id")

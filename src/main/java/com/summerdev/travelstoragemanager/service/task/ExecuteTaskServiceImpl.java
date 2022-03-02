@@ -34,31 +34,36 @@ public class ExecuteTaskServiceImpl implements ExecuteTaskService {
 
     @Override
     public void executeTask(RunnableTask runnableTask) throws Exception {
-
         while (!runnableTask.getFuture().isCancelled()) {
             InfoTask task = infoTaskRepository.findById(runnableTask.getTaskId())
                     .orElseThrow(() -> new NullPointerException("Task with id: " + runnableTask.getTaskId() +
                             " not found"));
             Long cursor = task.getCursorId();
-
             if (cursor == null) break;
 
-            TravelInfoUpdaterService updater = travelInfoUpdaterFactory.getTravelInfoUpdaterService(runnableTask);
-            try {
-                // TODO add annotation for show information about update
-                int count = updater.updateTravelInfo(cursor);
-                log.info("Updated count: {}, task id: {}, cursor: {}", count, task.getId(), cursor);
-            } catch (Exception e) {
-                log.error("Error in task: {}, cursor: {}", task.getId(), cursor);
-                UpdaterErrorHandlerService handler = updaterErrorHandlerFactory.getUpdaterErrorHandlerService(runnableTask);
-                handler.handleError(e, runnableTask);
-            }
-
-            CursorService cursorService = cursorFactory.getCursorService(runnableTask);
-            Long nextCursor = cursorService.getNextCursorId(cursor);
-            task.setCursorId(nextCursor);
-
-            infoTaskRepository.save(task);
+            updateTravelInfo(runnableTask, cursor, task.getId());
+            updateNextCursor(runnableTask, task, cursor);
         }
+    }
+
+    private void updateTravelInfo(RunnableTask runnableTask, Long cursor, Long id) throws Exception {
+        try {
+            TravelInfoUpdaterService updater = travelInfoUpdaterFactory.getTravelInfoUpdaterService(runnableTask);
+            // TODO add annotation for show information about update
+            int count = updater.updateTravelInfo(cursor);
+            log.info("Updated count: {}, task id: {}, cursor: {}", count, id, cursor);
+        } catch (Exception e) {
+            log.error("Error in task: {}, cursor: {}, text: {}", id, cursor, e.getMessage());
+            UpdaterErrorHandlerService handler = updaterErrorHandlerFactory.getUpdaterErrorHandlerService(runnableTask);
+            handler.handleError(e, runnableTask);
+        }
+    }
+
+    private void updateNextCursor(RunnableTask runnableTask, InfoTask task, Long cursor) {
+        CursorService cursorService = cursorFactory.getCursorService(runnableTask);
+        Long nextCursor = cursorService.getNextCursorId(cursor);
+        task.setCursorId(nextCursor);
+
+        infoTaskRepository.save(task);
     }
 }

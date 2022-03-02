@@ -21,6 +21,7 @@ import static com.summerdev.travelstoragemanager.service.task.InfoTaskServiceImp
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 public class InfoTaskStateServiceImpl implements InfoTaskStateService {
+    private static final String NOT_FOUND_MESSAGE = "Task not found. Id: ";
 
     @NonNull InfoTaskRepository infoTaskRepository;
 
@@ -28,8 +29,7 @@ public class InfoTaskStateServiceImpl implements InfoTaskStateService {
     public void enableTask(InfoTask task) {
         RunnableTask runnableTask = infoTasksMap.get(task.getId());
         if (runnableTask == null) {
-            throw new NullPointerException("Task wth id: " + task.getId() +
-                    " not found");
+            throw new NullPointerException(NOT_FOUND_MESSAGE+ task.getId());
         }
 
         runnableTask.startTask();
@@ -39,8 +39,7 @@ public class InfoTaskStateServiceImpl implements InfoTaskStateService {
     public void disableTask(InfoTask task) {
         RunnableTask runnableTask = infoTasksMap.get(task.getId());
         if (runnableTask == null) {
-            throw new NullPointerException("Task wth id: " + task.getId() +
-                    " not found");
+            throw new NullPointerException(NOT_FOUND_MESSAGE + task.getId());
         }
 
         runnableTask.stopTask();
@@ -49,8 +48,7 @@ public class InfoTaskStateServiceImpl implements InfoTaskStateService {
     @Override
     public void disableAndDeleteTask(Long taskId) {
         InfoTask task = infoTaskRepository.findById(taskId)
-                .orElseThrow(() -> new NullPointerException("Task with id: " + taskId +
-                        " not found"));
+                .orElseThrow(() -> new NullPointerException(NOT_FOUND_MESSAGE + taskId));
 
         disableTask(task);
         infoTaskRepository.delete(task);

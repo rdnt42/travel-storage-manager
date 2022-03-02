@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.trainInfo;
 
-import com.summerdev.travelstoragemanager.decode.TrainInfoDecodeService;
+import com.summerdev.travelstoragemanager.adapter.TrainInfoAdapterService;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.train.TutuRoute;
 import com.summerdev.travelstoragemanager.repository.TutuRouteRepository;
@@ -28,7 +28,7 @@ public class TrainInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
 
     @NonNull TutuRouteRepository tutuRouteRepository;
     @NonNull TutuApiService tutuApiService;
-    @NonNull TrainInfoDecodeService tutuInfoDecodeService;
+    @NonNull TrainInfoAdapterService trainInfoAdapterService;
     @NonNull TrainInfoService trainsInfoService;
 
     @Override
@@ -40,7 +40,7 @@ public class TrainInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
         TutuTrainsResponse trainsResponse = tutuApiService
                 .getTrainsResponse(tutuRoute.getDepartureStation(), tutuRoute.getArrivalStation());
 
-        List<TrainInfo> trainInfos = tutuInfoDecodeService.decodeTrainsResponse(trainsResponse);
+        List<TrainInfo> trainInfos = trainInfoAdapterService.getTrainInfos(trainsResponse);
 
         return trainsInfoService.updateOrCreate(trainInfos);
     }

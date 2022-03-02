@@ -35,9 +35,8 @@ public class HotelApiErrorHandlerService {
     }
 
     private HotelLookErrorResponse getErrorResponse(String exceptionMess) {
-        ObjectMapper objectMapper = new ObjectMapper();
-
         try {
+            ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(exceptionMess, HotelLookErrorResponse.class);
         } catch (JsonProcessingException e) {
             throw new BusinessLogicException(BusinessError.JSON_PARSE_ERROR_CODE, e.getMessage());
