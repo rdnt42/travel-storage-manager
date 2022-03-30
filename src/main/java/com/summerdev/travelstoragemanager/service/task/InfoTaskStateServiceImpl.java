@@ -2,6 +2,7 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
+import com.summerdev.travelstoragemanager.service.ThreadPoolTaskService;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 import lombok.AccessLevel;
 import lombok.NonNull;
@@ -24,6 +25,7 @@ public class InfoTaskStateServiceImpl implements InfoTaskStateService {
     private static final String NOT_FOUND_MESSAGE = "Task not found. Id: ";
 
     @NonNull InfoTaskRepository infoTaskRepository;
+    @NonNull ThreadPoolTaskService threadPoolTaskService;
 
     @Override
     public void enableTask(InfoTask task) {
@@ -32,7 +34,7 @@ public class InfoTaskStateServiceImpl implements InfoTaskStateService {
             throw new NullPointerException(NOT_FOUND_MESSAGE+ task.getId());
         }
 
-        runnableTask.startTask();
+        threadPoolTaskService.startTask(runnableTask);
     }
 
     @Override
@@ -42,7 +44,7 @@ public class InfoTaskStateServiceImpl implements InfoTaskStateService {
             throw new NullPointerException(NOT_FOUND_MESSAGE + task.getId());
         }
 
-        runnableTask.stopTask();
+        threadPoolTaskService.stopTask(runnableTask);
     }
 
     @Override

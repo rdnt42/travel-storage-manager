@@ -6,6 +6,7 @@ import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TaskTypeRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
+import com.summerdev.travelstoragemanager.service.ThreadPoolTaskService;
 import com.summerdev.travelstoragemanager.service.factory.CursorFactory;
 import com.summerdev.travelstoragemanager.service.factory.TaskFactory;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
@@ -39,6 +40,8 @@ public class InfoTaskServiceImpl implements InfoTaskService {
     @NonNull TaskTypeRepository taskTypeRepository;
     @NonNull InfoTaskRepository infoTaskRepository;
 
+    @NonNull ThreadPoolTaskService threadPoolTaskService;
+
     @Override
     @Transactional
     public InfoTask createTask(TaskTypeEnum taskTypeEnum) {
@@ -61,12 +64,14 @@ public class InfoTaskServiceImpl implements InfoTaskService {
         List<InfoTask> taskList = infoTaskRepository.findAll();
 
         for (InfoTask infoTask : taskList) {
-            RunnableTask runnableTask = taskFactory.getTask(TaskTypeEnum.getById(infoTask.getTaskTypeId()));
+            TaskTypeEnum taskType = TaskTypeEnum.getById(infoTask.getTaskTypeId());
+            RunnableTask runnableTask = taskFactory.getTask(taskType);
 
             runnableTask.setTaskId(infoTask.getId());
             infoTasksMap.put(infoTask.getId(), runnableTask);
-            runnableTask.startTask();
         }
+
+        infoTasksMap.values().forEach(threadPoolTaskService::startTaskWithShortInitDelay);
     }
 
     private InfoTask createInitInfoTask(TaskTypeEnum taskTypeEnum) {

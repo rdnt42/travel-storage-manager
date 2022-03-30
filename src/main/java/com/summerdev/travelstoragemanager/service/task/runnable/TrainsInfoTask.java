@@ -1,14 +1,15 @@
 package com.summerdev.travelstoragemanager.service.task.runnable;
 
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
+import com.summerdev.travelstoragemanager.service.ThreadPoolTaskService;
 import com.summerdev.travelstoragemanager.service.task.ExecuteTaskService;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Service;
 
 /**
@@ -18,18 +19,14 @@ import org.springframework.stereotype.Service;
  * Time: 23:32
  */
 @Slf4j
+@AllArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 @Scope(value = "prototype")
 public final class TrainsInfoTask extends RunnableTask {
     @NonNull InfoTaskStateService infoTaskStateService;
     @NonNull ExecuteTaskService executeTaskService;
-
-    public TrainsInfoTask(@NonNull InfoTaskStateService infoTaskStateService,
-                          @NonNull ExecuteTaskService executeTaskService) {
-        this.infoTaskStateService = infoTaskStateService;
-        this.executeTaskService = executeTaskService;
-    }
+    @NonNull ThreadPoolTaskService threadPoolTaskService;
 
     @Override
     public void run() {
@@ -41,7 +38,17 @@ public final class TrainsInfoTask extends RunnableTask {
             changeStateOnError(e);
         } catch (Exception e) {
             e.printStackTrace();
-            startTaskWithDelay(1);
+            threadPoolTaskService.startTaskWithDelay(this, 1);
+        }
+    }
+
+    private void changeStateOnError(BusinessLogicException e) {
+        if (e.getCode() == BusinessLogicException.BusinessError.TOO_MANY_REQUESTS_ERROR.getCode()) {
+            threadPoolTaskService.startTaskWithDelay(this, 1);
+            log.warn("Rate limit exceeded for task id: {}. Task will be postpone", taskId);
+        } else if (e.getCode() == BusinessLogicException.BusinessError.EMPTY_ERROR_CODE.getCode()) {
+            threadPoolTaskService.startTaskWithDelay(this, 1);
+            log.warn("Rate limit exceeded for task id: {}. . Task will be postpone", taskId);
         }
     }
 }

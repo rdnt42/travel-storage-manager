@@ -51,6 +51,7 @@ public class TrainInfo implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date lastUpdate;
 
+    @Builder.Default
     @Setter(AccessLevel.PRIVATE)
     @OneToMany(mappedBy = "trainInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TrainPrice> trainPrices = new ArrayList<>();
@@ -62,9 +63,7 @@ public class TrainInfo implements Serializable {
 
     public void addNewPrices(List<TrainPrice> prices) {
         trainPrices.clear();
-        for (TrainPrice price : prices) {
-            addPrice(price);
-        }
+        prices.forEach(this::addPrice);
     }
 
 }

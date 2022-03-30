@@ -41,23 +41,16 @@ public class HotelInfo implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date lastUpdate;
 
+    @Builder.Default
     @OneToMany(mappedBy = "hotelInfo", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private List<HotelPrice> hotelPrices;
+    private List<HotelPrice> hotelPrices = new ArrayList<>();
 
     public void addPrice(HotelPrice price) {
-        if (hotelPrices == null) {
-            hotelPrices = new ArrayList<>();
-        }
-
         hotelPrices.add(price);
     }
 
     public void addNewPrices(List<HotelPrice> prices) {
-        if (hotelPrices == null) {
-            hotelPrices = prices;
-        } else {
-            hotelPrices.clear();
-            hotelPrices.addAll(prices);
-        }
+        hotelPrices.clear();
+        hotelPrices.addAll(prices);
     }
 }
