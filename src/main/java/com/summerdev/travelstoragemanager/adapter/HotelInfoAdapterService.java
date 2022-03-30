@@ -5,10 +5,6 @@ import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelPrice;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -20,9 +16,7 @@ import java.util.List;
  * Date: 25.11.2021
  * Time: 23:08
  */
-@Slf4j
-@RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+
 @Service
 public class HotelInfoAdapterService {
 
@@ -46,25 +40,23 @@ public class HotelInfoAdapterService {
         if (totalDaysCount == 0) {
             return 0.0;
         }
-        
+
         return fullCost / totalDaysCount;
     }
 
     private HotelInfo convertResponseToHotelInfo(HotelLookHotelResponse hotel, GeoNameData city) {
-        HotelInfo hotelInfo = new HotelInfo();
-
-        hotelInfo.setCity(city);
-        hotelInfo.setStars(hotel.getStars());
-        hotelInfo.setHotelName(hotel.getHotelName());
-        hotelInfo.setId(hotel.getHotelId());
-
-        return hotelInfo;
+        return HotelInfo.builder()
+                .city(city)
+                .stars(hotel.getStars())
+                .hotelName(hotel.getHotelName())
+                .id(hotel.getHotelId())
+                .build();
     }
 
     private HotelPrice getHotelPrice(HotelInfo hotelInfo, double cost) {
         int stars = hotelInfo.getStars().intValue();
         if (stars < 3) {
-           return getLowPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_CHEAP);
+            return getLowPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_CHEAP);
         } else if (stars == 3 || stars == 4) {
             return getLowPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_COMFORT);
         } else if (stars == 5) {

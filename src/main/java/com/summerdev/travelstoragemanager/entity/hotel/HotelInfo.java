@@ -1,8 +1,7 @@
 package com.summerdev.travelstoragemanager.entity.hotel;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -17,6 +16,10 @@ import java.util.List;
  * Date: 31.05.2021
  * Time: 23:42
  */
+
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "hotels_info")

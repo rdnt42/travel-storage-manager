@@ -2,8 +2,6 @@ package com.summerdev.travelstoragemanager.service.api.aviasales;
 
 import com.summerdev.travelstoragemanager.config.ApiAviasalesProps;
 import com.summerdev.travelstoragemanager.response.api.aviasales.AviaSalesPriceMapResponse;
-import com.summerdev.travelstoragemanager.response.api.aviasales.bkp.AviaSalesMainResponse;
-import com.summerdev.travelstoragemanager.util.UtilDateFormat;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +12,8 @@ import org.springframework.web.reactive.function.client.WebClientResponseExcepti
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -30,12 +24,10 @@ public class AviasalesApiServiceImpl implements AviasalesApiService {
 
     @NonNull ApiAviasalesProps apiAviasalesProps;
 
-    public static final String PERIOD_MONTH = ":month";
-
     public List<AviaSalesPriceMapResponse> getPriceMap(String iataOrigin, Date fromDate, Integer durationDaysMin, Integer durationDaysMax) {
         Map<String, String> map = new HashMap<>();
         map.put("origin_iata", iataOrigin);
-        map.put("period", UtilDateFormat.SHORT_DATE(fromDate) + PERIOD_MONTH);
+        map.put("period", getShortFormatDate(fromDate) + ":month");
         map.put("direct", "true");
         map.put("one_way", "false");
         map.put("no_visa", "true");
@@ -47,16 +39,22 @@ public class AviasalesApiServiceImpl implements AviasalesApiService {
         try {
             AviaSalesPriceMapResponse[] response =
                     webClient
-                    .get()
-                    .uri(buildURI(apiAviasalesProps.getUrls().getPriceMap(), map))
-                    .retrieve()
-                    .bodyToMono(AviaSalesPriceMapResponse[].class)
-                    .block();
+                            .get()
+                            .uri(buildURI(apiAviasalesProps.getUrls().getPriceMap(), map))
+                            .retrieve()
+                            .bodyToMono(AviaSalesPriceMapResponse[].class)
+                            .block();
             return response != null ? Arrays.asList(response) : new ArrayList<>(0);
         } catch (WebClientResponseException e) {
             e.printStackTrace();
         }
         return new ArrayList<>(0);
+    }
+
+    private String getShortFormatDate(Date inputDate) {
+        SimpleDateFormat shortFormat = new SimpleDateFormat("yyyy-MM-dd");
+            
+        return shortFormat.format(inputDate);
     }
 
     private URI buildURI(String url, Map<String, String> params) {

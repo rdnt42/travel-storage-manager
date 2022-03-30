@@ -1,9 +1,7 @@
 package com.summerdev.travelstoragemanager.entity.train;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -18,6 +16,9 @@ import java.util.List;
  * Date: 30.05.2021
  * Time: 19:01
  */
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @Table(name = "trains_info")

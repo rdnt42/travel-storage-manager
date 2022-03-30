@@ -20,20 +20,11 @@ import java.util.concurrent.TimeUnit;
  */
 @Configuration
 public class WebClientConfig {
-    public static final int TIMEOUT = 10000;
 
     @Bean
     public WebClient webClientWithTimeout() {
-        final var tcpClient = TcpClient
-                .create()
-                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, TIMEOUT)
-                .doOnConnected(connection -> {
-                    connection.addHandlerLast(new ReadTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
-                    connection.addHandlerLast(new WriteTimeoutHandler(TIMEOUT, TimeUnit.MILLISECONDS));
-                });
-
         return WebClient.builder()
-                .clientConnector(new ReactorClientHttpConnector(HttpClient.from(tcpClient)))
+                .clientConnector(new ReactorClientHttpConnector(HttpClient.create()))
                 .build();
     }
 }

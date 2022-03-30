@@ -46,9 +46,6 @@ public class TrainInfoAdapterService {
     }
 
     private TrainInfo convertResponseToTrainInfo(TutuTripItemResponse trip) {
-        TrainInfo trainIfo = new TrainInfo();
-        trainIfo.setTravelTime(trip.getTravelTimeInSeconds());
-
         TutuStation arrivalStation = tutuStationRepository.findById(trip.getArrivalStation())
                 .orElse(null);
         TutuStation departureStation = tutuStationRepository.findById(trip.getDepartureStation())
@@ -56,11 +53,12 @@ public class TrainInfoAdapterService {
 
         if (arrivalStation == null || departureStation == null) return null;
 
-        trainIfo.setDepartureCity(departureStation.getGeoName());
-        trainIfo.setArrivalCity(arrivalStation.getGeoName());
-        trainIfo.setTrainNumber(trip.getTrainNumber());
-
-        return trainIfo;
+        return TrainInfo.builder()
+                .travelTime(trip.getTravelTimeInSeconds())
+                .departureCity(departureStation.getGeoName())
+                .arrivalCity(arrivalStation.getGeoName())
+                .trainNumber(trip.getTrainNumber())
+                .build();
     }
 
     private List<TrainPrice> convertResponseToTrainPrice(List<TutuRailwayCarriageResponse> categories) {

@@ -2,10 +2,10 @@ package com.summerdev.travelstoragemanager.service.task.runnable;
 
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 import static com.summerdev.travelstoragemanager.config.ThreadPoolTaskSchedulerConfig.threadPoolTaskScheduler;
 import static com.summerdev.travelstoragemanager.error.BusinessLogicException.BusinessError;
@@ -17,6 +17,7 @@ import static com.summerdev.travelstoragemanager.error.BusinessLogicException.Bu
  * Time: 22:25
  */
 @Slf4j
+@Service
 public class RunnableTask implements Runnable {
 
     protected Long taskId;
