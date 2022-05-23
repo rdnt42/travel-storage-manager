@@ -7,7 +7,6 @@ import com.summerdev.travelstoragemanager.entity.hotel.HotelPrice;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,31 +19,24 @@ import java.util.List;
 @Service
 public class HotelInfoAdapterService {
 
-    public List<HotelInfo> getHotelsInfo(List<HotelLookHotelResponse> responses, int totalDaysCount, GeoNameData city) {
-        List<HotelInfo> hotelInfos = new ArrayList<>();
-
-        for (HotelLookHotelResponse response : responses) {
-            HotelInfo hotelInfo = convertResponseToHotelInfo(response, city);
-            HotelPrice hotelPrice = getHotelPrice(hotelInfo, getCost(totalDaysCount, response.getPriceFrom()));
-
-            if (hotelPrice != null) {
-                hotelInfo.addPrice(hotelPrice);
-            }
-            hotelInfos.add(hotelInfo);
-        }
-
-        return hotelInfos;
+    public List<HotelInfo> convertResponsesToHotelsInfo(List<HotelLookHotelResponse> responses, int totalDaysCount, GeoNameData city) {
+        return responses.stream()
+                .map(r -> convertResponseToHotelInfo(r, city, totalDaysCount))
+                .toList();
     }
 
-    private double getCost(int totalDaysCount, Double fullCost) {
-        if (totalDaysCount == 0) {
-            return 0.0;
-        }
+    private HotelInfo convertResponseToHotelInfo(HotelLookHotelResponse hotel, GeoNameData city, int totalDaysCount) {
+        hotelInfoValidate(hotel);
 
-        return fullCost / totalDaysCount;
+        HotelInfo hotelInfo = getHotelInfoFromBuilder(hotel, city);
+        HotelPrice hotelPrice = getHotelPrice(hotelInfo, getCost(totalDaysCount, hotel.getPriceFrom()));
+
+        hotelInfo.addPrice(hotelPrice);
+
+        return hotelInfo;
     }
 
-    private HotelInfo convertResponseToHotelInfo(HotelLookHotelResponse hotel, GeoNameData city) {
+    private HotelInfo getHotelInfoFromBuilder(HotelLookHotelResponse hotel, GeoNameData city) {
         return HotelInfo.builder()
                 .city(city)
                 .stars(hotel.getStars())
@@ -53,20 +45,43 @@ public class HotelInfoAdapterService {
                 .build();
     }
 
-    private HotelPrice getHotelPrice(HotelInfo hotelInfo, double cost) {
-        int stars = hotelInfo.getStars().intValue();
-        if (stars < 3) {
-            return getLowPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_CHEAP);
-        } else if (stars == 3 || stars == 4) {
-            return getLowPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_COMFORT);
-        } else if (stars == 5) {
-            return getLowPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_LUXURY);
+    private double getCost(int totalDaysCount, Double fullCost) {
+        if (fullCost == null) {
+            throw new IllegalArgumentException("Full cost for hotel cannot be null");
+        }
+        if (totalDaysCount == 0) {
+            return 0.0;
         }
 
-        return null;
+        return fullCost / totalDaysCount;
     }
 
-    private HotelPrice getLowPrice(HotelInfo hotelInfo, double cost, ComfortType comfortType) {
+    private void hotelInfoValidate(HotelLookHotelResponse hotel) {
+        if (hotel.getHotelId() == null) {
+            throw new IllegalArgumentException("Hotel id cannot be null");
+        }
+
+        if (hotel.getStars() == null) {
+            throw new IllegalArgumentException("Stars for hotel cannot be null");
+        }
+
+        if (hotel.getHotelName() == null) {
+            throw new IllegalArgumentException("Name for hotel cannot be null");
+        }
+    }
+
+    private HotelPrice getHotelPrice(HotelInfo hotelInfo, double cost) {
+        int stars = hotelInfo.getStars().intValue();
+        if (stars == 3 || stars == 4) {
+            return getNewPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_COMFORT);
+        } else if (stars == 5) {
+            return getNewPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_LUXURY);
+        } else {
+            return getNewPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_CHEAP);
+        }
+    }
+
+    private HotelPrice getNewPrice(HotelInfo hotelInfo, double cost, ComfortType comfortType) {
         return new HotelPrice(hotelInfo, cost, comfortType);
     }
 }

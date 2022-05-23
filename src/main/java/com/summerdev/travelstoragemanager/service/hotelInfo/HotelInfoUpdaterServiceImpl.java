@@ -32,7 +32,7 @@ import java.util.List;
 public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
 
     @NonNull HotelLookApiService hotelLookApiService;
-    @NonNull HotelInfoAdapterService hotelInfoDecodeService;
+    @NonNull HotelInfoAdapterService hotelInfoAdapterService;
     @NonNull TutuStationRepository tutuStationRepository;
     @NonNull HotelInfoService hotelInfoService;
 
@@ -60,7 +60,7 @@ public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
         Date endDate = calendar.getTime();
 
         List<HotelLookHotelResponse> responses = hotelLookApiService.getHotelsResponse(city, startDate, endDate);
-        List<HotelInfo> hotelInfos = hotelInfoDecodeService.getHotelsInfo(responses, totalDaysCount, city);
+        List<HotelInfo> hotelInfos = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, totalDaysCount, city);
 
         return hotelInfoService.updateOrCreate(hotelInfos);
     }
