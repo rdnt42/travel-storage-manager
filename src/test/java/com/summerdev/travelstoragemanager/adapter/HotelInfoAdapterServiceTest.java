@@ -1,7 +1,6 @@
 package com.summerdev.travelstoragemanager.adapter;
 
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
-import com.summerdev.travelstoragemanager.entity.hotel.HotelPrice;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,154 +28,133 @@ class HotelInfoAdapterServiceTest {
     }
 
     @Test
-    void getHotelsInfoEmptyResponsesSuccessTest() {
+    void convertResponsesEmptyResponsesSuccess() {
         List<HotelInfo> results =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(getEmptyResponses(), 10, null);
+                hotelInfoAdapterService.convertResponsesToHotelsInfo(getEmptyResponses(), null, 1);
 
         assertTrue(results.isEmpty());
     }
 
     @Test
-    void getHotelsInfoWithEmptyPriceFromFailed() {
-        List<HotelLookHotelResponse> responses = getObjectWithEmptyPriceFromInResponses();
+    void convertResponsesWithValidObjectsSuccess() {
+        List<HotelLookHotelResponse> responses = getFillTenObjectsInResponses();
+
+        List<HotelInfo> results =
+                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, null, 1);
+
+        assertEquals(10, results.size());
+    }
+
+    @Test
+    void convertResponsesWithInvalidObjectsWithoutError() {
+        List<HotelLookHotelResponse> responses = getTenObjectsWithThreeInvalid();
+
+        List<HotelInfo> results = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, null,1);
+
+        assertEquals(7, results.size());
+    }
+
+    @Test
+    void convertResponseTotalDaysZeroSuccess() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
+
+        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+
+        assertNotNull(hotelInfo);
+    }
+
+    @Test
+    void convertResponseComfortCheapForLess3Stars() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
+        response.setStars(1L);
+
+        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortType());
+
+        response.setStars(2L);
+
+        hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortType());
+    }
+
+    @Test
+    void convertResponseComfortComfortFrom3To4Stars() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
+        response.setStars(3L);
+
+        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortType());
+
+        response.setStars(4L);
+
+        hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortType());
+    }
+
+    @Test
+    void convertResponseComfortLuxuryFor5Stars() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
+        response.setStars(5L);
+
+        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        assertEquals(COMFORT_TYPE_LUXURY, hotelInfo.getHotelPrices().get(0).getComfortType());
+    }
+
+    @Test
+    void convertResponseWithEmptyPriceFromFailed() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
+        response.setPriceFrom(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null));
+                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Full cost for hotel cannot be null"));
     }
 
     @Test
-    void getHotelsInfoWithEmptyIdFailed() {
-        List<HotelLookHotelResponse> responses = getObjectWithEmptyIdInResponses();
+    void convertResponseInfoWithEmptyIdSuccess() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null));
+                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Hotel id cannot be null"));
     }
 
     @Test
-    void getHotelsInfoWithEmptyStarsFailed() {
-        List<HotelLookHotelResponse> responses = getObjectWithEmptyStarsInResponses();
+    void convertResponseWithEmptyStarsFailed() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
+        response.setStars(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null));
+                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Stars for hotel cannot be null"));
     }
 
     @Test
-    void getHotelsInfoWithEmptyNameFailed() {
-        List<HotelLookHotelResponse> responses = getObjectWithEmptyNameInResponses();
+    void convertResponseWithEmptyNameFailed() {
+        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
+        response.setHotelName(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null));
+                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Name for hotel cannot be null"));
-    }
-
-    @Test
-    void getHotelsInfoTotalDaysZeroSuccess() {
-        int count = 1;
-        List<HotelLookHotelResponse> responses = getFillObjectsInResponses(count);
-
-        List<HotelInfo> hotelInfos =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 0, null);
-
-        assertEquals(count, hotelInfos.size());
-    }
-
-    @Test
-    void getHotelsInfoTenObjectsInResponsesSuccessTest() {
-        int count = 10;
-        List<HotelLookHotelResponse> responses = getFillObjectsInResponses(count);
-
-        List<HotelInfo> results =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null);
-
-        assertEquals(count, results.size());
-    }
-
-    @Test
-    void getHotelsComfortCheapForLess3Stars() {
-        List<HotelLookHotelResponse> responses = getCheapHotelsList();
-
-        List<HotelInfo> results =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null);
-
-        for (HotelInfo result : results) {
-            HotelPrice hotelPrice = result.getHotelPrices().get(0);
-            assertEquals(COMFORT_TYPE_CHEAP, hotelPrice.getComfortType());
-        }
-    }
-
-    @Test
-    void getHotelsComfortComfortFrom3To4Stars() {
-        List<HotelLookHotelResponse> responses = getComfortHotelsList();
-
-        List<HotelInfo> results =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null);
-
-        for (HotelInfo result : results) {
-            HotelPrice hotelPrice = result.getHotelPrices().get(0);
-            assertEquals(COMFORT_TYPE_COMFORT, hotelPrice.getComfortType());
-        }
-    }
-
-    @Test
-    void getHotelsComfortLuxuryFor5Stars() {
-        List<HotelLookHotelResponse> responses = getLuxuryHotelsList();
-
-        List<HotelInfo> results =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, 1, null);
-
-        for (HotelInfo result : results) {
-            HotelPrice hotelPrice = result.getHotelPrices().get(0);
-            assertEquals(COMFORT_TYPE_LUXURY, hotelPrice.getComfortType());
-        }
     }
 
     private List<HotelLookHotelResponse> getEmptyResponses() {
         return Collections.emptyList();
     }
 
-    private List<HotelLookHotelResponse> getObjectWithEmptyPriceFromInResponses() {
-        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
-        response.setPriceFrom(null);
-
-        return Collections.singletonList(response);
-    }
-
-    private List<HotelLookHotelResponse> getObjectWithEmptyIdInResponses() {
-        HotelLookHotelResponse response = getFillHotelObjectResponse(null);
-
-        return Collections.singletonList(response);
-    }
-
-    private List<HotelLookHotelResponse> getObjectWithEmptyStarsInResponses() {
-        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
-        response.setStars(null);
-
-        return Collections.singletonList(response);
-    }
-
-    private List<HotelLookHotelResponse> getObjectWithEmptyNameInResponses() {
-        HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
-        response.setHotelName(null);
-
-        return Collections.singletonList(response);
-    }
-
-    private List<HotelLookHotelResponse> getFillObjectsInResponses(int count) {
+    private List<HotelLookHotelResponse> getFillTenObjectsInResponses() {
         List<HotelLookHotelResponse> responses = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < 10; i++) {
             responses.add(getFillHotelObjectResponse((long)i));
         }
 
         return responses;
     }
-
 
     private HotelLookHotelResponse getFillHotelObjectResponse(Long id) {
         return HotelLookHotelResponse.builder()
@@ -187,32 +165,6 @@ class HotelInfoAdapterServiceTest {
                 .build();
     }
 
-    private List<HotelLookHotelResponse> getCheapHotelsList() {
-        List<HotelLookHotelResponse> responses = new ArrayList<>();
-
-        for (int i = 1; i < 3; i++) {
-            responses.add(getFillHotelObjectResponseWithStars(i));
-        }
-
-        return responses;
-    }
-
-    private List<HotelLookHotelResponse> getComfortHotelsList() {
-        List<HotelLookHotelResponse> responses = new ArrayList<>();
-
-        for (int i = 3; i <= 4; i++) {
-            responses.add(getFillHotelObjectResponseWithStars(i));
-        }
-
-        return responses;
-    }
-
-    private List<HotelLookHotelResponse> getLuxuryHotelsList() {
-        HotelLookHotelResponse response = getFillHotelObjectResponseWithStars(5);
-
-        return Collections.singletonList(response);
-    }
-
     private HotelLookHotelResponse getFillHotelObjectResponseWithStars(long stars) {
         return HotelLookHotelResponse.builder()
                 .hotelId(1L)
@@ -220,5 +172,19 @@ class HotelInfoAdapterServiceTest {
                 .stars(stars)
                 .priceFrom(1.0)
                 .build();
+    }
+
+    private List<HotelLookHotelResponse> getTenObjectsWithThreeInvalid() {
+        List<HotelLookHotelResponse> responses = new ArrayList<>();
+
+        for (int i = 0; i < 10; i++) {
+            responses.add(getFillHotelObjectResponseWithStars(i));
+        }
+
+        responses.get(0).setHotelId(null);
+        responses.get(1).setStars(null);
+        responses.get(2).setHotelName(null);
+
+        return responses;
     }
 }

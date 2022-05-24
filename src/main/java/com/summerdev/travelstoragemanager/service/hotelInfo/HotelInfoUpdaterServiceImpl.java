@@ -60,7 +60,7 @@ public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
         Date endDate = calendar.getTime();
 
         List<HotelLookHotelResponse> responses = hotelLookApiService.getHotelsResponse(city, startDate, endDate);
-        List<HotelInfo> hotelInfos = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, totalDaysCount, city);
+        List<HotelInfo> hotelInfos = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, city, totalDaysCount);
 
         return hotelInfoService.updateOrCreate(hotelInfos);
     }

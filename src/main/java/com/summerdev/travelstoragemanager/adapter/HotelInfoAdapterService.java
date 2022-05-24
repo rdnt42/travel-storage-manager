@@ -5,9 +5,11 @@ import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelPrice;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,16 +18,28 @@ import java.util.List;
  * Time: 23:08
  */
 
+@Slf4j
 @Service
 public class HotelInfoAdapterService {
 
-    public List<HotelInfo> convertResponsesToHotelsInfo(List<HotelLookHotelResponse> responses, int totalDaysCount, GeoNameData city) {
+    public List<HotelInfo> convertResponsesToHotelsInfo(List<HotelLookHotelResponse> responses, GeoNameData city, int totalDaysCount) {
         return responses.stream()
-                .map(r -> convertResponseToHotelInfo(r, city, totalDaysCount))
+                .map(r -> tryConvertResponseToHotelInfo(r, city, totalDaysCount))
+                .filter(Objects::nonNull)
                 .toList();
     }
 
-    private HotelInfo convertResponseToHotelInfo(HotelLookHotelResponse hotel, GeoNameData city, int totalDaysCount) {
+    private HotelInfo tryConvertResponseToHotelInfo(HotelLookHotelResponse hotel, GeoNameData city, int totalDaysCount) {
+        try {
+            return convertResponseToHotelInfo(hotel, city, totalDaysCount);
+        } catch (Exception e) {
+            log.warn("Some unexpected exception when parse Hotel response, message: {}", e.getMessage());
+        }
+
+        return null;
+    }
+
+    public HotelInfo convertResponseToHotelInfo(HotelLookHotelResponse hotel, GeoNameData city, int totalDaysCount) {
         hotelInfoValidate(hotel);
 
         HotelInfo hotelInfo = getHotelInfoFromBuilder(hotel, city);
