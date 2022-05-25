@@ -1,5 +1,6 @@
 package com.summerdev.travelstoragemanager.adapter;
 
+import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.SeatType.SeatTypeEnum;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
@@ -9,14 +10,13 @@ import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuRailwayCarriageResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTripItemResponse;
-import lombok.AccessLevel;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,43 +25,64 @@ import java.util.List;
  * Time: 23:45
  */
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
+@Slf4j
 @Service
 public class TrainInfoAdapterService {
-    @NonNull TutuStationRepository tutuStationRepository;
+    private final TutuStationRepository tutuStationRepository;
 
-    public List<TrainInfo> getTrainInfos(TutuTrainsResponse response) {
-        List<TrainInfo> trainInfos = new ArrayList<>();
-        for (TutuTripItemResponse trip : response.getTrips()) {
-            TrainInfo trainIfo = convertResponseToTrainInfo(trip);
-            if (trainIfo == null) continue;
-
-            List<TrainPrice> trainPrices = convertResponseToTrainPrice(trip.getCategories());
-            trainIfo.addNewPrices(trainPrices);
-
-            trainInfos.add(trainIfo);
-        }
-
-        return trainInfos;
+    public List<TrainInfo> convertResponsesToTrainsInfo(TutuTrainsResponse response) {
+        return response.getTrips().stream()
+                .map(this::tryConvertResponseToTrainInfo)
+                .filter(Objects::nonNull)
+                .toList();
     }
 
-    private TrainInfo convertResponseToTrainInfo(TutuTripItemResponse trip) {
-        TutuStation arrivalStation = tutuStationRepository.findById(trip.getArrivalStation())
-                .orElse(null);
-        TutuStation departureStation = tutuStationRepository.findById(trip.getDepartureStation())
-                .orElse(null);
+    private TrainInfo tryConvertResponseToTrainInfo(TutuTripItemResponse trip) {
+        try {
+            return convertResponseToTrainInfo(trip);
+        } catch (Exception e) {
+            log.warn("Some unexpected exception when parse Train response, message: {}", e.getMessage());
+        }
 
-        if (arrivalStation == null || departureStation == null) return null;
+        return null;
+    }
 
+    public TrainInfo convertResponseToTrainInfo(TutuTripItemResponse trip) {
+        GeoNameData arrivalCity = getArrivalCityOrThrow(trip.getArrivalStation());
+        GeoNameData departureCity = getDepartureCityOrThrow(trip.getDepartureStation());
+
+        TrainInfo trainInfo = getTrainInfoFromBuilder(trip, departureCity, arrivalCity);
+        List<TrainPrice> trainPrices = convertCarriageResponseToTrainPrice(trip.getCategories());
+
+        trainInfo.addNewPrices(trainPrices);
+
+        return trainInfo;
+    }
+
+    private GeoNameData getArrivalCityOrThrow(Long arrivalStationId) {
+        TutuStation arrivalStation = tutuStationRepository.findById(arrivalStationId)
+                .orElseThrow(() -> new IllegalArgumentException("Arrival station cannot be null"));
+
+        return arrivalStation.getGeoName();
+    }
+
+    private GeoNameData getDepartureCityOrThrow(Long departureStationId) {
+        TutuStation departureStation = tutuStationRepository.findById(departureStationId)
+                .orElseThrow(() -> new IllegalArgumentException("Departure station cannot be null"));
+
+        return departureStation.getGeoName();
+    }
+
+    private TrainInfo getTrainInfoFromBuilder(TutuTripItemResponse trip, GeoNameData departureCity, GeoNameData arrivalCity) {
         return TrainInfo.builder()
                 .travelTime(trip.getTravelTimeInSeconds())
-                .departureCity(departureStation.getGeoName())
-                .arrivalCity(arrivalStation.getGeoName())
+                .departureCity(departureCity)
+                .arrivalCity(arrivalCity)
                 .trainNumber(trip.getTrainNumber())
                 .build();
     }
 
-    private List<TrainPrice> convertResponseToTrainPrice(List<TutuRailwayCarriageResponse> categories) {
+    private List<TrainPrice> convertCarriageResponseToTrainPrice(List<TutuRailwayCarriageResponse> categories) {
         List<TrainPrice> trainPrices = new ArrayList<>();
         for (TutuRailwayCarriageResponse category : categories) {
             SeatTypeEnum seatType = SeatTypeEnum.getByDsc(category.getType());
@@ -73,20 +94,11 @@ public class TrainInfoAdapterService {
     }
 
     private ComfortType getComfortType(SeatTypeEnum seatType) {
-        switch (seatType) {
-            case SEAT_TYPE_ID_COUPE:
-                return ComfortType.COMFORT_TYPE_COMFORT;
-
-            case SEAT_TYPE_ID_LUX:
-            case SEAT_TYPE_ID_SOFT:
-                return ComfortType.COMFORT_TYPE_LUXURY;
-
-            case SEAT_TYPE_ID_ECONOMY:
-            case SEAT_TYPE_ID_SEDENTARY:
-
-            default:
-                return ComfortType.COMFORT_TYPE_CHEAP;
-        }
+        return switch (seatType) {
+            case SEAT_TYPE_ID_COUPE -> ComfortType.COMFORT_TYPE_COMFORT;
+            case SEAT_TYPE_ID_LUX, SEAT_TYPE_ID_SOFT -> ComfortType.COMFORT_TYPE_LUXURY;
+            case SEAT_TYPE_ID_ECONOMY, SEAT_TYPE_ID_SEDENTARY -> ComfortType.COMFORT_TYPE_CHEAP;
+        };
     }
 }
 

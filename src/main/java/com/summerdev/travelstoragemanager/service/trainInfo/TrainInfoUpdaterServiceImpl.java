@@ -40,7 +40,7 @@ public class TrainInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
         TutuTrainsResponse trainsResponse = tutuApiService
                 .getTrainsResponse(tutuRoute.getDepartureStation(), tutuRoute.getArrivalStation());
 
-        List<TrainInfo> trainInfos = trainInfoAdapterService.getTrainInfos(trainsResponse);
+        List<TrainInfo> trainInfos = trainInfoAdapterService.convertResponsesToTrainsInfo(trainsResponse);
 
         return trainsInfoService.updateOrCreate(trainInfos);
     }
