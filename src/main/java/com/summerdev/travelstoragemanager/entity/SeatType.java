@@ -34,9 +34,9 @@ public class SeatType implements Serializable {
         SEAT_TYPE_ID_LUX(4L, "Люкс", "lux"),
         SEAT_TYPE_ID_SOFT(5L, "Мягкий", "soft");
 
-        private Long id;
-        private String name;
-        private String dsc;
+        private final Long id;
+        private final String name;
+        private final String dsc;
 
         SeatTypeEnum(Long id, String name, String dsc) {
             this.id = id;
@@ -50,7 +50,8 @@ public class SeatType implements Serializable {
                     return seatType;
                 }
             }
-            return SEAT_TYPE_ID_ECONOMY;
+
+            return null;
         }
     }
 

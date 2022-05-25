@@ -14,7 +14,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,7 +51,7 @@ public class TrainInfoAdapterService {
         GeoNameData departureCity = getDepartureCityOrThrow(trip.getDepartureStation());
 
         TrainInfo trainInfo = getTrainInfoFromBuilder(trip, departureCity, arrivalCity);
-        List<TrainPrice> trainPrices = convertCarriageResponseToTrainPrice(trip.getCategories());
+        List<TrainPrice> trainPrices = convertCarriageResponsesToTrainPrices(trip.getCategories());
 
         trainInfo.addNewPrices(trainPrices);
 
@@ -82,15 +81,32 @@ public class TrainInfoAdapterService {
                 .build();
     }
 
-    private List<TrainPrice> convertCarriageResponseToTrainPrice(List<TutuRailwayCarriageResponse> categories) {
-        List<TrainPrice> trainPrices = new ArrayList<>();
-        for (TutuRailwayCarriageResponse category : categories) {
-            SeatTypeEnum seatType = SeatTypeEnum.getByDsc(category.getType());
-            TrainPrice price = new TrainPrice(category.getPrice(), getComfortType(seatType), seatType.getId());
-            trainPrices.add(price);
+    private List<TrainPrice> convertCarriageResponsesToTrainPrices(List<TutuRailwayCarriageResponse> categories) {
+        return categories.stream()
+                .map(this::tryConvertCarriageResponseToTrainPrice)
+                .filter(Objects::nonNull)
+                .toList();
+    }
+
+    private TrainPrice tryConvertCarriageResponseToTrainPrice(TutuRailwayCarriageResponse category) {
+        try {
+            SeatTypeEnum seatType = getSeatTypeOrThrow(category);
+
+            return new TrainPrice(category.getPrice(), getComfortType(seatType), seatType.getId());
+        } catch (Exception e) {
+            log.warn("Some unexpected exception when parse Category response, message: {}", e.getMessage());
         }
 
-        return trainPrices;
+        return null;
+    }
+
+    private SeatTypeEnum getSeatTypeOrThrow(TutuRailwayCarriageResponse category) {
+        SeatTypeEnum seatType = SeatTypeEnum.getByDsc(category.getType());
+        if (seatType == null) {
+            throw new IllegalArgumentException("Category doesn't exist: " + category.getType());
+        }
+
+        return seatType;
     }
 
     private ComfortType getComfortType(SeatTypeEnum seatType) {
