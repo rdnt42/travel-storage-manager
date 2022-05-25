@@ -23,7 +23,7 @@ class HotelInfoAdapterServiceTest {
     private HotelInfoAdapterService hotelInfoAdapterService;
 
     @BeforeEach
-    public void init() {
+    void setUp() {
         hotelInfoAdapterService = new HotelInfoAdapterService();
     }
 
