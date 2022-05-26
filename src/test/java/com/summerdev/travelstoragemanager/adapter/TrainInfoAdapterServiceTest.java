@@ -2,9 +2,11 @@ package com.summerdev.travelstoragemanager.adapter;
 
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
+import com.summerdev.travelstoragemanager.entity.train.TrainPrice;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuRailwayCarriageResponse;
+import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTripItemResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,10 +19,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.summerdev.travelstoragemanager.entity.SeatType.SeatTypeEnum.SEAT_TYPE_ID_COUPE;
-import static com.summerdev.travelstoragemanager.entity.directory.ComfortType.COMFORT_TYPE_COMFORT;
+import static com.summerdev.travelstoragemanager.entity.SeatType.SeatTypeEnum.*;
+import static com.summerdev.travelstoragemanager.entity.directory.ComfortType.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 
 /**
  * Created with IntelliJ IDEA.
@@ -39,6 +42,39 @@ class TrainInfoAdapterServiceTest {
     @BeforeEach
     void setUp() {
         trainInfoAdapterService = new TrainInfoAdapterService(tutuStationRepository);
+    }
+
+    @Test
+    void convertResponsesEmptyResponsesSuccess() {
+        List<TrainInfo> trainInfos = trainInfoAdapterService.convertResponsesToTrainsInfo(new TutuTrainsResponse());
+
+        assertTrue(trainInfos.isEmpty());
+    }
+
+    @Test
+    void convertResponsesTenObjectSuccess() {
+        Mockito.when(tutuStationRepository.findById(anyLong()))
+                .thenReturn(getEmptyStation());
+
+        TutuTrainsResponse response = getFillTutuTrainsWithTenItems();
+
+        List<TrainInfo> trainInfos = trainInfoAdapterService.convertResponsesToTrainsInfo(response);
+
+        assertEquals(10, trainInfos.size());
+    }
+
+    @Test
+    void convertResponsesTenObjectsWithTwoInvalidSuccess() {
+        Mockito.when(tutuStationRepository.findById(anyLong()))
+                .thenReturn(getEmptyStation());
+
+        TutuTrainsResponse response = getFillTutuTrainsWithTenItems();
+        response.getTrips().get(0).setDepartureStation(null);
+        response.getTrips().get(1).setArrivalStation(null);
+
+        List<TrainInfo> trainInfos = trainInfoAdapterService.convertResponsesToTrainsInfo(response);
+
+        assertEquals(8, trainInfos.size());
     }
 
     @Test
@@ -64,16 +100,58 @@ class TrainInfoAdapterServiceTest {
     }
 
     @Test
+    void convertResponseEconomyAndSeat() {
+        Mockito.when(tutuStationRepository.findById(any()))
+                .thenReturn(getEmptyStation());
+
+        TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_ECONOMY.getDsc(), 2);
+        response.getCategories().get(1).setType(SEAT_TYPE_ID_SEDENTARY.getDsc());
+
+        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+                .getTrainPrices();
+
+        assertEquals(2, trainPrices.size());
+
+        ComfortType comfortType = trainPrices.get(0).getComfortType();
+        assertEquals(COMFORT_TYPE_CHEAP, comfortType);
+
+        comfortType = trainPrices.get(1).getComfortType();
+        assertEquals(COMFORT_TYPE_CHEAP, comfortType);
+    }
+
+    @Test
     void convertResponseCoupe() {
         Mockito.when(tutuStationRepository.findById(any()))
                 .thenReturn(getEmptyStation());
 
-        TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_COUPE.getDsc());
+        TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_COUPE.getDsc(), 1);
 
-        TrainInfo trainInfo = trainInfoAdapterService.convertResponseToTrainInfo(response);
-        ComfortType comfortType = trainInfo.getTrainPrices().get(0).getComfortType();
+        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+                .getTrainPrices();
+        ComfortType comfortType = trainPrices.get(0).getComfortType();
 
+        assertEquals(1, trainPrices.size());
         assertEquals(COMFORT_TYPE_COMFORT, comfortType);
+    }
+
+    @Test
+    void convertResponseLuxAndSoft() {
+        Mockito.when(tutuStationRepository.findById(any()))
+                .thenReturn(getEmptyStation());
+
+        TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_LUX.getDsc(), 2);
+        response.getCategories().get(1).setType(SEAT_TYPE_ID_SOFT.getDsc());
+
+        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+                .getTrainPrices();
+
+        assertEquals(2, trainPrices.size());
+
+        ComfortType comfortType = trainPrices.get(0).getComfortType();
+        assertEquals(COMFORT_TYPE_LUXURY, comfortType);
+
+        comfortType = trainPrices.get(1).getComfortType();
+        assertEquals(COMFORT_TYPE_LUXURY, comfortType);
     }
 
     @Test
@@ -81,17 +159,18 @@ class TrainInfoAdapterServiceTest {
         Mockito.when(tutuStationRepository.findById(any()))
                 .thenReturn(getEmptyStation());
 
-        TutuTripItemResponse response = getFillTripObjectResponse("incorrect");
+        TutuTripItemResponse response = getFillTripObjectResponse("incorrect", 10);
         response.getCategories().get(1).setType(SEAT_TYPE_ID_COUPE.getDsc());
 
         assertEquals("incorrect", response.getCategories().get(0).getType());
 
-        TrainInfo trainInfo = trainInfoAdapterService.convertResponseToTrainInfo(response);
+        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+                .getTrainPrices();
 
-        ComfortType comfortType = trainInfo.getTrainPrices().get(0).getComfortType();
+        ComfortType comfortType = trainPrices.get(0).getComfortType();
 
         assertEquals(ComfortType.COMFORT_TYPE_COMFORT, comfortType);
-        assertEquals(1, trainInfo.getTrainPrices().size());
+        assertEquals(1, trainPrices.size());
     }
 
     private Optional<TutuStation> getEmptyStation() {
@@ -104,21 +183,21 @@ class TrainInfoAdapterServiceTest {
         return TutuTripItemResponse.builder()
                 .departureStation(1L)
                 .arrivalStation(2L)
-                .categories(getFillCategories(SEAT_TYPE_ID_COUPE.getDsc()))
+                .categories(getFillCategories(SEAT_TYPE_ID_COUPE.getDsc(), 10))
                 .build();
     }
 
-    private TutuTripItemResponse getFillTripObjectResponse(String seatTypeName) {
+    private TutuTripItemResponse getFillTripObjectResponse(String seatTypeName, int countCategories) {
         return TutuTripItemResponse.builder()
                 .departureStation(1L)
                 .arrivalStation(2L)
-                .categories(getFillCategories(seatTypeName))
+                .categories(getFillCategories(seatTypeName, countCategories))
                 .build();
     }
 
-    private List<TutuRailwayCarriageResponse> getFillCategories(String seatTypeName) {
+    private List<TutuRailwayCarriageResponse> getFillCategories(String seatTypeName, int countCategories) {
         List<TutuRailwayCarriageResponse> responses = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < countCategories; i++) {
             TutuRailwayCarriageResponse response = new TutuRailwayCarriageResponse();
             response.setPrice(i);
             response.setType(seatTypeName);
@@ -127,6 +206,16 @@ class TrainInfoAdapterServiceTest {
         }
 
         return responses;
+    }
+
+    private TutuTrainsResponse getFillTutuTrainsWithTenItems() {
+        List<TutuTripItemResponse> responses = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            TutuTripItemResponse response = getFillTripObjectResponse();
+            responses.add(response);
+        }
+
+        return new TutuTrainsResponse(responses);
     }
 
 }
