@@ -1,0 +1,18 @@
+version: '2'
+
+services:
+  app:
+    image: 'docker-spring-boot-postgres:latest'
+    build:
+      context: .
+    container_name: app
+    depends_on:
+      - postgres-db
+
+  postgres-db:
+    image: 'postgres:13.1-alpine'
+    container_name: postgres-db
+    environment:
+      - POSTGRES_USER=manager
+      - POSTGRES_PASSWORD=manager
+      - POSTGRES_DB=travel_dev
