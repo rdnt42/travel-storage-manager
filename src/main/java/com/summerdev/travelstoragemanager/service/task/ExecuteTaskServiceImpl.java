@@ -49,9 +49,7 @@ public class ExecuteTaskServiceImpl implements ExecuteTaskService {
     private void updateTravelInfo(RunnableTask runnableTask, Long cursor, Long id) throws Exception {
         try {
             TravelInfoUpdaterService updater = travelInfoUpdaterFactory.getTravelInfoUpdaterService(runnableTask);
-            // TODO add annotation for show information about update
-            int count = updater.updateTravelInfo(cursor);
-            log.info("Updated count: {}, task id: {}, cursor: {}", count, id, cursor);
+            updater.updateTravelInfo(cursor);
         } catch (Exception e) {
             log.error("Error in task: {}, cursor: {}, text: {}", id, cursor, e.getMessage());
             UpdaterErrorHandlerService handler = updaterErrorHandlerFactory.getUpdaterErrorHandlerService(runnableTask);
