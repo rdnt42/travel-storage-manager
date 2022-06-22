@@ -1,5 +1,6 @@
 package com.summerdev.travelstoragemanager.service.hotelInfo;
 
+import com.summerdev.travelstoragemanager.error.UnExpectedException;
 import com.summerdev.travelstoragemanager.error.HotelExecuteException;
 import com.summerdev.travelstoragemanager.service.UpdaterErrorHandlerService;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
@@ -17,13 +18,13 @@ import org.springframework.stereotype.Service;
 public class HotelUpdaterErrorHandlerImpl implements UpdaterErrorHandlerService {
 
     @Override
-    public void handleError(Exception e, RunnableTask task) throws Exception {
-        if (e instanceof HotelExecuteException) {
-            if (((HotelExecuteException) e).getCode() == HotelExecuteException.HotelError.LOCATION_NOT_FOUND_ERROR.getCode()) {
+    public void handleError(Exception e, RunnableTask task) {
+        if (e instanceof HotelExecuteException exception) {
+            if (exception.getCode() == HotelExecuteException.HotelError.LOCATION_NOT_FOUND_ERROR.getCode()) {
                 log.warn("Some expected error in task " + task.getTaskId() + ", message: " + e.getMessage());
             }
         } else {
-            throw e;
+            throw new UnExpectedException(e);
         }
     }
 }

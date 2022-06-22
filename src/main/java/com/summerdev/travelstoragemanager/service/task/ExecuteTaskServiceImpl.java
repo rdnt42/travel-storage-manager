@@ -33,7 +33,7 @@ public class ExecuteTaskServiceImpl implements ExecuteTaskService {
     @NonNull CursorFactory cursorFactory;
 
     @Override
-    public void executeTask(RunnableTask runnableTask) throws Exception {
+    public void executeTask(RunnableTask runnableTask) {
         while (!runnableTask.getFuture().isCancelled()) {
             InfoTask task = infoTaskRepository.findById(runnableTask.getTaskId())
                     .orElseThrow(() -> new NullPointerException("Task with id: " + runnableTask.getTaskId() +
@@ -46,7 +46,7 @@ public class ExecuteTaskServiceImpl implements ExecuteTaskService {
         }
     }
 
-    private void updateTravelInfo(RunnableTask runnableTask, Long cursor, Long id) throws Exception {
+    private void updateTravelInfo(RunnableTask runnableTask, Long cursor, Long id) {
         try {
             TravelInfoUpdaterService updater = travelInfoUpdaterFactory.getTravelInfoUpdaterService(runnableTask);
             updater.updateTravelInfo(cursor);
