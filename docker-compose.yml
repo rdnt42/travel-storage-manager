@@ -1,18 +1,10 @@
-version: '2'
-
+version: "3.9"
 services:
   travel-storage-manager:
-    image: 'docker-spring-boot-postgres:latest'
-    build:
-      context: .
-    container_name: travel-storage-manager
-    depends_on:
-      - postgres-db
-
-  postgres-db:
-    image: 'postgres:13.1-alpine'
-    container_name: postgres-db
+    build: .
     environment:
-      - POSTGRES_USER=manager
-      - POSTGRES_PASSWORD=manager
-      - POSTGRES_DB=travel_dev
+      TRAVEL_DB_URL: ${TRAVEL_DB_URL}
+      TRAVEL_DB_USERNAME: ${TRAVEL_DB_USERNAME}
+      TRAVEL_DB_PASSWORD: ${TRAVEL_DB_PASSWORD}
+    ports:
+      - "8084:8084"
