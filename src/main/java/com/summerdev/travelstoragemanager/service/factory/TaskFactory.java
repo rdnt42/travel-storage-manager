@@ -16,16 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public abstract class TaskFactory {
     public RunnableTask getTask(TaskTypeEnum taskType) {
-        switch (taskType) {
-            case TASK_GET_HOTELS_INFO:
-                return getHotelsInfoTask();
-
-            case TASK_GET_TRAINS_INFO:
-                return getTrainsInfoTask();
-
-            default:
-                throw new IllegalArgumentException("Wrong task type: " + taskType.getIdValue());
-        }
+        return switch (taskType) {
+            case TASK_GET_HOTELS_INFO -> getHotelsInfoTask();
+            case TASK_GET_TRAINS_INFO -> getTrainsInfoTask();
+            default -> throw new IllegalArgumentException("Wrong task type: " + taskType.getIdValue());
+        };
     }
 
     @Lookup

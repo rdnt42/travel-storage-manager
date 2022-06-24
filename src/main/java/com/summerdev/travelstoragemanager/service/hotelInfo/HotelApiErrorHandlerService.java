@@ -10,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClientResponseException;
 
-import static com.summerdev.travelstoragemanager.error.BusinessLogicException.*;
-import static com.summerdev.travelstoragemanager.error.HotelExecuteException.*;
+import static com.summerdev.travelstoragemanager.error.BusinessLogicException.BusinessError;
+import static com.summerdev.travelstoragemanager.error.HotelExecuteException.HotelError;
 
 /**
  * Created with IntelliJ IDEA.
