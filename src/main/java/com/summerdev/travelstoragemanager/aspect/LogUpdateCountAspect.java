@@ -24,7 +24,7 @@ public class LogUpdateCountAspect {
             return;
         }
 
-        String name = joinPoint.getSignature().getName();
-        log.info("Updater: {}, updated count: {}, task id: {}, cursor: {}", name, retVal, args[2], args[1]);
+        String name = joinPoint.getSignature().toShortString();
+        log.debug("Updater: {}, updated count: {}, task id: {}, cursor: {}", name, retVal, args[2], args[1]);
     }
 }

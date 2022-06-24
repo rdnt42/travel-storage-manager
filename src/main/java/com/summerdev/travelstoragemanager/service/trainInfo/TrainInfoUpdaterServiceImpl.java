@@ -1,7 +1,6 @@
 package com.summerdev.travelstoragemanager.service.trainInfo;
 
 import com.summerdev.travelstoragemanager.adapter.TrainInfoAdapterService;
-import com.summerdev.travelstoragemanager.aspect.LogUpdateCount;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.train.TutuRoute;
 import com.summerdev.travelstoragemanager.repository.TutuRouteRepository;
@@ -33,7 +32,6 @@ public class TrainInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
     @NonNull TrainInfoService trainsInfoService;
 
     @Override
-    @LogUpdateCount
     public int updateTravelInfo(Long cursorId) {
         TutuRoute tutuRoute = tutuRouteRepository.findById(cursorId)
                 .orElseThrow(() -> new NullPointerException("Route with id: " + cursorId +

@@ -1,7 +1,6 @@
 package com.summerdev.travelstoragemanager.service.hotelInfo;
 
 import com.summerdev.travelstoragemanager.adapter.HotelInfoAdapterService;
-import com.summerdev.travelstoragemanager.aspect.LogUpdateCount;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
@@ -39,7 +38,6 @@ public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
 
 
     @Override
-    @LogUpdateCount
     public int updateTravelInfo(Long cursorId) {
         // TODO rework search to return distinct cities
         TutuStation station = tutuStationRepository.findById(cursorId)
