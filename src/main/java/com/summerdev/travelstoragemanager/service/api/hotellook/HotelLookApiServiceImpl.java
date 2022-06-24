@@ -1,14 +1,12 @@
 package com.summerdev.travelstoragemanager.service.api.hotellook;
 
-import com.summerdev.travelstoragemanager.constant.api.Urls;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.service.hotelInfo.HotelApiErrorHandlerService;
 import com.summerdev.travelstoragemanager.request.api.hotellook.HotelLookRequest;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
-import lombok.AccessLevel;
+import com.summerdev.travelstoragemanager.service.hotelInfo.HotelApiErrorHandlerService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import lombok.experimental.FieldDefaults;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -30,11 +28,13 @@ import java.util.List;
  * Time: 22:32
  */
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 public class HotelLookApiServiceImpl implements HotelLookApiService {
-    WebClient webClient;
-    HotelApiErrorHandlerService hotelTaskErrorHandlerService;
+    private final WebClient webClient;
+    private final HotelApiErrorHandlerService hotelTaskErrorHandlerService;
+
+    @Value("${api.url.hotels.hotelLook}")
+    private String hotelValue;
 
     @Override
     public List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request) {
@@ -50,7 +50,7 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
     public List<HotelLookHotelResponse> getHotelsResponseFromApi(HotelLookRequest request) {
         String encodeLocation = URLEncoder.encode(request.getLocation(), StandardCharsets.UTF_8.name());
         URI uri = UriComponentsBuilder
-                .fromHttpUrl(Urls.URL_HOTEL_LOOK_GET_HOTELS)
+                .fromHttpUrl(hotelValue)
                 .queryParam("location", encodeLocation)
                 .queryParam("checkIn", request.getCheckInFormatted())
                 .queryParam("checkOut", request.getCheckOutFormatted())
