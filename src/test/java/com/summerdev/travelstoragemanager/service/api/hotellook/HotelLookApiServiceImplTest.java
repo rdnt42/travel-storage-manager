@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -20,8 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -55,6 +54,7 @@ class HotelLookApiServiceImplTest {
     @Test
     void getHotelsResponseAnyExceptionRequestSuccess() {
         initWebClient();
+        doNothing().when(hotelTaskErrorHandlerService).handleError(any(), any());
 
         HotelLookRequest request = getFilledRequest();
         request.setLocation(null);
@@ -73,7 +73,7 @@ class HotelLookApiServiceImplTest {
 
         ReflectionTestUtils.setField(hotelLookApiService, "hotelValue", "http://test");
 
-        when(uriSpecMock.uri(Mockito.any(URI.class)))
+        when(uriSpecMock.uri(any(URI.class)))
                 .thenThrow(WebClientResponseException.class);
     }
 
