@@ -37,7 +37,18 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
     private String hotelValue;
 
     @Override
-    public List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request) {
+    public List<HotelLookHotelResponse> getHotelsResponse(GeoNameData city, Date startDate, Date endDate) {
+        checkRequestedParams(city, startDate, endDate);
+
+        return getHotelsResponse(new HotelLookRequest(city.getGeoNameRu(), startDate, endDate));
+    }
+
+    private void checkRequestedParams(GeoNameData city, Date startDate, Date endDate) {
+        if (city == null || city.getGeoNameRu() == null || startDate == null || endDate == null) {
+            throw new IllegalArgumentException("Parameters for HotelLookRequest cannot be null");
+        }
+    }
+    private List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request) {
         try {
             return getHotelsResponseFromApi(request);
         } catch (WebClientResponseException e) {
@@ -47,7 +58,7 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
     }
 
     @SneakyThrows(UnsupportedEncodingException.class)
-    public List<HotelLookHotelResponse> getHotelsResponseFromApi(HotelLookRequest request) {
+    private List<HotelLookHotelResponse> getHotelsResponseFromApi(HotelLookRequest request) {
         String encodeLocation = URLEncoder.encode(request.getLocation(), StandardCharsets.UTF_8.name());
         URI uri = UriComponentsBuilder
                 .fromHttpUrl(hotelValue)
@@ -66,10 +77,5 @@ public class HotelLookApiServiceImpl implements HotelLookApiService {
                 .retrieve()
                 .bodyToMono(new ParameterizedTypeReference<List<HotelLookHotelResponse>>() {})
                 .block();
-    }
-
-    @Override
-    public List<HotelLookHotelResponse> getHotelsResponse(GeoNameData city, Date startDate, Date endDate) {
-        return getHotelsResponse(new HotelLookRequest(city.getGeoNameRu(), startDate, endDate));
     }
 }

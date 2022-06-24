@@ -1,11 +1,13 @@
 package com.summerdev.travelstoragemanager.request.api.hotellook;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
 public class HotelLookRequest {
     private final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private String location;
@@ -21,9 +23,6 @@ public class HotelLookRequest {
     private int hotelId;
     private int children;
     private String token;
-
-    public HotelLookRequest() {
-    }
 
     public HotelLookRequest(String location, Date checkIn, Date getCheckOut) {
         this.location = location;

@@ -15,15 +15,6 @@ import java.util.List;
  */
 public interface HotelLookApiService {
     /**
-     * Запрос на API hotellook.ru через travelpayouts
-     * https://support.travelpayouts.com/hc/ru/articles/115000343268-API-%D0%B4%D0%B0%D0%BD%D0%BD%D1%8B%D1%85-%D0%BE%D1%82%D0%B5%D0%BB%D0%B5%D0%B9
-     *
-     * @param request фильтр для поиска отеля в указанном городе
-     * @return список отелей, соответсвующих фильтру
-     */
-    List<HotelLookHotelResponse> getHotelsResponse(HotelLookRequest request);
-
-    /**
      * Информация обо всех отелях в указанном городе
      *
      * @param city      город поиска
