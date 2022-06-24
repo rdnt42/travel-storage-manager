@@ -10,16 +10,13 @@ public class HotelExecuteException extends BusinessLogicException {
     public HotelExecuteException(HotelError error, String addText) {
         super(error.code, error.message + addText);
     }
-    public HotelExecuteException(HotelError error) {
-        super(error.code, error.message);
+
+    public HotelExecuteException(BusinessError error) {
+        super(error);
     }
 
-    public HotelExecuteException(long code, String message) {
-        super(code, message);
-    }
-
-    public HotelExecuteException(String message) {
-        super(message);
+    public HotelExecuteException(BusinessError error, String additionalText) {
+        super(error, additionalText);
     }
 
     public enum HotelError {

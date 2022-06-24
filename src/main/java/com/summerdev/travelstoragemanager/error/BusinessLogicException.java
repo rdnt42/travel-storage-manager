@@ -21,11 +21,6 @@ public class BusinessLogicException extends RuntimeException {
         this.code = code;
     }
 
-    public BusinessLogicException(String message) {
-        super(message);
-        this.code = BusinessError.EMPTY_ERROR_CODE.code;
-    }
-
     private final long code;
 
     @Override

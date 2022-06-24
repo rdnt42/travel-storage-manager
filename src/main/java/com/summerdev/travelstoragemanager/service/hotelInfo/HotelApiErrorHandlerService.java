@@ -27,9 +27,9 @@ public class HotelApiErrorHandlerService {
         if (status == HttpStatus.BAD_REQUEST) {
             badRequestHandler(e.getResponseBodyAsString(), request);
         } else if (status == HttpStatus.TOO_MANY_REQUESTS) {
-            throw new BusinessLogicException(BusinessError.TOO_MANY_REQUESTS_ERROR);
+            throw new HotelExecuteException(BusinessError.TOO_MANY_REQUESTS_ERROR);
         } else {
-            throw new BusinessLogicException(BusinessError.UNKNOWN_ERROR,
+            throw new HotelExecuteException(BusinessError.UNKNOWN_ERROR,
                     "Unknown Http status: " + status.value());
         }
     }

@@ -13,7 +13,6 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,7 +45,7 @@ public class TrainInfoServiceImpl implements TrainInfoService {
                 .stream()
                 .filter(distinctByKey(t -> Arrays.asList(
                         t.getDepartureCity().getId(), t.getArrivalCity().getId(), t.getTrainNumber())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static <T> Predicate<T> distinctByKey(Function<? super T, ?> keyExtractor) {

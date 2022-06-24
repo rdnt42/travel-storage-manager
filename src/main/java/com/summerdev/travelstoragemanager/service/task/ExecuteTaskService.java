@@ -9,5 +9,5 @@ import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
  * Time: 22:35
  */
 public interface ExecuteTaskService {
-    void executeTask(RunnableTask runnableTask) throws Exception;
+    void executeTask(RunnableTask runnableTask);
 }
