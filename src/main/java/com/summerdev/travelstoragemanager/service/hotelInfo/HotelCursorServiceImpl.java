@@ -33,7 +33,11 @@ public class HotelCursorServiceImpl implements CursorService {
 
     @Override
     public Long getNextCursorId(long currCursorId) {
-        TutuStation station = tutuStationRepository.findFirstByIdAfterOrderByIdAsc(currCursorId);
+        TutuStation prevStation = tutuStationRepository.findById(currCursorId)
+                .orElse(tutuStationRepository.findFirstByIdAfterOrderByIdAsc(currCursorId));
+
+        TutuStation station = tutuStationRepository
+                .findFirstByIdAfterAndGeoNameIdNotOrderByIdAsc(currCursorId, prevStation.getGeoNameId());
 
         return station == null ? null : station.getId();
     }

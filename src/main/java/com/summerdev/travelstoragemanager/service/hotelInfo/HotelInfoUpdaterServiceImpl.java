@@ -39,7 +39,6 @@ public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
 
     @Override
     public int updateTravelInfo(Long cursorId) {
-        // TODO rework search to return distinct cities
         TutuStation station = tutuStationRepository.findById(cursorId)
                 .orElseThrow(() -> new NullPointerException("Station with id: " + cursorId +
                         " not found"));
