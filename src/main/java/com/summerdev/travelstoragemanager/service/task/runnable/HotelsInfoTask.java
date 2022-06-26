@@ -2,12 +2,10 @@ package com.summerdev.travelstoragemanager.service.task.runnable;
 
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import com.summerdev.travelstoragemanager.service.ThreadPoolTaskService;
+import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
 import com.summerdev.travelstoragemanager.service.task.ExecuteTaskService;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.NonNull;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -20,13 +18,12 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @AllArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 @Scope(value = "prototype")
-public final class HotelsInfoTask extends RunnableTask {
-    @NonNull InfoTaskStateService infoTaskStateService;
-    @NonNull ExecuteTaskService executeTaskService;
-    @NonNull ThreadPoolTaskService threadPoolTaskService;
+public final class HotelsInfoTask extends RunnableTask implements HotelLookServiceType {
+    private final InfoTaskStateService infoTaskStateService;
+    private final ExecuteTaskService executeTaskService;
+    private final ThreadPoolTaskService threadPoolTaskService;
 
     @Override
     public void run() {

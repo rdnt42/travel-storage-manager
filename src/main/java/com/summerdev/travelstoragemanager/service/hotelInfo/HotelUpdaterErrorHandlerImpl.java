@@ -3,6 +3,7 @@ package com.summerdev.travelstoragemanager.service.hotelInfo;
 import com.summerdev.travelstoragemanager.error.UnExpectedException;
 import com.summerdev.travelstoragemanager.error.HotelExecuteException;
 import com.summerdev.travelstoragemanager.service.UpdaterErrorHandlerService;
+import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class HotelUpdaterErrorHandlerImpl implements UpdaterErrorHandlerService {
+public class HotelUpdaterErrorHandlerImpl implements UpdaterErrorHandlerService, HotelLookServiceType {
 
     @Override
     public void handleError(Exception e, RunnableTask task) {

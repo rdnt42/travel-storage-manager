@@ -3,11 +3,8 @@ package com.summerdev.travelstoragemanager.service.hotelInfo;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
-import lombok.AccessLevel;
-import lombok.NonNull;
+import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 /**
@@ -16,13 +13,10 @@ import org.springframework.stereotype.Service;
  * Date: 28.11.2021
  * Time: 22:36
  */
-
-@Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class HotelCursorServiceImpl implements CursorService {
-    @NonNull TutuStationRepository tutuStationRepository;
+public class HotelCursorServiceImpl implements CursorService, HotelLookServiceType {
+    private final TutuStationRepository tutuStationRepository;
 
     @Override
     public Long getFirstCursorId() {

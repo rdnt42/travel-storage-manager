@@ -7,10 +7,8 @@ import com.summerdev.travelstoragemanager.repository.TutuRouteRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
 import com.summerdev.travelstoragemanager.service.TravelInfoUpdaterService;
 import com.summerdev.travelstoragemanager.service.api.tutu.TutuApiService;
-import lombok.AccessLevel;
-import lombok.NonNull;
+import com.summerdev.travelstoragemanager.serviceType.TutuServiceType;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +20,12 @@ import java.util.List;
  * Time: 23:43
  */
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class TrainInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
-
-    @NonNull TutuRouteRepository tutuRouteRepository;
-    @NonNull TutuApiService tutuApiService;
-    @NonNull TrainInfoAdapterService trainInfoAdapterService;
-    @NonNull TrainInfoService trainsInfoService;
+public class TrainInfoUpdaterServiceImpl implements TravelInfoUpdaterService, TutuServiceType {
+    private final TutuRouteRepository tutuRouteRepository;
+    private final TutuApiService tutuApiService;
+    private final TrainInfoAdapterService trainInfoAdapterService;
+    private final TrainInfoService trainsInfoService;
 
     @Override
     public int updateTravelInfo(Long cursorId) {

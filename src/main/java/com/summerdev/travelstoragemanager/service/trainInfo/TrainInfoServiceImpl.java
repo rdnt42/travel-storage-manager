@@ -2,10 +2,8 @@ package com.summerdev.travelstoragemanager.service.trainInfo;
 
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.repository.TrainInfoRepository;
-import lombok.AccessLevel;
-import lombok.NonNull;
+import com.summerdev.travelstoragemanager.serviceType.TutuServiceType;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -21,11 +19,9 @@ import java.util.function.Predicate;
  * Time: 22:28
  */
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class TrainInfoServiceImpl implements TrainInfoService {
-
-    @NonNull TrainInfoRepository trainInfoRepository;
+public class TrainInfoServiceImpl implements TrainInfoService, TutuServiceType {
+    private final TrainInfoRepository trainInfoRepository;
 
     @Transactional
     @Override

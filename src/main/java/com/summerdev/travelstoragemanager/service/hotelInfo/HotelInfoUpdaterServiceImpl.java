@@ -8,11 +8,8 @@ import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import com.summerdev.travelstoragemanager.service.TravelInfoUpdaterService;
 import com.summerdev.travelstoragemanager.service.api.hotellook.HotelLookApiService;
-import lombok.AccessLevel;
-import lombok.NonNull;
+import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -25,17 +22,13 @@ import java.util.List;
  * Date: 27.11.2021
  * Time: 21:47
  */
-@Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService {
-
-    @NonNull HotelLookApiService hotelLookApiService;
-    @NonNull HotelInfoAdapterService hotelInfoAdapterService;
-    @NonNull TutuStationRepository tutuStationRepository;
-    @NonNull HotelInfoService hotelInfoService;
-
+public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService, HotelLookServiceType {
+    private final HotelLookApiService hotelLookApiService;
+    private final HotelInfoAdapterService hotelInfoAdapterService;
+    private final TutuStationRepository tutuStationRepository;
+    private final HotelInfoService hotelInfoService;
 
     @Override
     public int updateTravelInfo(Long cursorId) {

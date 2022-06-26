@@ -2,11 +2,8 @@ package com.summerdev.travelstoragemanager.service.hotelInfo;
 
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.repository.HotelInfoRepository;
-import lombok.AccessLevel;
-import lombok.NonNull;
+import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,13 +19,11 @@ import java.util.stream.Collectors;
  * Date: 24.11.2021
  * Time: 0:09
  */
-@Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
-public class HotelInfoServiceImpl implements HotelInfoService {
+public class HotelInfoServiceImpl implements HotelInfoService, HotelLookServiceType {
 
-    @NonNull HotelInfoRepository hotelInfoRepository;
+    private final HotelInfoRepository hotelInfoRepository;
 
     @Transactional
     @Override

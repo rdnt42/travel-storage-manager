@@ -2,6 +2,7 @@ package com.summerdev.travelstoragemanager.service.trainInfo;
 
 import com.summerdev.travelstoragemanager.error.UnExpectedException;
 import com.summerdev.travelstoragemanager.service.UpdaterErrorHandlerService;
+import com.summerdev.travelstoragemanager.serviceType.TutuServiceType;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.codec.DecodingException;
@@ -15,7 +16,7 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @Service
-public class TrainUpdaterErrorHandlerImpl implements UpdaterErrorHandlerService {
+public class TrainUpdaterErrorHandlerImpl implements UpdaterErrorHandlerService, TutuServiceType {
     @Override
     public void handleError(Exception e, RunnableTask task) {
         if (e instanceof DecodingException) {
