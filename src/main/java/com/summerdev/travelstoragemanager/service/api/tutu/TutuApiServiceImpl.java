@@ -25,7 +25,22 @@ public class TutuApiServiceImpl implements TutuApiService {
     private String tutuUrl;
 
     @Override
-    public TutuTrainsResponse getTrainsResponse(TutuRequest request) {
+    public TutuTrainsResponse getTrainsResponse(TutuStation departureStation, TutuStation arrivalStation) {
+        checkRequestedParams(departureStation, arrivalStation);
+        return getTrainsResponse(new TutuRequest(departureStation.getId().intValue(), arrivalStation.getId().intValue()));
+    }
+
+    private void checkRequestedParams(TutuStation departureStation, TutuStation arrivalStation) {
+        if (departureStation == null) {
+            throw new IllegalArgumentException("DepartureStation for request cannot be null");
+        }
+
+        if (arrivalStation == null) {
+            throw new IllegalArgumentException("ArrivalStation for request cannot be null");
+        }
+    }
+
+    private TutuTrainsResponse getTrainsResponse(TutuRequest request) {
         try {
             return getTrainsResponseFromApi(request);
         } catch (WebClientResponseException e) {
@@ -48,10 +63,5 @@ public class TutuApiServiceImpl implements TutuApiService {
                 .retrieve()
                 .bodyToMono(TutuTrainsResponse.class)
                 .block();
-    }
-
-    @Override
-    public TutuTrainsResponse getTrainsResponse(TutuStation departureStation, TutuStation arrivalStation) {
-        return getTrainsResponse(new TutuRequest(departureStation.getId().intValue(), arrivalStation.getId().intValue()));
     }
 }
