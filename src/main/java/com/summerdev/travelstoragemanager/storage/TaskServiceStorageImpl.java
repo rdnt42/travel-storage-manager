@@ -16,9 +16,13 @@ import java.util.*;
 @Service
 public class TaskServiceStorageImpl implements TaskServiceStorage {
     private final Map<Class<? extends ServiceType>, Set<ServiceType>> serviceTypeStorageMap = new HashMap<>();
+    private final Map<Class<? extends ServiceType>, TravelInfoUpdaterService> updaterServiceMap = new HashMap<>();
 
     public TaskServiceStorageImpl(Set<ServiceType> serviceTypes) {
         initServiceTypeStorageMap(serviceTypes);
+        for (Map.Entry<Class<? extends ServiceType>, Set<ServiceType>> entry : serviceTypeStorageMap.entrySet()) {
+            initUpdaterServiceMap(entry.getKey(), entry.getValue());
+        }
     }
 
     private void initServiceTypeStorageMap(Set<ServiceType> serviceTypes) {
@@ -28,6 +32,29 @@ public class TaskServiceStorageImpl implements TaskServiceStorage {
             serviceTypeStorageMap.putIfAbsent(serviceTypeClass, new HashSet<>());
             serviceTypeStorageMap.get(serviceTypeClass).add(serviceType);
         }
+    }
+
+    private void initUpdaterServiceMap(Class<? extends ServiceType> serviceTypeClass, Set<ServiceType> serviceTypes) {
+        TravelInfoUpdaterService service;
+        for (ServiceType serviceType : serviceTypes) {
+            if ((service = getUpdaterServiceMap(serviceType)) != null) {
+                updaterServiceMap.put(serviceTypeClass, service);
+                return;
+            }
+        }
+        throw new IllegalArgumentException("TravelInfoUpdaterService implementation not found for service" +
+                serviceTypeClass);
+    }
+
+    private TravelInfoUpdaterService getUpdaterServiceMap(ServiceType serviceType) {
+        Class<?> targetClass = AopUtils.getTargetClass(serviceType);
+        for (Class<?> targetInterface : targetClass.getInterfaces()) {
+            if (TravelInfoUpdaterService.class.isAssignableFrom(targetInterface)) {
+                return (TravelInfoUpdaterService) serviceType;
+            }
+        }
+
+        return null;
     }
 
     private Class<? extends ServiceType> getServiceTypeClass(ServiceType serviceType) {
