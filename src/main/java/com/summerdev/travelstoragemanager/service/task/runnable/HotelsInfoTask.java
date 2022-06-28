@@ -2,9 +2,10 @@ package com.summerdev.travelstoragemanager.service.task.runnable;
 
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import com.summerdev.travelstoragemanager.service.ThreadPoolTaskService;
-import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
-import com.summerdev.travelstoragemanager.service.task.ExecuteTaskService;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
+import com.summerdev.travelstoragemanager.service.task.execute.ExecuteTaskService;
+import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
+import com.summerdev.travelstoragemanager.serviceType.ServiceType;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
@@ -20,7 +21,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 @Service
 @Scope(value = "prototype")
-public final class HotelsInfoTask extends RunnableTask implements HotelLookServiceType {
+public final class HotelsInfoTask extends RunnableTask {
     private final InfoTaskStateService infoTaskStateService;
     private final ExecuteTaskService executeTaskService;
     private final ThreadPoolTaskService threadPoolTaskService;
@@ -47,5 +48,10 @@ public final class HotelsInfoTask extends RunnableTask implements HotelLookServi
             threadPoolTaskService.startTaskWithDelay(this, 1);
             log.warn("Rate limit exceeded for task id: {}. . Task will be postpone", taskId);
         }
+    }
+
+    @Override
+    public Class<? extends ServiceType> getServiceTypeClass() {
+        return HotelLookServiceType.class;
     }
 }

@@ -2,8 +2,9 @@ package com.summerdev.travelstoragemanager.service.task.runnable;
 
 import com.summerdev.travelstoragemanager.error.BusinessLogicException;
 import com.summerdev.travelstoragemanager.service.ThreadPoolTaskService;
+import com.summerdev.travelstoragemanager.serviceType.ServiceType;
 import com.summerdev.travelstoragemanager.serviceType.TutuServiceType;
-import com.summerdev.travelstoragemanager.service.task.ExecuteTaskService;
+import com.summerdev.travelstoragemanager.service.task.execute.ExecuteTaskService;
 import com.summerdev.travelstoragemanager.service.task.InfoTaskStateService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,5 +48,10 @@ public final class TrainsInfoTask extends RunnableTask implements TutuServiceTyp
             threadPoolTaskService.startTaskWithDelay(this, 1);
             log.warn("Rate limit exceeded for task id: {}. . Task will be postpone", taskId);
         }
+    }
+
+    @Override
+    public Class<? extends ServiceType> getServiceTypeClass() {
+        return TutuServiceType.class;
     }
 }

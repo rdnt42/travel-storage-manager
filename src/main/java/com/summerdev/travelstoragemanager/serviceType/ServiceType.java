@@ -7,5 +7,4 @@ package com.summerdev.travelstoragemanager.serviceType;
  * Time: 22:35
  */
 public interface ServiceType {
-    Class<? extends ServiceType> getServiceTypeClass();
 }

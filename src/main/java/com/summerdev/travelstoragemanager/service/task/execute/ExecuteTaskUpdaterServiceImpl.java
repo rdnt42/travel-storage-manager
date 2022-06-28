@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.service.task;
+package com.summerdev.travelstoragemanager.service.task.execute;
 
 import com.summerdev.travelstoragemanager.aspect.LogUpdateCount;
 import com.summerdev.travelstoragemanager.entity.InfoTask;
@@ -6,13 +6,9 @@ import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
 import com.summerdev.travelstoragemanager.service.TravelInfoUpdaterService;
 import com.summerdev.travelstoragemanager.service.UpdaterErrorHandlerService;
-import com.summerdev.travelstoragemanager.service.factory.CursorFactory;
-import com.summerdev.travelstoragemanager.service.factory.TravelInfoUpdaterFactory;
-import com.summerdev.travelstoragemanager.service.factory.UpdaterErrorHandlerFactory;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
-import lombok.AccessLevel;
+import com.summerdev.travelstoragemanager.storage.ServiceTypeServiceStorage;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,25 +20,24 @@ import org.springframework.stereotype.Service;
  */
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 public class ExecuteTaskUpdaterServiceImpl implements ExecuteTaskUpdaterService {
+    private final ServiceTypeServiceStorage<TravelInfoUpdaterService> travelInfoUpdaterServiceStorage;
+    private final ServiceTypeServiceStorage<UpdaterErrorHandlerService> updaterErrorServiceStorage;
+    private final ServiceTypeServiceStorage<CursorService> cursorServiceStorage;
 
-    TravelInfoUpdaterFactory travelInfoUpdaterFactory;
-    UpdaterErrorHandlerFactory updaterErrorHandlerFactory;
-    CursorFactory cursorFactory;
-    InfoTaskRepository infoTaskRepository;
+    private final InfoTaskRepository infoTaskRepository;
 
     @Override
     @LogUpdateCount
     public int updateTravelInfo(RunnableTask runnableTask, Long cursor, Long id) {
         try {
-            TravelInfoUpdaterService updater = travelInfoUpdaterFactory.getTravelInfoUpdaterService(runnableTask);
+            TravelInfoUpdaterService updater = travelInfoUpdaterServiceStorage.getService(runnableTask.getServiceTypeClass());
 
             return updater.updateTravelInfo(cursor);
         } catch (Exception e) {
             log.error("Error in task: {}, cursor: {}, text: {}", id, cursor, e.getMessage());
-            UpdaterErrorHandlerService handler = updaterErrorHandlerFactory.getUpdaterErrorHandlerService(runnableTask);
+            UpdaterErrorHandlerService handler = updaterErrorServiceStorage.getService(runnableTask.getServiceTypeClass());
             handler.handleError(e, runnableTask);
 
             return 0;
@@ -51,7 +46,7 @@ public class ExecuteTaskUpdaterServiceImpl implements ExecuteTaskUpdaterService 
 
     @Override
     public void updateNextCursor(RunnableTask runnableTask, InfoTask task, Long cursor) {
-        CursorService cursorService = cursorFactory.getCursorService(runnableTask);
+        CursorService cursorService = cursorServiceStorage.getService(runnableTask.getServiceTypeClass());
         Long nextCursor = cursorService.getNextCursorId(cursor);
         task.setCursorId(nextCursor);
 

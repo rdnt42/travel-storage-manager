@@ -18,17 +18,17 @@ import java.util.Set;
 @Configuration
 public class TaskServiceStorageInit {
 
-    @Bean(name = "cursorServiceStorage")
+    @Bean
     ServiceTypeServiceStorage<CursorService> cursorService(Set<CursorService> initServices) {
         return new ServiceTypeServiceStorage<>(initServices);
     }
 
-    @Bean(name = "travelInfoUpdaterStorage")
+    @Bean
     ServiceTypeServiceStorage<TravelInfoUpdaterService> travelInfoUpdaterService(Set<TravelInfoUpdaterService> initServices) {
         return new ServiceTypeServiceStorage<>(initServices);
     }
 
-    @Bean(name = "updaterErrorHandlerStorage")
+    @Bean
     ServiceTypeServiceStorage<UpdaterErrorHandlerService> updaterErrorHandlerService(Set<UpdaterErrorHandlerService> initServices) {
         return new ServiceTypeServiceStorage<>(initServices);
     }

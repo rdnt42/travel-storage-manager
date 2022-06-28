@@ -7,8 +7,4 @@ package com.summerdev.travelstoragemanager.serviceType;
  * Time: 23:50
  */
 public interface TutuServiceType extends ServiceType {
-    @Override
-    default Class<? extends ServiceType> getServiceTypeClass() {
-        return TutuServiceType.class;
-    }
 }

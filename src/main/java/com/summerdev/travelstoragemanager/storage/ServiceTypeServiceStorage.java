@@ -42,4 +42,8 @@ public class ServiceTypeServiceStorage<T> {
             throw new IllegalArgumentException("Value for key " + key + " already exists. Value: " + value);
         });
     }
+
+    public T getService(Class<? extends ServiceType> keyClass) {
+        return initServicesMap.get(keyClass);
+    }
 }

@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.service.task;
+package com.summerdev.travelstoragemanager.service.task.execute;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
