@@ -22,10 +22,9 @@ import java.util.concurrent.ScheduledFuture;
  */
 @Slf4j
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 public class ThreadPoolTaskServiceImpl implements ThreadPoolTaskService {
-    @NonNull ThreadPoolTaskScheduler threadPoolTaskScheduler;
+    private final ThreadPoolTaskScheduler threadPoolTaskScheduler;
 
     @Override
     public void startTask(RunnableTask task) {
