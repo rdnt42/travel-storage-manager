@@ -1,5 +1,6 @@
 package com.summerdev.travelstoragemanager.aspect;
 
+import com.summerdev.travelstoragemanager.entity.InfoTask;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -20,11 +21,12 @@ public class LogUpdateCountAspect {
     @AfterReturning(pointcut = "@annotation(LogUpdateCount)", returning = "retVal")
     public void logUpdateCount(JoinPoint joinPoint, Object retVal){
         Object[] args = joinPoint.getArgs();
-        if (args.length != 3) {
+        if (args.length != 2) {
             return;
         }
 
         String name = joinPoint.getSignature().toShortString();
-        log.debug("Updater: {}, updated count: {}, task id: {}, cursor: {}", name, retVal, args[2], args[1]);
+        InfoTask task = (InfoTask)args[1];
+        log.debug("Updater: {}, updated count: {}, task id: {}, cursor: {}", name, retVal, task.getId(), task.getCursorId());
     }
 }

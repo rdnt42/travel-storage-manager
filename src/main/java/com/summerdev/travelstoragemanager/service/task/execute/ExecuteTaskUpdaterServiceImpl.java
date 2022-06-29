@@ -30,13 +30,13 @@ public class ExecuteTaskUpdaterServiceImpl implements ExecuteTaskUpdaterService 
 
     @Override
     @LogUpdateCount
-    public int updateTravelInfo(RunnableTask runnableTask, Long cursor, Long id) {
+    public int updateTravelInfo(RunnableTask runnableTask, InfoTask task) {
         try {
             TravelInfoUpdaterService updater = travelInfoUpdaterServiceStorage.getService(runnableTask.getServiceTypeClass());
 
-            return updater.updateTravelInfo(cursor);
+            return updater.updateTravelInfo(task.getId());
         } catch (Exception e) {
-            log.error("Error in task: {}, cursor: {}, text: {}", id, cursor, e.getMessage());
+            log.error("Error in task: {}, cursor: {}, text: {}", task.getId(), task.getCursorId(), e.getMessage());
             UpdaterErrorHandlerService handler = updaterErrorServiceStorage.getService(runnableTask.getServiceTypeClass());
             handler.handleError(e, runnableTask);
 
@@ -45,9 +45,9 @@ public class ExecuteTaskUpdaterServiceImpl implements ExecuteTaskUpdaterService 
     }
 
     @Override
-    public void updateNextCursor(RunnableTask runnableTask, InfoTask task, Long cursor) {
+    public void updateNextCursor(RunnableTask runnableTask, InfoTask task) {
         CursorService cursorService = cursorServiceStorage.getService(runnableTask.getServiceTypeClass());
-        Long nextCursor = cursorService.getNextCursorId(cursor);
+        Long nextCursor = cursorService.getNextCursorId(task.getCursorId());
         task.setCursorId(nextCursor);
 
         infoTaskRepository.save(task);

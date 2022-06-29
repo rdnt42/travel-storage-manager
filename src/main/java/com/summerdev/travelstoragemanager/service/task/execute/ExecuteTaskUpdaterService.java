@@ -10,7 +10,7 @@ import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
  * Time: 23:01
  */
 public interface ExecuteTaskUpdaterService {
-    int updateTravelInfo(RunnableTask runnableTask, Long cursor, Long id);
+    int updateTravelInfo(RunnableTask runnableTask, InfoTask task);
 
-    void updateNextCursor(RunnableTask runnableTask, InfoTask task, Long cursor);
+    void updateNextCursor(RunnableTask runnableTask, InfoTask task);
 }

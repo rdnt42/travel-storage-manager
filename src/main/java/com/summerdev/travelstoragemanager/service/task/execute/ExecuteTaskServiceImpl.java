@@ -30,8 +30,8 @@ public class ExecuteTaskServiceImpl implements ExecuteTaskService {
             Long cursor = task.getCursorId();
             if (cursor == null) break;
 
-            executeTaskUpdaterService.updateTravelInfo(runnableTask, cursor, task.getId());
-            executeTaskUpdaterService.updateNextCursor(runnableTask, task, cursor);
+            executeTaskUpdaterService.updateTravelInfo(runnableTask, task);
+            executeTaskUpdaterService.updateNextCursor(runnableTask, task);
         }
     }
 }
