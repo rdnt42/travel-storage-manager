@@ -40,7 +40,8 @@ class HotelLookApiServiceImplTest {
 
     @Mock
     private HotelApiErrorHandlerService hotelTaskErrorHandlerService;
-
+    @Mock
+    private WebClient.RequestHeadersUriSpec<?> uriSpecMock;
 
     @Test
     void getHotelsResponseEmptyRequestFailed() {
@@ -65,11 +66,9 @@ class HotelLookApiServiceImplTest {
         assertTrue(responses.isEmpty());
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private void initWebClient() {
-        WebClient.RequestHeadersUriSpec uriSpecMock = mock(WebClient.RequestHeadersUriSpec.class);
-        when(webClient.get())
-                .thenReturn(uriSpecMock);
+        doReturn(uriSpecMock)
+                .when(webClient).get();
 
         ReflectionTestUtils.setField(hotelLookApiService, "hotelValue", "http://test");
 

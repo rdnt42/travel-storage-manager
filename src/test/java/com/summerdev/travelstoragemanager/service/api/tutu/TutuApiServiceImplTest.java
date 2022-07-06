@@ -34,7 +34,8 @@ class TutuApiServiceImplTest {
 
     @Mock
     private TrainApiErrorHandlerService trainApiErrorHandlerService;
-
+    @Mock
+    private WebClient.RequestHeadersUriSpec<?> uriSpecMock;
 
     @Test
     void getTrainsResponseEmptyParamsFailed() {
@@ -62,11 +63,9 @@ class TutuApiServiceImplTest {
         return station;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     private void initWebClient() {
-        WebClient.RequestHeadersUriSpec uriSpecMock = mock(WebClient.RequestHeadersUriSpec.class);
-        when(webClient.get())
-                .thenReturn(uriSpecMock);
+        doReturn(uriSpecMock)
+                .when(webClient).get();
 
         ReflectionTestUtils.setField(tutuApiService, "tutuUrl", "http://test");
 
