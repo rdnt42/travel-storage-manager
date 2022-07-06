@@ -3,9 +3,7 @@ package com.summerdev.travelstoragemanager.service.task.execute;
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 
 /**
@@ -15,11 +13,10 @@ import org.springframework.stereotype.Service;
  * Time: 21:02
  */
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 public class ExecuteTaskServiceImpl implements ExecuteTaskService {
-    InfoTaskRepository infoTaskRepository;
-    ExecuteTaskUpdaterService executeTaskUpdaterService;
+    private final InfoTaskRepository infoTaskRepository;
+    private final ExecuteTaskUpdaterService executeTaskUpdaterService;
 
     @Override
     public void executeTask(RunnableTask runnableTask) {
