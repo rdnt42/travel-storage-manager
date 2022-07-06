@@ -3,19 +3,18 @@ package com.summerdev.travelstoragemanager.service.task.execute;
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
-import com.summerdev.travelstoragemanager.serviceType.ServiceType;
 import org.jeasy.random.EasyRandom;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
 /**
@@ -36,32 +35,37 @@ class ExecuteTaskServiceImplTest {
     @Mock
     private ExecuteTaskUpdaterService executeTaskUpdaterService;
 
+    @Mock
     private RunnableTask runnableTask;
+    @Mock
+    private ScheduledFuture<?> future;
 
-    @BeforeEach
-    private void updateTask() {
-        runnableTask = new RunnableTask() {
-            @Override
-            public Class<? extends ServiceType> getServiceTypeClass() {
-                return null;
-            }
+    @Test
+    void executeTaskNoExecute() {
+        Long taskId = 1L;
 
-            @Override
-            public void run() {
+        initFuture(true);
 
-            }
-        };
+        executeTaskService.executeTask(runnableTask);
 
-        ScheduledFuture<?> future = Mockito.mock(ScheduledFuture.class);
-        runnableTask.setFuture(future);
-        runnableTask.setTaskId(1L);
+        verify(infoTaskRepository, times(0))
+                .findById(taskId);
+
+        verify(executeTaskUpdaterService, times(0))
+                .updateTravelInfo(eq(runnableTask), any(InfoTask.class));
+
+        verify(executeTaskUpdaterService, times(0))
+                .updateNextCursor(eq(runnableTask), any(InfoTask.class));
     }
 
     @Test
-    void executeTask() {
+    void executeTaskSuccess() {
         Long taskId = 1L;
         Optional<InfoTask> task = getTaskFinishedTask(taskId);
 
+        initFuture(false);
+        when(runnableTask.getTaskId())
+                .thenReturn(taskId);
         when(infoTaskRepository.findById(taskId))
                 .thenReturn(task);
 
@@ -77,6 +81,22 @@ class ExecuteTaskServiceImplTest {
                 .updateNextCursor(runnableTask, task.orElse(null));
     }
 
+    @Test
+    void executeTaskError() {
+        Long taskId = 1L;
+
+        initFuture(false);
+        when(runnableTask.getTaskId())
+                .thenReturn(taskId);
+        when(infoTaskRepository.findById(taskId))
+                .thenThrow(NullPointerException.class);
+
+        Exception exception = assertThrows(NullPointerException.class, () ->
+                executeTaskService.executeTask(runnableTask));
+
+        assertNotNull(exception);
+    }
+
     private Optional<InfoTask> getTaskFinishedTask(Long id) {
         EasyRandom random = new EasyRandom();
         InfoTask task = random.nextObject(InfoTask.class);
@@ -84,5 +104,12 @@ class ExecuteTaskServiceImplTest {
         task.setCursorId(null);
 
         return Optional.of(task);
+    }
+
+    private void initFuture(boolean isCancel) {
+        doReturn(future)
+                .when(runnableTask).getFuture();
+        when(runnableTask.getFuture().isCancelled())
+                .thenReturn(isCancel);
     }
 }
