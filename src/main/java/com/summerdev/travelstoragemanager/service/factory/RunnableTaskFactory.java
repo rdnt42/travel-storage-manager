@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * Time: 23:27
  */
 @Service
-public abstract class TaskFactory {
+public abstract class RunnableTaskFactory {
     public RunnableTask getTask(TaskTypeEnum taskType) {
         return switch (taskType) {
             case TASK_GET_HOTELS_INFO -> getHotelsInfoTask();

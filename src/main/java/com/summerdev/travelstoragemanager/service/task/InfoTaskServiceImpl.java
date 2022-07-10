@@ -7,19 +7,16 @@ import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TaskTypeRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
 import com.summerdev.travelstoragemanager.service.ThreadPoolTaskService;
-import com.summerdev.travelstoragemanager.service.factory.CursorFactory;
-import com.summerdev.travelstoragemanager.service.factory.TaskFactory;
+import com.summerdev.travelstoragemanager.service.factory.RunnableTaskFactory;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
-import lombok.AccessLevel;
-import lombok.NonNull;
+import com.summerdev.travelstoragemanager.storage.ServiceTypeServiceStorage;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,30 +25,29 @@ import java.util.Map;
  * Time: 23:08
  */
 @RequiredArgsConstructor
-@FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @Service
 public class InfoTaskServiceImpl implements InfoTaskService {
+    protected static final Map<Long, RunnableTask> infoTasksMap = new ConcurrentHashMap<>();
 
-    protected static final Map<Long, RunnableTask> infoTasksMap = new HashMap<>();
+    private final RunnableTaskFactory runnableTaskFactory;
+    private final ServiceTypeServiceStorage<CursorService> cursorServiceStorage;
 
-    @NonNull TaskFactory taskFactory;
-    @NonNull CursorFactory cursorFactory;
 
-    @NonNull TaskTypeRepository taskTypeRepository;
-    @NonNull InfoTaskRepository infoTaskRepository;
+    private final TaskTypeRepository taskTypeRepository;
+    private final InfoTaskRepository infoTaskRepository;
 
-    @NonNull ThreadPoolTaskService threadPoolTaskService;
+    private final ThreadPoolTaskService threadPoolTaskService;
 
     @Override
     @Transactional
     public InfoTask createTask(TaskTypeEnum taskTypeEnum) {
         InfoTask newTask = createInitInfoTask(taskTypeEnum);
 
-        RunnableTask runnableTask = taskFactory.getTask(taskTypeEnum);
-        CursorService cursorService = cursorFactory.getCursorService(runnableTask);
+        RunnableTask runnableTask = runnableTaskFactory.getTask(taskTypeEnum);
+        CursorService cursorService = cursorServiceStorage.getService(runnableTask.getServiceTypeClass());
         newTask.setCursorId(cursorService.getFirstCursorId());
 
-        infoTaskRepository.save(newTask);
+        newTask = infoTaskRepository.save(newTask);
 
         runnableTask.setTaskId(newTask.getId());
         infoTasksMap.put(newTask.getId(), runnableTask);
@@ -65,7 +61,7 @@ public class InfoTaskServiceImpl implements InfoTaskService {
 
         for (InfoTask infoTask : taskList) {
             TaskTypeEnum taskType = TaskTypeEnum.getById(infoTask.getTaskTypeId());
-            RunnableTask runnableTask = taskFactory.getTask(taskType);
+            RunnableTask runnableTask = runnableTaskFactory.getTask(taskType);
 
             runnableTask.setTaskId(infoTask.getId());
             infoTasksMap.put(infoTask.getId(), runnableTask);
