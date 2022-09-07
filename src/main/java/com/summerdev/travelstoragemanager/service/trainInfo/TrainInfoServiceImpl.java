@@ -30,7 +30,7 @@ public class TrainInfoServiceImpl implements TrainInfoService, TutuServiceType {
 
         List<TrainInfo> listForSave = new ArrayList<>();
         for (TrainInfo newItem : trainInfos) {
-            listForSave.add(getItemForUpdate(newItem));
+            listForSave.add(updateOrCreateItem(newItem));
         }
 
         return trainInfoRepository.saveAll(listForSave).size();
@@ -50,16 +50,14 @@ public class TrainInfoServiceImpl implements TrainInfoService, TutuServiceType {
         return t -> seen.putIfAbsent(keyExtractor.apply(t), Boolean.TRUE) == null;
     }
 
-    private TrainInfo getItemForUpdate(TrainInfo newInfo) {
-        TrainInfo itemToUpdate = trainInfoRepository.findDistinctByDepartureCityIdAndArrivalCityIdAndTrainNumber(
-                newInfo.getDepartureCity().getId(), newInfo.getArrivalCity().getId(), newInfo.getTrainNumber());
+    private TrainInfo updateOrCreateItem(TrainInfo newInfo) {
+        long departureId = newInfo.getDepartureCity().getId();
+        long arrivalId = newInfo.getArrivalCity().getId();
+        TrainInfo itemToUpdate = trainInfoRepository.findDistinctTrain(departureId, arrivalId, newInfo.getTrainNumber())
+                .orElse(newInfo);
 
-        if (itemToUpdate == null) {
-            itemToUpdate = newInfo;
-        } else {
-            itemToUpdate.setTravelTime(newInfo.getTravelTime());
-            itemToUpdate.addNewPrices(newInfo.getTrainPrices());
-        }
+        itemToUpdate.setTravelTime(newInfo.getTravelTime());
+        itemToUpdate.addNewPrices(newInfo.getTrainPrices());
         itemToUpdate.setLastUpdate(new Date());
 
         return itemToUpdate;
