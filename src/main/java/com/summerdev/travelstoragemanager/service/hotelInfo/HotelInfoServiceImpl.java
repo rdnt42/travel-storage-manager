@@ -7,11 +7,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Created with IntelliJ IDEA.
@@ -28,27 +26,26 @@ public class HotelInfoServiceImpl implements HotelInfoService, HotelLookServiceT
     @Transactional
     @Override
     public int updateOrCreate(List<HotelInfo> hotelInfos) {
-        Map<Long, HotelInfo> newItems = hotelInfos.stream()
-                .collect(Collectors.toMap(HotelInfo::getId, Function.identity()));
-
-        List<HotelInfo> itemsToUpdate = hotelInfoRepository.findAllById(newItems.keySet());
-
-        for (HotelInfo itemToUpdate : itemsToUpdate) {
-            HotelInfo newItem = newItems.get(itemToUpdate.getId());
-
-            updateItem(itemToUpdate, newItem);
-            newItems.put(itemToUpdate.getId(), itemToUpdate);
+        List<HotelInfo> listForSave = new ArrayList<>();
+        for (HotelInfo hotelInfo : hotelInfos) {
+            HotelInfo updatedItem = updateOrCreateItem(hotelInfo);
+            listForSave.add(updatedItem);
         }
 
-        return hotelInfoRepository.saveAll(newItems.values()).size();
+        return hotelInfoRepository.saveAll(listForSave).size();
     }
 
-    private void updateItem(HotelInfo info, HotelInfo newInfo) {
-        info.setHotelName(newInfo.getHotelName());
-        info.setCity(newInfo.getCity());
-        info.setStars(newInfo.getStars());
-        info.addNewPrices(newInfo.getHotelPrices());
+    private HotelInfo updateOrCreateItem(HotelInfo newInfo) {
+        HotelInfo hotelInfo = hotelInfoRepository.findById(newInfo.getId())
+                .orElse(newInfo);
 
-        info.setLastUpdate(new Date());
+        hotelInfo.setHotelName(newInfo.getHotelName());
+        hotelInfo.setCity(newInfo.getCity());
+        hotelInfo.setStars(newInfo.getStars());
+        hotelInfo.addNewPrices(newInfo.getHotelPrices());
+
+        hotelInfo.setLastUpdate(new Date());
+
+        return hotelInfo;
     }
 }
