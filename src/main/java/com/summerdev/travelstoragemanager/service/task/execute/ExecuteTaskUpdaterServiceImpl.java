@@ -34,7 +34,7 @@ public class ExecuteTaskUpdaterServiceImpl implements ExecuteTaskUpdaterService 
         try {
             TravelInfoUpdaterService updater = travelInfoUpdaterServiceStorage.getService(runnableTask.getServiceTypeClass());
 
-            return updater.updateTravelInfo(task.getId());
+            return updater.updateTravelInfo(task.getCursorId());
         } catch (Exception e) {
             log.error("Error in task: {}, cursor: {}, text: {}", task.getId(), task.getCursorId(), e.getMessage());
             UpdaterErrorHandlerService handler = updaterErrorServiceStorage.getService(runnableTask.getServiceTypeClass());
