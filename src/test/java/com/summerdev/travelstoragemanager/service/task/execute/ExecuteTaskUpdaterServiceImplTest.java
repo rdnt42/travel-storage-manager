@@ -62,10 +62,11 @@ class ExecuteTaskUpdaterServiceImplTest {
     @Test
     void updateTravelInfoSuccess() {
         initInfoUpdater();
-        when(travelInfoUpdaterService.updateTravelInfo(any()))
+        InfoTask infoTask = getInfoTask();
+        when(travelInfoUpdaterService.updateTravelInfo(infoTask.getCursorId()))
                 .thenReturn(10);
 
-        int count = executeTaskUpdaterService.updateTravelInfo(task, getInfoTask());
+        int count = executeTaskUpdaterService.updateTravelInfo(task, infoTask);
 
         Assertions.assertEquals(10, count);
     }
@@ -73,13 +74,14 @@ class ExecuteTaskUpdaterServiceImplTest {
     @Test
     void updateTravelInfoSuccessOnError() {
         initInfoUpdater();
-        when(travelInfoUpdaterService.updateTravelInfo(any()))
+        InfoTask infoTask = getInfoTask();
+        when(travelInfoUpdaterService.updateTravelInfo(infoTask.getCursorId()))
                 .thenThrow(RuntimeException.class);
 
         initErrorHandler();
         doNothing().when(executeTaskErrorHandlerService).handleError(any(), any());
 
-        int count = executeTaskUpdaterService.updateTravelInfo(task, getInfoTask());
+        int count = executeTaskUpdaterService.updateTravelInfo(task, infoTask);
 
         Assertions.assertEquals(0, count);
     }
