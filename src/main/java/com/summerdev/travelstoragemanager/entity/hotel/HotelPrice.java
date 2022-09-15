@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.entity.hotel;
 
-import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
+import com.summerdev.travelstoragemanager.enums.ComfortTypes;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -43,14 +43,14 @@ public class HotelPrice implements Serializable {
 
     @Column(name = "comfort_type")
     @Enumerated(EnumType.STRING)
-    private ComfortType comfortType;
+    private ComfortTypes comfortTypes;
 
     public HotelPrice() {
     }
 
-    public HotelPrice(HotelInfo hotelInfo, Double cost, ComfortType comfortType) {
+    public HotelPrice(HotelInfo hotelInfo, Double cost, ComfortTypes comfortTypes) {
         this.hotelInfo = hotelInfo;
         this.cost = cost;
-        this.comfortType = comfortType;
+        this.comfortTypes = comfortTypes;
     }
 }

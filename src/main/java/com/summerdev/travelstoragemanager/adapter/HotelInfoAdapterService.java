@@ -1,7 +1,7 @@
 package com.summerdev.travelstoragemanager.adapter;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
+import com.summerdev.travelstoragemanager.enums.ComfortTypes;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelPrice;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
@@ -87,15 +87,15 @@ public class HotelInfoAdapterService {
     private HotelPrice getHotelPrice(HotelInfo hotelInfo, double cost) {
         int stars = hotelInfo.getStars().intValue();
         if (stars == 3 || stars == 4) {
-            return getNewPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_COMFORT);
+            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_COMFORT);
         } else if (stars == 5) {
-            return getNewPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_LUXURY);
+            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_LUXURY);
         } else {
-            return getNewPrice(hotelInfo, cost, ComfortType.COMFORT_TYPE_CHEAP);
+            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_CHEAP);
         }
     }
 
-    private HotelPrice getNewPrice(HotelInfo hotelInfo, double cost, ComfortType comfortType) {
-        return new HotelPrice(hotelInfo, cost, comfortType);
+    private HotelPrice getNewPrice(HotelInfo hotelInfo, double cost, ComfortTypes comfortTypes) {
+        return new HotelPrice(hotelInfo, cost, comfortTypes);
     }
 }

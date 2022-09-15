@@ -6,6 +6,8 @@ import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.train.TrainPrice;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
+import com.summerdev.travelstoragemanager.enums.ComfortTypes;
+import com.summerdev.travelstoragemanager.repository.ComfortTypeRepository;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuRailwayCarriageResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
@@ -28,6 +30,7 @@ import java.util.Objects;
 @Service
 public class TrainInfoAdapterService {
     private final TutuStationRepository tutuStationRepository;
+    private final ComfortTypeRepository comfortTypeRepository;
 
     public List<TrainInfo> convertResponsesToTrainsInfo(TutuTrainsResponse response) {
         return response.getTrips().stream()
@@ -111,10 +114,15 @@ public class TrainInfoAdapterService {
 
     private ComfortType getComfortType(SeatTypeEnum seatType) {
         return switch (seatType) {
-            case SEAT_TYPE_ID_COUPE -> ComfortType.COMFORT_TYPE_COMFORT;
-            case SEAT_TYPE_ID_LUX, SEAT_TYPE_ID_SOFT -> ComfortType.COMFORT_TYPE_LUXURY;
-            case SEAT_TYPE_ID_ECONOMY, SEAT_TYPE_ID_SEDENTARY -> ComfortType.COMFORT_TYPE_CHEAP;
+            case SEAT_TYPE_ID_COUPE -> findComfortType(ComfortTypes.COMFORT_TYPE_COMFORT.getId());
+            case SEAT_TYPE_ID_LUX, SEAT_TYPE_ID_SOFT -> findComfortType(ComfortTypes.COMFORT_TYPE_LUXURY.getId());
+            case SEAT_TYPE_ID_ECONOMY, SEAT_TYPE_ID_SEDENTARY -> findComfortType(ComfortTypes.COMFORT_TYPE_CHEAP.getId());
         };
+    }
+
+    private ComfortType findComfortType(int id) {
+        return comfortTypeRepository.findById(id)
+                .orElseThrow(() -> new NullPointerException("Comfort type with id: " + id + "doesn't exist"));
     }
 }
 

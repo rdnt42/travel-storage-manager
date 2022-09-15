@@ -7,8 +7,6 @@ import lombok.Setter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -41,8 +39,8 @@ public class TrainPrice implements Serializable {
 
     private Double cost;
 
-    @Column(name = "comfort_type")
-    @Enumerated(EnumType.STRING)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comfort_type_id")
     private ComfortType comfortType;
 
     @Column(name = "seat_type_id")

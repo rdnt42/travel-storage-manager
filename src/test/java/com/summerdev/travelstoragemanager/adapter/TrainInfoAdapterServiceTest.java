@@ -4,15 +4,15 @@ import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.train.TrainPrice;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
+import com.summerdev.travelstoragemanager.repository.ComfortTypeRepository;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuRailwayCarriageResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTripItemResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
@@ -20,10 +20,11 @@ import java.util.List;
 import java.util.Optional;
 
 import static com.summerdev.travelstoragemanager.entity.SeatType.SeatTypeEnum.*;
-import static com.summerdev.travelstoragemanager.entity.directory.ComfortType.*;
+import static com.summerdev.travelstoragemanager.enums.ComfortTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -34,15 +35,13 @@ import static org.mockito.ArgumentMatchers.anyLong;
 @ExtendWith(MockitoExtension.class)
 class TrainInfoAdapterServiceTest {
 
+    @InjectMocks
     private TrainInfoAdapterService trainInfoAdapterService;
 
     @Mock
+    private ComfortTypeRepository comfortTypeRepository;
+    @Mock
     private TutuStationRepository tutuStationRepository;
-
-    @BeforeEach
-    void setUp() {
-        trainInfoAdapterService = new TrainInfoAdapterService(tutuStationRepository);
-    }
 
     @Test
     void convertResponsesEmptyResponsesSuccess() {
@@ -53,7 +52,7 @@ class TrainInfoAdapterServiceTest {
 
     @Test
     void convertResponsesTenObjectSuccess() {
-        Mockito.when(tutuStationRepository.findById(anyLong()))
+        when(tutuStationRepository.findById(anyLong()))
                 .thenReturn(getEmptyStation());
 
         TutuTrainsResponse response = getFillTutuTrainsWithTenItems();
@@ -65,7 +64,7 @@ class TrainInfoAdapterServiceTest {
 
     @Test
     void convertResponsesTenObjectsWithTwoInvalidSuccess() {
-        Mockito.when(tutuStationRepository.findById(anyLong()))
+        when(tutuStationRepository.findById(anyLong()))
                 .thenReturn(getEmptyStation());
 
         TutuTrainsResponse response = getFillTutuTrainsWithTenItems();
@@ -101,8 +100,10 @@ class TrainInfoAdapterServiceTest {
 
     @Test
     void convertResponseEconomyAndSeat() {
-        Mockito.when(tutuStationRepository.findById(any()))
+        when(tutuStationRepository.findById(any()))
                 .thenReturn(getEmptyStation());
+        when(comfortTypeRepository.findById(1))
+                .thenReturn(Optional.of(getComfortType(1)));
 
         TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_ECONOMY.getDsc(), 2);
         response.getCategories().get(1).setType(SEAT_TYPE_ID_SEDENTARY.getDsc());
@@ -113,16 +114,18 @@ class TrainInfoAdapterServiceTest {
         assertEquals(2, trainPrices.size());
 
         ComfortType comfortType = trainPrices.get(0).getComfortType();
-        assertEquals(COMFORT_TYPE_CHEAP, comfortType);
+        assertEquals(COMFORT_TYPE_CHEAP.getId(), comfortType.getId());
 
         comfortType = trainPrices.get(1).getComfortType();
-        assertEquals(COMFORT_TYPE_CHEAP, comfortType);
+        assertEquals(COMFORT_TYPE_CHEAP.getId(), comfortType.getId());
     }
 
     @Test
     void convertResponseCoupe() {
-        Mockito.when(tutuStationRepository.findById(any()))
+        when(tutuStationRepository.findById(any()))
                 .thenReturn(getEmptyStation());
+        when(comfortTypeRepository.findById(2))
+                .thenReturn(Optional.of(getComfortType(2)));
 
         TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_COUPE.getDsc(), 1);
 
@@ -131,13 +134,15 @@ class TrainInfoAdapterServiceTest {
         ComfortType comfortType = trainPrices.get(0).getComfortType();
 
         assertEquals(1, trainPrices.size());
-        assertEquals(COMFORT_TYPE_COMFORT, comfortType);
+        assertEquals(COMFORT_TYPE_COMFORT.getId(), comfortType.getId());
     }
 
     @Test
     void convertResponseLuxAndSoft() {
-        Mockito.when(tutuStationRepository.findById(any()))
+        when(tutuStationRepository.findById(any()))
                 .thenReturn(getEmptyStation());
+        when(comfortTypeRepository.findById(3))
+                .thenReturn(Optional.of(getComfortType(3)));
 
         TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_LUX.getDsc(), 2);
         response.getCategories().get(1).setType(SEAT_TYPE_ID_SOFT.getDsc());
@@ -148,16 +153,18 @@ class TrainInfoAdapterServiceTest {
         assertEquals(2, trainPrices.size());
 
         ComfortType comfortType = trainPrices.get(0).getComfortType();
-        assertEquals(COMFORT_TYPE_LUXURY, comfortType);
+        assertEquals(COMFORT_TYPE_LUXURY.getId(), comfortType.getId());
 
         comfortType = trainPrices.get(1).getComfortType();
-        assertEquals(COMFORT_TYPE_LUXURY, comfortType);
+        assertEquals(COMFORT_TYPE_LUXURY.getId(), comfortType.getId());
     }
 
     @Test
     void convertResponseWithOneCorrectSeatType() {
-        Mockito.when(tutuStationRepository.findById(any()))
+        when(tutuStationRepository.findById(any()))
                 .thenReturn(getEmptyStation());
+        when(comfortTypeRepository.findById(2))
+                .thenReturn(Optional.of(getComfortType(2)));
 
         TutuTripItemResponse response = getFillTripObjectResponse("incorrect", 10);
         response.getCategories().get(1).setType(SEAT_TYPE_ID_COUPE.getDsc());
@@ -169,7 +176,8 @@ class TrainInfoAdapterServiceTest {
 
         ComfortType comfortType = trainPrices.get(0).getComfortType();
 
-        assertEquals(ComfortType.COMFORT_TYPE_COMFORT, comfortType);
+        assertEquals(COMFORT_TYPE_COMFORT.getId(), comfortType.getId());
+
         assertEquals(1, trainPrices.size());
     }
 
@@ -218,4 +226,10 @@ class TrainInfoAdapterServiceTest {
         return new TutuTrainsResponse(responses);
     }
 
+    private ComfortType getComfortType(int id) {
+        ComfortType comfortType = new ComfortType();
+        comfortType.setId(id);
+
+        return comfortType;
+    }
 }

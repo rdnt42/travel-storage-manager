@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.summerdev.travelstoragemanager.entity.directory.ComfortType.*;
+import static com.summerdev.travelstoragemanager.enums.ComfortTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -69,12 +69,12 @@ class HotelInfoAdapterServiceTest {
         response.setStars(1L);
 
         HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortType());
+        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortTypes());
 
         response.setStars(2L);
 
         hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortType());
+        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortTypes());
     }
 
     @Test
@@ -83,12 +83,12 @@ class HotelInfoAdapterServiceTest {
         response.setStars(3L);
 
         HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortType());
+        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortTypes());
 
         response.setStars(4L);
 
         hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortType());
+        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortTypes());
     }
 
     @Test
@@ -97,7 +97,7 @@ class HotelInfoAdapterServiceTest {
         response.setStars(5L);
 
         HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_LUXURY, hotelInfo.getHotelPrices().get(0).getComfortType());
+        assertEquals(COMFORT_TYPE_LUXURY, hotelInfo.getHotelPrices().get(0).getComfortTypes());
     }
 
     @Test
