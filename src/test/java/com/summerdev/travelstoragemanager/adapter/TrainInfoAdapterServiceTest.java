@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.summerdev.travelstoragemanager.entity.SeatType.SeatTypeEnum.*;
+import static com.summerdev.travelstoragemanager.entity.directory.SeatType.SeatTypeEnum.*;
 import static com.summerdev.travelstoragemanager.enums.ComfortTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

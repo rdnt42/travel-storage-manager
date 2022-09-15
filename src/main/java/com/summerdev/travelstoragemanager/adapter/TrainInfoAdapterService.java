@@ -1,7 +1,7 @@
 package com.summerdev.travelstoragemanager.adapter;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.entity.SeatType.SeatTypeEnum;
+import com.summerdev.travelstoragemanager.entity.directory.SeatType.SeatTypeEnum;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.train.TrainPrice;

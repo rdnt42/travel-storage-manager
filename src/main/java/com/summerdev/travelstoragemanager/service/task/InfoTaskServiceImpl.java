@@ -1,8 +1,8 @@
 package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
-import com.summerdev.travelstoragemanager.entity.TaskType;
-import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum;
+import com.summerdev.travelstoragemanager.entity.directory.TaskType;
+import com.summerdev.travelstoragemanager.entity.directory.TaskType.TaskTypeEnum;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TaskTypeRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;

@@ -2,7 +2,7 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 
-import static com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum;
+import static com.summerdev.travelstoragemanager.entity.directory.TaskType.TaskTypeEnum;
 
 /**
  * Created with IntelliJ IDEA.

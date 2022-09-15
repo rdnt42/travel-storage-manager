@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.repository;
 
-import com.summerdev.travelstoragemanager.entity.TaskType;
+import com.summerdev.travelstoragemanager.entity.directory.TaskType;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

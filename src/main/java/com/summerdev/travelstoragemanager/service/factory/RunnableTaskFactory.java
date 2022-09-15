@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.service.factory;
 
-import com.summerdev.travelstoragemanager.entity.TaskType.TaskTypeEnum;
+import com.summerdev.travelstoragemanager.entity.directory.TaskType.TaskTypeEnum;
 import com.summerdev.travelstoragemanager.service.task.runnable.HotelsInfoTask;
 import com.summerdev.travelstoragemanager.service.task.runnable.RunnableTask;
 import com.summerdev.travelstoragemanager.service.task.runnable.TrainsInfoTask;

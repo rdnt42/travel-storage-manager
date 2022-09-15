@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.entity;
+package com.summerdev.travelstoragemanager.entity.directory;
 
 import lombok.Getter;
 import lombok.Setter;

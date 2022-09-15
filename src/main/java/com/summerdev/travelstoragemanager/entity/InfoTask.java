@@ -1,5 +1,6 @@
 package com.summerdev.travelstoragemanager.entity;
 
+import com.summerdev.travelstoragemanager.entity.directory.TaskType;
 import lombok.Getter;
 import lombok.Setter;
 

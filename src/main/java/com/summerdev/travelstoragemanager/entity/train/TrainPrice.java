@@ -1,6 +1,6 @@
 package com.summerdev.travelstoragemanager.entity.train;
 
-import com.summerdev.travelstoragemanager.entity.SeatType;
+import com.summerdev.travelstoragemanager.entity.directory.SeatType;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import lombok.Getter;
 import lombok.Setter;
