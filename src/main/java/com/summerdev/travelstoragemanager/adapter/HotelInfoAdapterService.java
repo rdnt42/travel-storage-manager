@@ -1,10 +1,13 @@
 package com.summerdev.travelstoragemanager.adapter;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.enums.ComfortTypes;
+import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelPrice;
+import com.summerdev.travelstoragemanager.enums.ComfortTypes;
+import com.summerdev.travelstoragemanager.repository.ComfortTypeRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -19,8 +22,10 @@ import java.util.Objects;
  */
 
 @Slf4j
+@AllArgsConstructor
 @Service
 public class HotelInfoAdapterService {
+    private final ComfortTypeRepository comfortTypeRepository;
 
     public List<HotelInfo> convertResponsesToHotelsInfo(List<HotelLookHotelResponse> responses, GeoNameData city, int totalDaysCount) {
         return responses.stream()
@@ -87,15 +92,17 @@ public class HotelInfoAdapterService {
     private HotelPrice getHotelPrice(HotelInfo hotelInfo, double cost) {
         int stars = hotelInfo.getStars().intValue();
         if (stars == 3 || stars == 4) {
-            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_COMFORT);
+            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_COMFORT.getId());
         } else if (stars == 5) {
-            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_LUXURY);
+            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_LUXURY.getId());
         } else {
-            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_CHEAP);
+            return getNewPrice(hotelInfo, cost, ComfortTypes.COMFORT_TYPE_CHEAP.getId());
         }
     }
 
-    private HotelPrice getNewPrice(HotelInfo hotelInfo, double cost, ComfortTypes comfortTypes) {
-        return new HotelPrice(hotelInfo, cost, comfortTypes);
+    private HotelPrice getNewPrice(HotelInfo hotelInfo, double cost, Integer comfortTypeId) {
+        ComfortType comfortType = comfortTypeRepository.findById(comfortTypeId)
+                .orElseThrow(() -> new NullPointerException("Comfort type with id: " + comfortTypeId + "doesn't exist"));
+        return new HotelPrice(hotelInfo, cost, comfortType);
     }
 }

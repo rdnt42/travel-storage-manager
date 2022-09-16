@@ -1,16 +1,24 @@
 package com.summerdev.travelstoragemanager.adapter;
 
+import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
+import com.summerdev.travelstoragemanager.repository.ComfortTypeRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static com.summerdev.travelstoragemanager.enums.ComfortTypes.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.when;
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,14 +26,13 @@ import static org.junit.jupiter.api.Assertions.*;
  * Date: 22.05.2022
  * Time: 23:40
  */
+@ExtendWith(MockitoExtension.class)
 class HotelInfoAdapterServiceTest {
-
+    @InjectMocks
     private HotelInfoAdapterService hotelInfoAdapterService;
 
-    @BeforeEach
-    void setUp() {
-        hotelInfoAdapterService = new HotelInfoAdapterService();
-    }
+    @Mock
+    private ComfortTypeRepository comfortTypeRepository;
 
     @Test
     void convertResponsesEmptyResponsesSuccess() {
@@ -37,6 +44,9 @@ class HotelInfoAdapterServiceTest {
 
     @Test
     void convertResponsesWithValidObjectsSuccess() {
+        when(comfortTypeRepository.findById(anyInt()))
+                .thenReturn(Optional.of(new ComfortType()));
+
         List<HotelLookHotelResponse> responses = getFillTenObjectsInResponses();
 
         List<HotelInfo> results =
@@ -47,15 +57,20 @@ class HotelInfoAdapterServiceTest {
 
     @Test
     void convertResponsesWithInvalidObjectsWithoutError() {
+        when(comfortTypeRepository.findById(anyInt()))
+                .thenReturn(Optional.of(new ComfortType()));
+
         List<HotelLookHotelResponse> responses = getTenObjectsWithThreeInvalid();
 
-        List<HotelInfo> results = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, null,1);
+        List<HotelInfo> results = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, null, 1);
 
         assertEquals(7, results.size());
     }
 
     @Test
     void convertResponseTotalDaysZeroSuccess() {
+        when(comfortTypeRepository.findById(anyInt()))
+                .thenReturn(Optional.of(new ComfortType()));
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
 
         HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
@@ -65,39 +80,48 @@ class HotelInfoAdapterServiceTest {
 
     @Test
     void convertResponseComfortCheapForLess3Stars() {
+        when(comfortTypeRepository.findById(1))
+                .thenReturn(Optional.of(getComfortType(1)));
+
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
         response.setStars(1L);
 
         HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortTypes());
+        assertEquals(COMFORT_TYPE_CHEAP.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
 
         response.setStars(2L);
 
         hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_CHEAP, hotelInfo.getHotelPrices().get(0).getComfortTypes());
+        assertEquals(COMFORT_TYPE_CHEAP.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
     }
 
     @Test
     void convertResponseComfortComfortFrom3To4Stars() {
+        when(comfortTypeRepository.findById(2))
+                .thenReturn(Optional.of(getComfortType(2)));
+
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
         response.setStars(3L);
 
         HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortTypes());
+        assertEquals(COMFORT_TYPE_COMFORT.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
 
         response.setStars(4L);
 
         hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_COMFORT, hotelInfo.getHotelPrices().get(0).getComfortTypes());
+        assertEquals(COMFORT_TYPE_COMFORT.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
     }
 
     @Test
     void convertResponseComfortLuxuryFor5Stars() {
+        when(comfortTypeRepository.findById(3))
+                .thenReturn(Optional.of(getComfortType(3)));
+
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
         response.setStars(5L);
 
         HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
-        assertEquals(COMFORT_TYPE_LUXURY, hotelInfo.getHotelPrices().get(0).getComfortTypes());
+        assertEquals(COMFORT_TYPE_LUXURY.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
     }
 
     @Test
@@ -186,5 +210,12 @@ class HotelInfoAdapterServiceTest {
         responses.get(2).setHotelName(null);
 
         return responses;
+    }
+
+    private ComfortType getComfortType(int id) {
+        ComfortType comfortType = new ComfortType();
+        comfortType.setId(id);
+
+        return comfortType;
     }
 }
