@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.adapter;
+package com.summerdev.travelstoragemanager.service.converter;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
@@ -24,7 +24,7 @@ import java.util.Objects;
 @Slf4j
 @AllArgsConstructor
 @Service
-public class HotelInfoAdapterService {
+public class HotelInfoConverter {
     private final ComfortTypeRepository comfortTypeRepository;
 
     public List<HotelInfo> convertResponsesToHotelsInfo(List<HotelLookHotelResponse> responses, GeoNameData city, int totalDaysCount) {

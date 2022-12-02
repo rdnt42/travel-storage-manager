@@ -1,12 +1,12 @@
 package com.summerdev.travelstoragemanager.service.hotelInfo;
 
-import com.summerdev.travelstoragemanager.adapter.HotelInfoAdapterService;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import com.summerdev.travelstoragemanager.service.api.hotellook.HotelLookApiService;
+import com.summerdev.travelstoragemanager.service.converter.HotelInfoConverter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -38,7 +38,7 @@ class HotelInfoUpdaterServiceImplTest {
     @Mock
     private HotelLookApiService hotelLookApiService;
     @Mock
-    private HotelInfoAdapterService hotelInfoAdapterService;
+    private HotelInfoConverter hotelInfoConverter;
     @Mock
     private HotelInfoService hotelInfoService;
 
@@ -65,7 +65,7 @@ class HotelInfoUpdaterServiceImplTest {
                 .thenReturn(Optional.of(station));
         when(hotelLookApiService.getHotelsResponse(eq(geoNameData), any(Date.class), any(Date.class)))
                 .thenReturn(responses);
-        when(hotelInfoAdapterService.convertResponsesToHotelsInfo(eq(responses), eq(geoNameData), anyInt()))
+        when(hotelInfoConverter.convertResponsesToHotelsInfo(eq(responses), eq(geoNameData), anyInt()))
                 .thenReturn(hotelInfos);
         when(hotelInfoService.updateOrCreate(hotelInfos))
                 .thenReturn(hotelInfos.size());

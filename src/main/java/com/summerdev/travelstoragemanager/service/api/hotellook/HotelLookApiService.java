@@ -1,7 +1,6 @@
 package com.summerdev.travelstoragemanager.service.api.hotellook;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.request.api.hotellook.HotelLookRequest;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 
 import java.util.Date;

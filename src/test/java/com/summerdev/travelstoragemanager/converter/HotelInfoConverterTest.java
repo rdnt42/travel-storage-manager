@@ -1,9 +1,10 @@
-package com.summerdev.travelstoragemanager.adapter;
+package com.summerdev.travelstoragemanager.converter;
 
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.repository.ComfortTypeRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
+import com.summerdev.travelstoragemanager.service.converter.HotelInfoConverter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,9 +28,9 @@ import static org.mockito.Mockito.when;
  * Time: 23:40
  */
 @ExtendWith(MockitoExtension.class)
-class HotelInfoAdapterServiceTest {
+class HotelInfoConverterTest {
     @InjectMocks
-    private HotelInfoAdapterService hotelInfoAdapterService;
+    private HotelInfoConverter hotelInfoConverter;
 
     @Mock
     private ComfortTypeRepository comfortTypeRepository;
@@ -37,7 +38,7 @@ class HotelInfoAdapterServiceTest {
     @Test
     void convertResponsesEmptyResponsesSuccess() {
         List<HotelInfo> results =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(getEmptyResponses(), null, 1);
+                hotelInfoConverter.convertResponsesToHotelsInfo(getEmptyResponses(), null, 1);
 
         assertTrue(results.isEmpty());
     }
@@ -50,7 +51,7 @@ class HotelInfoAdapterServiceTest {
         List<HotelLookHotelResponse> responses = getFillTenObjectsInResponses();
 
         List<HotelInfo> results =
-                hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, null, 1);
+                hotelInfoConverter.convertResponsesToHotelsInfo(responses, null, 1);
 
         assertEquals(10, results.size());
     }
@@ -62,7 +63,7 @@ class HotelInfoAdapterServiceTest {
 
         List<HotelLookHotelResponse> responses = getTenObjectsWithThreeInvalid();
 
-        List<HotelInfo> results = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, null, 1);
+        List<HotelInfo> results = hotelInfoConverter.convertResponsesToHotelsInfo(responses, null, 1);
 
         assertEquals(7, results.size());
     }
@@ -73,7 +74,7 @@ class HotelInfoAdapterServiceTest {
                 .thenReturn(Optional.of(new ComfortType()));
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
 
-        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        HotelInfo hotelInfo = hotelInfoConverter.convertResponseToHotelInfo(response, null, 0);
 
         assertNotNull(hotelInfo);
     }
@@ -86,12 +87,12 @@ class HotelInfoAdapterServiceTest {
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
         response.setStars(1L);
 
-        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        HotelInfo hotelInfo = hotelInfoConverter.convertResponseToHotelInfo(response, null, 0);
         assertEquals(COMFORT_TYPE_CHEAP.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
 
         response.setStars(2L);
 
-        hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        hotelInfo = hotelInfoConverter.convertResponseToHotelInfo(response, null, 0);
         assertEquals(COMFORT_TYPE_CHEAP.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
     }
 
@@ -103,12 +104,12 @@ class HotelInfoAdapterServiceTest {
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
         response.setStars(3L);
 
-        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        HotelInfo hotelInfo = hotelInfoConverter.convertResponseToHotelInfo(response, null, 0);
         assertEquals(COMFORT_TYPE_COMFORT.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
 
         response.setStars(4L);
 
-        hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        hotelInfo = hotelInfoConverter.convertResponseToHotelInfo(response, null, 0);
         assertEquals(COMFORT_TYPE_COMFORT.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
     }
 
@@ -120,7 +121,7 @@ class HotelInfoAdapterServiceTest {
         HotelLookHotelResponse response = getFillHotelObjectResponse(1L);
         response.setStars(5L);
 
-        HotelInfo hotelInfo = hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 0);
+        HotelInfo hotelInfo = hotelInfoConverter.convertResponseToHotelInfo(response, null, 0);
         assertEquals(COMFORT_TYPE_LUXURY.getId(), hotelInfo.getHotelPrices().get(0).getComfortType().getId());
     }
 
@@ -130,7 +131,7 @@ class HotelInfoAdapterServiceTest {
         response.setPriceFrom(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
+                hotelInfoConverter.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Full cost for hotel cannot be null"));
     }
@@ -140,7 +141,7 @@ class HotelInfoAdapterServiceTest {
         HotelLookHotelResponse response = getFillHotelObjectResponse(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
+                hotelInfoConverter.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Hotel id cannot be null"));
     }
@@ -151,7 +152,7 @@ class HotelInfoAdapterServiceTest {
         response.setStars(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
+                hotelInfoConverter.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Stars for hotel cannot be null"));
     }
@@ -162,7 +163,7 @@ class HotelInfoAdapterServiceTest {
         response.setHotelName(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                hotelInfoAdapterService.convertResponseToHotelInfo(response, null, 1));
+                hotelInfoConverter.convertResponseToHotelInfo(response, null, 1));
 
         assertTrue(thrown.getMessage().contains("Name for hotel cannot be null"));
     }

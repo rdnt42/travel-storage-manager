@@ -1,8 +1,8 @@
 package com.summerdev.travelstoragemanager.service.trainInfo;
 
-import com.summerdev.travelstoragemanager.adapter.TrainInfoAdapterService;
 import com.summerdev.travelstoragemanager.repository.TutuRouteRepository;
 import com.summerdev.travelstoragemanager.service.api.tutu.TutuApiService;
+import com.summerdev.travelstoragemanager.service.converter.TrainInfoConverter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,7 +11,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -31,7 +32,7 @@ class TrainInfoUpdaterServiceImplTest {
     @Mock
     private TutuApiService tutuApiService;
     @Mock
-    private TrainInfoAdapterService trainInfoAdapterService;
+    private TrainInfoConverter trainInfoConverter;
     @Mock
     private TrainInfoService trainsInfoService;
 

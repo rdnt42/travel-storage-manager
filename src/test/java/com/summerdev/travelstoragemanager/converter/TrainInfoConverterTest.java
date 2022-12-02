@@ -1,4 +1,4 @@
-package com.summerdev.travelstoragemanager.adapter;
+package com.summerdev.travelstoragemanager.converter;
 
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
@@ -9,6 +9,7 @@ import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuRailwayCarriageResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTrainsResponse;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuTripItemResponse;
+import com.summerdev.travelstoragemanager.service.converter.TrainInfoConverter;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -33,10 +34,10 @@ import static org.mockito.Mockito.when;
  * Time: 23:29
  */
 @ExtendWith(MockitoExtension.class)
-class TrainInfoAdapterServiceTest {
+class TrainInfoConverterTest {
 
     @InjectMocks
-    private TrainInfoAdapterService trainInfoAdapterService;
+    private TrainInfoConverter trainInfoConverter;
 
     @Mock
     private ComfortTypeRepository comfortTypeRepository;
@@ -45,7 +46,7 @@ class TrainInfoAdapterServiceTest {
 
     @Test
     void convertResponsesEmptyResponsesSuccess() {
-        List<TrainInfo> trainInfos = trainInfoAdapterService.convertResponsesToTrainsInfo(new TutuTrainsResponse());
+        List<TrainInfo> trainInfos = trainInfoConverter.convertResponsesToTrainsInfo(new TutuTrainsResponse());
 
         assertTrue(trainInfos.isEmpty());
     }
@@ -57,7 +58,7 @@ class TrainInfoAdapterServiceTest {
 
         TutuTrainsResponse response = getFillTutuTrainsWithTenItems();
 
-        List<TrainInfo> trainInfos = trainInfoAdapterService.convertResponsesToTrainsInfo(response);
+        List<TrainInfo> trainInfos = trainInfoConverter.convertResponsesToTrainsInfo(response);
 
         assertEquals(10, trainInfos.size());
     }
@@ -71,7 +72,7 @@ class TrainInfoAdapterServiceTest {
         response.getTrips().get(0).setDepartureStation(null);
         response.getTrips().get(1).setArrivalStation(null);
 
-        List<TrainInfo> trainInfos = trainInfoAdapterService.convertResponsesToTrainsInfo(response);
+        List<TrainInfo> trainInfos = trainInfoConverter.convertResponsesToTrainsInfo(response);
 
         assertEquals(8, trainInfos.size());
     }
@@ -82,7 +83,7 @@ class TrainInfoAdapterServiceTest {
         response.setArrivalStation(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                trainInfoAdapterService.convertResponseToTrainInfo(response));
+                trainInfoConverter.convertResponseToTrainInfo(response));
 
         assertTrue(thrown.getMessage().contains("Arrival station cannot be null"));
     }
@@ -93,7 +94,7 @@ class TrainInfoAdapterServiceTest {
         response.setDepartureStation(null);
 
         Exception thrown = assertThrows(IllegalArgumentException.class, () ->
-                trainInfoAdapterService.convertResponseToTrainInfo(response));
+                trainInfoConverter.convertResponseToTrainInfo(response));
 
         assertTrue(thrown.getMessage().contains("Arrival station cannot be null"));
     }
@@ -108,7 +109,7 @@ class TrainInfoAdapterServiceTest {
         TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_ECONOMY.getDsc(), 2);
         response.getCategories().get(1).setType(SEAT_TYPE_ID_SEDENTARY.getDsc());
 
-        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+        List<TrainPrice> trainPrices = trainInfoConverter.convertResponseToTrainInfo(response)
                 .getTrainPrices();
 
         assertEquals(2, trainPrices.size());
@@ -129,7 +130,7 @@ class TrainInfoAdapterServiceTest {
 
         TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_COUPE.getDsc(), 1);
 
-        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+        List<TrainPrice> trainPrices = trainInfoConverter.convertResponseToTrainInfo(response)
                 .getTrainPrices();
         ComfortType comfortType = trainPrices.get(0).getComfortType();
 
@@ -147,7 +148,7 @@ class TrainInfoAdapterServiceTest {
         TutuTripItemResponse response = getFillTripObjectResponse(SEAT_TYPE_ID_LUX.getDsc(), 2);
         response.getCategories().get(1).setType(SEAT_TYPE_ID_SOFT.getDsc());
 
-        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+        List<TrainPrice> trainPrices = trainInfoConverter.convertResponseToTrainInfo(response)
                 .getTrainPrices();
 
         assertEquals(2, trainPrices.size());
@@ -171,7 +172,7 @@ class TrainInfoAdapterServiceTest {
 
         assertEquals("incorrect", response.getCategories().get(0).getType());
 
-        List<TrainPrice> trainPrices = trainInfoAdapterService.convertResponseToTrainInfo(response)
+        List<TrainPrice> trainPrices = trainInfoConverter.convertResponseToTrainInfo(response)
                 .getTrainPrices();
 
         ComfortType comfortType = trainPrices.get(0).getComfortType();

@@ -1,8 +1,8 @@
-package com.summerdev.travelstoragemanager.adapter;
+package com.summerdev.travelstoragemanager.service.converter;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
-import com.summerdev.travelstoragemanager.entity.directory.SeatType.SeatTypeEnum;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
+import com.summerdev.travelstoragemanager.entity.directory.SeatType.SeatTypeEnum;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.train.TrainPrice;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
@@ -28,7 +28,7 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Slf4j
 @Service
-public class TrainInfoAdapterService {
+public class TrainInfoConverter {
     private final TutuStationRepository tutuStationRepository;
     private final ComfortTypeRepository comfortTypeRepository;
 

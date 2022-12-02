@@ -1,6 +1,5 @@
 package com.summerdev.travelstoragemanager.service.hotelInfo;
 
-import com.summerdev.travelstoragemanager.adapter.HotelInfoAdapterService;
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.hotel.HotelInfo;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
@@ -8,6 +7,7 @@ import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.hotellook.HotelLookHotelResponse;
 import com.summerdev.travelstoragemanager.service.TravelInfoUpdaterService;
 import com.summerdev.travelstoragemanager.service.api.hotellook.HotelLookApiService;
+import com.summerdev.travelstoragemanager.service.converter.HotelInfoConverter;
 import com.summerdev.travelstoragemanager.serviceType.HotelLookServiceType;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ import java.util.List;
 @Service
 public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService, HotelLookServiceType {
     private final HotelLookApiService hotelLookApiService;
-    private final HotelInfoAdapterService hotelInfoAdapterService;
+    private final HotelInfoConverter hotelInfoConverter;
     private final TutuStationRepository tutuStationRepository;
     private final HotelInfoService hotelInfoService;
 
@@ -52,7 +52,7 @@ public class HotelInfoUpdaterServiceImpl implements TravelInfoUpdaterService, Ho
         Date endDate = calendar.getTime();
 
         List<HotelLookHotelResponse> responses = hotelLookApiService.getHotelsResponse(city, startDate, endDate);
-        List<HotelInfo> hotelInfos = hotelInfoAdapterService.convertResponsesToHotelsInfo(responses, city, totalDaysCount);
+        List<HotelInfo> hotelInfos = hotelInfoConverter.convertResponsesToHotelsInfo(responses, city, totalDaysCount);
 
         return hotelInfoService.updateOrCreate(hotelInfos);
     }
