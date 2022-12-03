@@ -2,7 +2,7 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.directory.TaskType;
-import com.summerdev.travelstoragemanager.entity.directory.TaskType.TaskTypeEnum;
+import com.summerdev.travelstoragemanager.enums.TaskTypes;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TaskTypeRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
@@ -40,7 +40,7 @@ public class InfoTaskServiceImpl implements InfoTaskService {
 
     @Override
     @Transactional
-    public InfoTask createTask(TaskTypeEnum taskTypeEnum) {
+    public InfoTask createTask(TaskTypes taskTypeEnum) {
         InfoTask newTask = createInitInfoTask(taskTypeEnum);
 
         RunnableTask runnableTask = runnableTaskFactory.getTask(taskTypeEnum);
@@ -60,7 +60,7 @@ public class InfoTaskServiceImpl implements InfoTaskService {
         List<InfoTask> taskList = infoTaskRepository.findAll();
 
         for (InfoTask infoTask : taskList) {
-            TaskTypeEnum taskType = TaskTypeEnum.getById(infoTask.getTaskTypeId());
+            TaskTypes taskType = TaskTypes.getById(infoTask.getTaskTypeId());
             RunnableTask runnableTask = runnableTaskFactory.getTask(taskType);
 
             runnableTask.setTaskId(infoTask.getId());
@@ -70,7 +70,7 @@ public class InfoTaskServiceImpl implements InfoTaskService {
         infoTasksMap.values().forEach(threadPoolTaskService::startTaskWithShortInitDelay);
     }
 
-    private InfoTask createInitInfoTask(TaskTypeEnum taskTypeEnum) {
+    private InfoTask createInitInfoTask(TaskTypes taskTypeEnum) {
         TaskType taskType = taskTypeRepository.findById(taskTypeEnum.getIdValue())
                 .orElseThrow(() -> new NullPointerException("Task type with id: " + taskTypeEnum.getIdValue() +
                         " not found"));

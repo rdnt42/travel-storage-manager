@@ -2,11 +2,11 @@ package com.summerdev.travelstoragemanager.service.converter;
 
 import com.summerdev.travelstoragemanager.entity.GeoNameData;
 import com.summerdev.travelstoragemanager.entity.directory.ComfortType;
-import com.summerdev.travelstoragemanager.entity.directory.SeatType.SeatTypeEnum;
 import com.summerdev.travelstoragemanager.entity.train.TrainInfo;
 import com.summerdev.travelstoragemanager.entity.train.TrainPrice;
 import com.summerdev.travelstoragemanager.entity.train.TutuStation;
 import com.summerdev.travelstoragemanager.enums.ComfortTypes;
+import com.summerdev.travelstoragemanager.enums.SeatTypes;
 import com.summerdev.travelstoragemanager.repository.ComfortTypeRepository;
 import com.summerdev.travelstoragemanager.repository.TutuStationRepository;
 import com.summerdev.travelstoragemanager.response.api.tutu.TutuRailwayCarriageResponse;
@@ -93,7 +93,7 @@ public class TrainInfoConverter {
 
     private TrainPrice tryConvertCarriageResponseToTrainPrice(TutuRailwayCarriageResponse category) {
         try {
-            SeatTypeEnum seatType = getSeatTypeOrThrow(category);
+            SeatTypes seatType = getSeatTypeOrThrow(category);
 
             return new TrainPrice(category.getPrice(), getComfortType(seatType), seatType.getId());
         } catch (Exception e) {
@@ -103,8 +103,8 @@ public class TrainInfoConverter {
         return null;
     }
 
-    private SeatTypeEnum getSeatTypeOrThrow(TutuRailwayCarriageResponse category) {
-        SeatTypeEnum seatType = SeatTypeEnum.getByDsc(category.getType());
+    private SeatTypes getSeatTypeOrThrow(TutuRailwayCarriageResponse category) {
+        SeatTypes seatType = SeatTypes.getByDsc(category.getType());
         if (seatType == null) {
             throw new IllegalArgumentException("Category doesn't exist: " + category.getType());
         }
@@ -112,7 +112,7 @@ public class TrainInfoConverter {
         return seatType;
     }
 
-    private ComfortType getComfortType(SeatTypeEnum seatType) {
+    private ComfortType getComfortType(SeatTypes seatType) {
         return switch (seatType) {
             case SEAT_TYPE_ID_COUPE -> findComfortType(ComfortTypes.COMFORT_TYPE_COMFORT.getId());
             case SEAT_TYPE_ID_LUX, SEAT_TYPE_ID_SOFT -> findComfortType(ComfortTypes.COMFORT_TYPE_LUXURY.getId());

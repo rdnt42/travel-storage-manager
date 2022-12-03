@@ -2,6 +2,7 @@ package com.summerdev.travelstoragemanager.service.task;
 
 import com.summerdev.travelstoragemanager.entity.InfoTask;
 import com.summerdev.travelstoragemanager.entity.directory.TaskType;
+import com.summerdev.travelstoragemanager.enums.TaskTypes;
 import com.summerdev.travelstoragemanager.repository.InfoTaskRepository;
 import com.summerdev.travelstoragemanager.repository.TaskTypeRepository;
 import com.summerdev.travelstoragemanager.service.CursorService;
@@ -18,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.summerdev.travelstoragemanager.entity.directory.TaskType.TaskTypeEnum.TASK_GET_HOTELS_INFO;
+import static com.summerdev.travelstoragemanager.enums.TaskTypes.TASK_GET_HOTELS_INFO;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -53,7 +54,7 @@ class InfoTaskServiceImplTest {
         Long cursorId = 5L;
         Long taskId = 100L;
 
-        TaskType.TaskTypeEnum taskType = TASK_GET_HOTELS_INFO;
+        TaskTypes taskType = TASK_GET_HOTELS_INFO;
         TaskType type = getTaskType(taskType);
 
         initRepos(type, taskType);
@@ -76,7 +77,7 @@ class InfoTaskServiceImplTest {
     }
 
 
-    private void initRepos(TaskType type, TaskType.TaskTypeEnum taskType) {
+    private void initRepos(TaskType type, TaskTypes taskType) {
         RunnableTask runnableTask = mock(RunnableTask.class);
         when(taskTypeRepository.findById(taskType.getIdValue()))
                 .thenReturn(Optional.of(type));
@@ -91,7 +92,7 @@ class InfoTaskServiceImplTest {
                 .thenReturn(cursorId);
     }
 
-    private TaskType getTaskType(TaskType.TaskTypeEnum typeEnum) {
+    private TaskType getTaskType(TaskTypes typeEnum) {
         TaskType taskType = new TaskType();
         taskType.setId(typeEnum.getIdValue());
 
